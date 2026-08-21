@@ -41,7 +41,7 @@ function AppLayout() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="my-react-app">
       <AppLayout />
     </BrowserRouter>
   );
