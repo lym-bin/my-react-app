@@ -2,7 +2,11 @@ name: Deploy React App to GitHub Pages
 
 on:
   push:
-    branches: [main] # main 브랜치에 푸시될 때 자동 실행
+    branches: [main]
+
+# 깃허브 페이지에 쓸 수 있는 쓰기 권한을 명시적으로 부여
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
