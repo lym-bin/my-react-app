@@ -1,15 +1,36 @@
-// src/pages/ProductList/ProductListPage.tsx
-import { useState } from "react";
+// src/ProductList/ProductListPage.tsx
+import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import useDisclosure from "../hooks/useDisclosure";
 import FilterSidebar from "../ProductList/FilterSidebar";
 import ProductGrid from "../ProductList/ProductGrid";
-
+import { Product, PRODUCTS } from "./ProductsData";
 const sortOptions = ["신상품 순", "낮은 가격순", "높은 가격순", "인기순"];
+
+function sortProducts(products: Product[], sort: string): Product[] {
+  const sorted = [...products];
+  switch (sort) {
+    case "낮은 가격순":
+      return sorted.sort((a, b) => a.price - b.price);
+    case "높은 가격순":
+      return sorted.sort((a, b) => b.price - a.price);
+    case "신상품 순":
+      return sorted.sort((a, b) => b.id - a.id);
+    case "인기순":
+    default:
+      // TODO: 실제 인기도(조회수/판매량 등) 필드가 생기면 그 기준으로 정렬
+      return sorted;
+  }
+}
 
 export default function ProductListPage() {
   const filterSidebar = useDisclosure();
   const [activeSort, setActiveSort] = useState(sortOptions[0]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const activeCategory = searchParams.get("category") ?? "";
+  const activeSearch = searchParams.get("search") ?? "";
 
   const toggleFilter = (value: string) => {
     setSelectedFilters((prev) => {
@@ -24,21 +45,79 @@ export default function ProductListPage() {
     });
   };
 
+  const filteredProducts = useMemo(() => {
+    let result = PRODUCTS;
+
+    if (activeCategory) {
+      result = result.filter((p) => p.category === activeCategory);
+    }
+
+    if (activeSearch) {
+      const q = activeSearch.toLowerCase();
+      result = result.filter((p) => p.name.toLowerCase().includes(q));
+    }
+
+    // TODO: selectedFilters(색상/사이즈)는 아직 Product 데이터에 대응 필드가 없어 미적용 상태.
+    // 실제 색상/사이즈 데이터가 추가되면 여기서 같이 필터링하세요.
+
+    return sortProducts(result, activeSort);
+  }, [activeCategory, activeSearch, activeSort]);
+
+  const clearCategory = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete("category");
+    setSearchParams(next);
+  };
+
+  const clearSearch = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete("search");
+    setSearchParams(next);
+  };
+
   return (
     <main className="pb-[80px]">
       {/* 필터 사이드바 오픈 시 배경 Dimmed 효과 */}
       {filterSidebar.isOpen && (
         <div
-          className="fixed inset-0 z-[9990] bg-black/50 transition-opacity"
+          className="fixed inset-0 z-[9998] bg-ink/50 transition-opacity"
           onClick={filterSidebar.close}
         />
       )}
 
       <section className="mx-auto my-[40px] w-full max-w-[1200px] px-[20px]">
+        {/* 활성 필터(카테고리/검색어) 표시 */}
+        {(activeCategory || activeSearch) && (
+          <div className="mb-[16px] flex flex-wrap items-center gap-[8px] text-[13px]">
+            {activeCategory && (
+              <button
+                type="button"
+                onClick={clearCategory}
+                className="flex items-center gap-[6px] rounded-full border border-gray-400 px-[12px] py-[4px] text-gray-850 hover:border-ink"
+              >
+                카테고리: {activeCategory} ✕
+              </button>
+            )}
+            {activeSearch && (
+              <button
+                type="button"
+                onClick={clearSearch}
+                className="flex items-center gap-[6px] rounded-full border border-gray-400 px-[12px] py-[4px] text-gray-850 hover:border-ink"
+              >
+                검색: "{activeSearch}" ✕
+              </button>
+            )}
+          </div>
+        )}
+
         {/* 상단 정렬 및 필터 버튼 영역 */}
-        <div className="flex items-center justify-between border-b border-[#e5e5e5] pb-[20px]">
-          <div className="text-[14px] font-medium text-[#333]">
-            TOTAL <span className="font-bold">06</span> ITEMS
+        <div className="flex items-center justify-between border-b border-gray-200 pb-[20px]">
+          <div className="text-[14px] font-medium text-gray-850">
+            TOTAL{" "}
+            <span className="font-bold">
+              {String(filteredProducts.length).padStart(2, "0")}
+            </span>{" "}
+            ITEMS
           </div>
 
           <div className="flex items-center gap-[24px]">
@@ -50,8 +129,8 @@ export default function ProductListPage() {
                     type="button"
                     className={`cursor-pointer text-[14px] transition-colors ${
                       activeSort === option
-                        ? "font-bold text-black underline underline-offset-4"
-                        : "text-[#888] hover:text-black"
+                        ? "font-bold text-ink underline underline-offset-4"
+                        : "text-gray-600 hover:text-ink"
                     }`}
                     aria-current={activeSort === option}
                     onClick={() => setActiveSort(option)}
@@ -65,7 +144,7 @@ export default function ProductListPage() {
             {/* 필터 사이드바 토글 버튼 */}
             <button
               type="button"
-              className="cursor-pointer border border-[#ccc] bg-white px-[16px] py-[8px] text-[13px] font-medium transition-colors hover:border-black hover:bg-black hover:text-white"
+              className="cursor-pointer border border-gray-400 bg-paper px-[16px] py-[8px] text-[13px] font-medium transition-colors hover:border-ink hover:bg-ink hover:text-paper"
               aria-haspopup="true"
               aria-expanded={filterSidebar.isOpen}
               onClick={filterSidebar.open}
@@ -84,7 +163,7 @@ export default function ProductListPage() {
       </section>
 
       {/* 상품 그리드 영역 */}
-      <ProductGrid />
+      <ProductGrid products={filteredProducts} />
     </main>
   );
 }

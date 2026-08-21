@@ -26,6 +26,19 @@
   --color-danger: #ff4d4f;
   --color-discount: #dc134c;
 
+  /* 메인페이지 다크 모드용 팔레트 */
+  --color-navy-950: #06090f;
+  --color-navy-900: #0b111c;
+  --color-navy-800: #141d2e;
+  --color-navy-700: #1e2a40;
+  --color-navy-600: #34445d;
+
+  --color-cream: #f4ede2;
+
+  --color-terracotta-400: #e08663;
+  --color-terracotta-500: #c1502e;
+  --color-terracotta-600: #9c3f24;
+
   --font-sans: "Pretendard", sans-serif;
 
   /* max-w-* 유틸리티는 v4에서 --container-* 네임스페이스로 생성 */
