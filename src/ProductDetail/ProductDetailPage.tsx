@@ -1,9 +1,11 @@
 // src/pages/ProductDetail/ProductDetailPage.tsx
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import useDisclosure from "../hooks/useDisclosure";
 import SizeGuideSidebar from "./SizeGuideSidebar";
 import CartSidebar from "./CartSidebar";
 import SimilarProducts from "./SimilarProducts";
+import { PRODUCTS } from "../ProductList/ProductsData";
 
 const colors = [
   { value: "red", label: "레드" },
@@ -15,15 +17,31 @@ const colors = [
 const sizes = ["XXXS", "XXS", "XS", "S", "M", "L", "XL", "XXL"];
 
 export default function ProductDetailPage() {
+  const { id } = useParams();
   const cart = useDisclosure();
   const sizeGuide = useDisclosure();
 
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
 
+  const product = PRODUCTS.find((p) => p.id === Number(id));
+
+  const openCart = () => {
+    sizeGuide.close();
+    cart.open();
+  };
+  const openSizeGuide = () => {
+    cart.close();
+    sizeGuide.open();
+  };
+
   const handleAddToCart = (e: React.FormEvent) => {
     e.preventDefault();
-    cart.open();
+    if (!selectedColor || selectedSize) {
+      alert("색상과 사이즈를 선택해주세요.");
+      return;
+    }
+    openCart();
   };
 
   const handleCheckout = () => {
@@ -32,12 +50,20 @@ export default function ProductDetailPage() {
 
   const isDimmedOpen = cart.isOpen || sizeGuide.isOpen;
 
+  if (!product) {
+    return (
+      <main className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[40px] py-[80px] text-center text-cream/80">
+        <p>상품을 찾을수 없습니다.</p>
+      </main>
+    );
+  }
+
   return (
-    <div>
+    <div className="bg-navy-950">
       {/* 백드롭 Dimmed 레이어 (사이드바 오픈 시 배경 어둡게 처리) */}
       {isDimmedOpen && (
         <div
-          className="fixed inset-0 z-[9990] bg-black/50 transition-opacity"
+          className="fixed inset-0 z-[9998] bg-navy-950/70 transition-opacity"
           onClick={() => {
             cart.close();
             sizeGuide.close();
@@ -49,16 +75,16 @@ export default function ProductDetailPage() {
         <section className="w-[400px]">
           <div>
             <img
-              src=""
-              alt="블랙 데님 와이드 진 상품 대표 이미지"
-              className="mt-[20px] h-[400px] w-full bg-[#f5f5f5] object-cover"
+              src={product.imgSrc}
+              alt={`${product.name} 상품 대표 이미지`}
+              className="mt-[20px] h-[400px] w-full bg-navy-800 object-cover"
             />
           </div>
           <div>
             <img
-              src=""
-              alt="블랙 데님 와이드 진 모델 대표 이미지"
-              className="mt-[20px] h-[400px] w-full bg-[#f5f5f5] object-cover"
+              src={product.imgSrc}
+              alt={`${product.name} 모델 이미지`}
+              className="mt-[20px] h-[400px] w-full bg- object-cover"
             />
           </div>
         </section>
@@ -66,17 +92,19 @@ export default function ProductDetailPage() {
         <section className="mt-[20px] flex-1">
           <form onSubmit={handleAddToCart}>
             <div>
-              <h1 className="mb-[20px] text-[24px] font-normal">
-                블랙 데님 와이드 스트레이트 진
+              <h1 className="mb-[20px] text-[24px] font-normal text-cream">
+                {product.name}
               </h1>
               {/* 가격 통일 ($ 120) */}
-              <div className="mb-[20px] border-b border-[#d9d9d9] pb-[20px] text-[18px] font-semibold">
-                $ 120
+              <div className="mb-[20px] border-b border-navy-700 pb-[20px] text-[18px] font-semibold text-cream">
+                {product.price.toLocaleString()}
               </div>
             </div>
 
             <div className="mb-[20px]">
-              <strong className="mb-[10px] block text-[18px]">색상 : </strong>
+              <strong className="mb-[10px] block text-[18px] text-cream">
+                색상 :{" "}
+              </strong>
               <div className="flex flex-wrap gap-[20px]">
                 {colors.map((c) => (
                   <label key={c.value}>
@@ -91,8 +119,8 @@ export default function ProductDetailPage() {
                     <span
                       className={`inline-block cursor-pointer border px-[16px] py-[8px] text-[14px] transition-all duration-200 ease-in-out ${
                         selectedColor === c.value
-                          ? "border-black bg-black text-white"
-                          : "border-[#d9d9d9]"
+                          ? "border-terracotta-500 bg-terracotta-500 text-navy-950"
+                          : "border-navy-600 text-cream/80"
                       }`}
                     >
                       {c.label}
@@ -103,7 +131,9 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="mb-[20px]">
-              <strong className="mb-[10px] block text-[18px]">사이즈 : </strong>
+              <strong className="mb-[10px] block text-[18px] text-cream">
+                사이즈 :{" "}
+              </strong>
               <div className="flex flex-wrap gap-[20px]">
                 {sizes.map((size) => (
                   <label key={size}>
@@ -118,8 +148,8 @@ export default function ProductDetailPage() {
                     <span
                       className={`inline-block cursor-pointer border px-[16px] py-[8px] text-[14px] transition-all duration-200 ease-in-out ${
                         selectedSize === size
-                          ? "border-black bg-black text-white"
-                          : "border-[#d9d9d9]"
+                          ? "border-terracotta-500 bg-terracotta-500 text-navy-950"
+                          : "border-navy-600 text-cream/80"
                       }`}
                     >
                       {size}
@@ -132,7 +162,7 @@ export default function ProductDetailPage() {
             <div className="my-[15px] mb-[25px]">
               <button
                 type="button"
-                className="cursor-pointer border-none bg-transparent p-0 text-[13px] text-[#666] underline"
+                className="cursor-pointer border-none bg-transparent p-0 text-[13px] text-cream/60 underline hover:text-terracotta-400"
                 aria-expanded={sizeGuide.isOpen}
                 onClick={sizeGuide.open}
               >
@@ -148,7 +178,7 @@ export default function ProductDetailPage() {
             <div className="mb-[30px]">
               <button
                 type="submit"
-                className="w-full cursor-pointer border border-black bg-black py-[15px] text-[16px] font-medium text-white transition-colors duration-200 hover:bg-[#333]"
+                className="w-full cursor-pointer border border-terracotta-500 bg-terracotta-500 py-[15px] text-[16px] font-medium text-navy-950 transition-colors duration-200 hover:bg-terracotta-600"
                 aria-expanded={cart.isOpen}
               >
                 장바구니 담기
@@ -160,8 +190,8 @@ export default function ProductDetailPage() {
               onClose={cart.close}
               onCheckout={handleCheckout}
               item={{
-                name: "블랙 데님 와이드 스트레이트 진",
-                price: "$ 120",
+                name: product.name,
+                price: `$ ${product.price.toLocaleString()}`,
                 color: selectedColor || "gray",
                 size: selectedSize || "S",
                 qty: 1,
@@ -169,7 +199,7 @@ export default function ProductDetailPage() {
             />
 
             <div>
-              <p className="mt-[20px] text-left text-[14px] font-light leading-[1.6] text-[#444]">
+              <p className="mt-[20px] text-left text-[14px] font-light leading-[1.6] text-cream/60">
                 풍부한 질감이 느껴지는 블랙 데님 소재의 와이드 스트레이트 레그
                 미드 라이즈 진. 톤온톤 탑스티칭 및 클래식한 파이브 포켓 디자인.
                 시간이 지날수록 독특한 매력을 더하는 깊고 섬세한 색감과 의도적인

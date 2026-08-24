@@ -58,7 +58,7 @@ export default function ProductListPage() {
     }
 
     // TODO: selectedFilters(색상/사이즈)는 아직 Product 데이터에 대응 필드가 없어 미적용 상태.
-    // 실제 색상/사이즈 데이터가 추가되면 여기서 같이 필터링하세요.
+    // 실제 색상/사이즈 데이터가 추가되면 여기서 같이 필터링.
 
     return sortProducts(result, activeSort);
   }, [activeCategory, activeSearch, activeSort]);
@@ -76,11 +76,11 @@ export default function ProductListPage() {
   };
 
   return (
-    <main className="pb-[80px]">
+    <main className="bg-navy-950 pb-[80px]">
       {/* 필터 사이드바 오픈 시 배경 Dimmed 효과 */}
       {filterSidebar.isOpen && (
         <div
-          className="fixed inset-0 z-[9998] bg-ink/50 transition-opacity"
+          className="fixed inset-0 z-[9998] bg-navy-950/70 transition-opacity"
           onClick={filterSidebar.close}
         />
       )}
@@ -93,7 +93,7 @@ export default function ProductListPage() {
               <button
                 type="button"
                 onClick={clearCategory}
-                className="flex items-center gap-[6px] rounded-full border border-gray-400 px-[12px] py-[4px] text-gray-850 hover:border-ink"
+                className="flex items-center gap-[6px] rounded-full border border-navy-600 px-[12px] py-[4px] text-cream/80 hover:border-terracotta-400 hover:text-terracotta-400"
               >
                 카테고리: {activeCategory} ✕
               </button>
@@ -102,7 +102,7 @@ export default function ProductListPage() {
               <button
                 type="button"
                 onClick={clearSearch}
-                className="flex items-center gap-[6px] rounded-full border border-gray-400 px-[12px] py-[4px] text-gray-850 hover:border-ink"
+                className="flex items-center gap-[6px] rounded-full border border-navy-600 px-[12px] py-[4px] text-cream/80  hover:border-terracotta-400 hover:text-terracotta-400"
               >
                 검색: "{activeSearch}" ✕
               </button>
@@ -111,10 +111,10 @@ export default function ProductListPage() {
         )}
 
         {/* 상단 정렬 및 필터 버튼 영역 */}
-        <div className="flex items-center justify-between border-b border-gray-200 pb-[20px]">
-          <div className="text-[14px] font-medium text-gray-850">
+        <div className="flex items-center justify-between border-b border-navy-700 pb-[20px]">
+          <div className="text-[14px] font-medium text-cream/80">
             TOTAL{" "}
-            <span className="font-bold">
+            <span className="font-bold text-cream">
               {String(filteredProducts.length).padStart(2, "0")}
             </span>{" "}
             ITEMS
@@ -129,8 +129,8 @@ export default function ProductListPage() {
                     type="button"
                     className={`cursor-pointer text-[14px] transition-colors ${
                       activeSort === option
-                        ? "font-bold text-ink underline underline-offset-4"
-                        : "text-gray-600 hover:text-ink"
+                        ? "font-bold text-terracotta-400 underline underline-offset-4"
+                        : "text-cream/50 hover:text-cream"
                     }`}
                     aria-current={activeSort === option}
                     onClick={() => setActiveSort(option)}
@@ -144,7 +144,7 @@ export default function ProductListPage() {
             {/* 필터 사이드바 토글 버튼 */}
             <button
               type="button"
-              className="cursor-pointer border border-gray-400 bg-paper px-[16px] py-[8px] text-[13px] font-medium transition-colors hover:border-ink hover:bg-ink hover:text-paper"
+              className="cursor-pointer border border-terracotta-500 bg-transparent px-[16px] py-[8px] text-cream text-[13px] font-medium transition-colors hover:border-terracotta-500 hover:bg-terracotta-500 hover:text-navy-950"
               aria-haspopup="true"
               aria-expanded={filterSidebar.isOpen}
               onClick={filterSidebar.open}

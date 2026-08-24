@@ -1,17 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../Context/AuthContext";
+import { useCart } from "../../Context/CartContext";
 
-// TODO: 실제 카테고리 값/필터링 로직에 맞게 category 파라미터를 조정하세요.
+// 기존 원본 카테고리 배열
 const CATEGORIES = [
-  { id: "all", label: "전체보기", category: "" },
   { id: "outer", label: "아우터", category: "outer" },
   { id: "top", label: "상의", category: "top" },
   { id: "pants", label: "바지", category: "pants" },
   { id: "shoes", label: "신발", category: "shoes" },
 ];
-
+// 헤더 드롭다운 메뉴 전용 배열
+const CATRGORIES_MENU = [
+  { id: "all", label: "전체보기", category: "" },
+  ...CATEGORIES.map((c) => ({ id: c.id, label: c.label, category: c.id })),
+];
 export default function Header() {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
+  const { totalCount } = useCart();
 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -61,7 +68,7 @@ export default function Header() {
   }
 
   return (
-    <header className="border-b border-gray-400">
+    <header className="border-b border-navy-700 bg-navy-950">
       <div className="mx-auto flex h-[80px] w-full max-w-[1200px] items-center justify-between px-[18px] py-[8px]">
         {/* 좌측 카테고리 */}
         <ul className="relative flex flex-1 justify-start">
@@ -71,13 +78,14 @@ export default function Header() {
               aria-label="카테고리 메뉴 열기"
               aria-expanded={isCategoryOpen}
               onClick={() => setIsCategoryOpen((prev) => !prev)}
-              className="flex items-center justify-center transition hover:opacity-70"
+              className="cursor-pointer flex items-center justify-center transition hover:opacity-70"
             >
               <img
                 src="/images/category_1.svg"
                 alt="카테고리"
                 width={20}
                 height={20}
+                className="invert"
               />
             </button>
 
@@ -85,7 +93,7 @@ export default function Header() {
               <ul
                 role="menu"
                 aria-label="카테고리 목록"
-                className="absolute top-[calc(100%+12px)] left-0 z-10 w-[160px] rounded-[4px] border border-gray-300 bg-paper py-[8px] shadow-lg"
+                className="absolute top-[calc(100%+12px)] left-0 z-10 w-[160px] rounded-[4px] border border-navy-700 bg-navy-900 py-[8px] shadow-lg"
               >
                 {CATEGORIES.map((item) => (
                   <li key={item.id} role="none">
@@ -93,7 +101,7 @@ export default function Header() {
                       type="button"
                       role="menuitem"
                       onClick={() => handleCategoryClick(item.category)}
-                      className="block w-full px-[16px] py-[8px] text-left text-[13px] text-gray-850 transition hover:bg-gray-50"
+                      className="block w-full px-[16px] py-[8px] text-left text-[13px] text-cream transition hover:bg-navy-800 hover: text-terracotta-400"
                     >
                       {item.label}
                     </button>
@@ -115,6 +123,7 @@ export default function Header() {
             alt="Objet & B 로고"
             width={80}
             height={80}
+            className="brightness-90 invert"
           />
         </Link>
 
@@ -136,35 +145,47 @@ export default function Header() {
                   alt="검색"
                   width={20}
                   height={20}
+                  className="invert"
                 />
               </button>
             </li>
             <li>
               <Link
                 to="/order"
-                aria-label="장바구니"
-                className="transition hover:opacity-70"
+                aria-label={`장바구니${totalCount > 0 ? ` (${totalCount}개)` : ""}`}
+                className="relative flex items-center justify-center transition hover:opacity-70"
               >
                 <img
                   src="/images/cart_1.svg"
                   alt="카트"
                   width={20}
                   height={20}
+                  className="invert"
                 />
+                {totalCount > 0 && (
+                  <span className="absolute -top-[6px] -right-[8px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-terracotta-500 px-[3px] text-[10px] font-bold text-navy-950">
+                    {totalCount}
+                  </span>
+                )}
               </Link>
             </li>
             <li>
               <Link
-                to="/login"
-                aria-label="로그인"
-                className="transition hover:opacity-70"
+                to={isLoggedIn ? "/mypage" : "/login"}
+                aria-label={isLoggedIn ? "마이페이지" : "로그인"}
+                className="relative flex items-center justify-center transition hover:opacity-70"
               >
                 <img
                   src="/images/login_1.svg"
-                  alt="로그인"
+                  alt={isLoggedIn ? "마이페이지" : "로그인"}
                   width={20}
                   height={20}
+                  className="invert"
                 />
+                {/* 로그인 상태 일 때 작은 점으로 표시 */}
+                {isLoggedIn && (
+                  <span className="absolute -top-[2px] -right[2px] h-[8px] w-[8px] rounded-full bg-terracotta-500"></span>
+                )}
               </Link>
             </li>
           </ul>

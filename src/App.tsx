@@ -11,6 +11,8 @@ import OrderPage from "./Order/OrderPage";
 import ProductDetailPage from "./ProductDetail/ProductDetailPage";
 import MyPage from "./Mypage/Mypage";
 import ProductListPage from "./ProductList/ProductListPage";
+import { AuthProvider } from "./Context/AuthContext";
+import { CartProvider } from "./Context/CartContext";
 
 function AppLayout() {
   const location = useLocation();
@@ -41,8 +43,12 @@ function AppLayout() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AppLayout />
-    </BrowserRouter>
+    <AuthProvider>
+      <CartProvider>
+        <BrowserRouter>
+          <AppLayout />
+        </BrowserRouter>
+      </CartProvider>
+    </AuthProvider>
   );
 }

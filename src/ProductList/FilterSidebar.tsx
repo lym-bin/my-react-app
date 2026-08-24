@@ -36,17 +36,17 @@ export default function FilterSidebar({
 }: FilterSidebarProps) {
   return (
     <aside
-      className={`fixed top-0 right-0 z-[9999] flex h-screen w-[360px] flex-col bg-white shadow-[-5px_0_15px_rgba(0,0,0,0.1)] transition-transform duration-300 ease-in-out ${
+      className={`fixed top-0 right-0 z-sidebar flex h-screen w-[360px] flex-col border-1 border-navy-700 bg-navy-900 shadow-[-5px_0_15px_rgba(0,0,0,0.1)] transition-transform duration-300 ease-in-out ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
       aria-label="상품 상세 필터"
     >
       {/* 헤더 영역 */}
-      <header className="flex items-center justify-between border-b border-[#eee] p-[24px]">
-        <h3 className="m-0 text-[18px] font-bold">Filter</h3>
+      <header className="flex items-center justify-between border-b border-navy-700 p-[24px]">
+        <h3 className="m-0 text-[18px] font-bold text-cream">Filter</h3>
         <button
           type="button"
-          className="cursor-pointer border-none bg-transparent text-[14px] font-semibold text-[#222]"
+          className="cursor-pointer border-none bg-transparent text-[14px] font-semibold text-cream/70 hover:text-cream"
           onClick={onClose}
           aria-label="필터 닫기"
         >
@@ -62,9 +62,7 @@ export default function FilterSidebar({
         >
           {/* 색상 섹션 */}
           <section>
-            <h4 className="mb-[14px] text-[15px] font-bold text-[#111]">
-              색상
-            </h4>
+            <h4 className="mb-[14px] text-[15px] font-bold text-cream">색상</h4>
             <div className="grid grid-cols-2 gap-[10px]">
               {colors.map((label, i) => {
                 const val = colorValues[i];
@@ -82,8 +80,8 @@ export default function FilterSidebar({
                     <span
                       className={`block rounded border py-[10px] text-center text-[13px] transition-colors ${
                         isChecked
-                          ? "border-black bg-black text-white"
-                          : "border-[#e5e5e5] bg-white text-[#333] hover:border-[#999]"
+                          ? "border-terracotta-500 bg-terracotta-500 text-navy-950"
+                          : "border-navy-600 bg-navy-800 text-cream/80 hover:border-terracotta-400"
                       }`}
                     >
                       {label}
@@ -96,7 +94,7 @@ export default function FilterSidebar({
 
           {/* 사이즈 섹션 */}
           <section>
-            <h4 className="mb-[14px] text-[15px] font-bold text-[#111]">
+            <h4 className="mb-[14px] text-[15px] font-bold text-cream">
               사이즈
             </h4>
             <div className="grid grid-cols-3 gap-[10px]">
@@ -116,8 +114,8 @@ export default function FilterSidebar({
                     <span
                       className={`block rounded border py-[10px] text-center text-[13px] transition-colors ${
                         isChecked
-                          ? "border-black bg-black text-white"
-                          : "border-[#e5e5e5] bg-white text-[#333] hover:border-[#999]"
+                          ? "border-terracotta-500 bg-terracotta-500 text-navy-950"
+                          : "border-navy-600 bg-navy-800 text-cream/80 hover:border-terracotta-400"
                       }`}
                     >
                       {size}

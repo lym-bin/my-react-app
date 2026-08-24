@@ -22,7 +22,7 @@
   --color-gray-950: #111111;
 
   --color-naver: #03c75a;
-  --color-kakao: #fae100;
+  --color-kakao: #fee500;
   --color-danger: #ff4d4f;
   --color-discount: #dc134c;
 
@@ -47,4 +47,8 @@
   --container-wide: 1400px;
 
   --z-index-sidebar: 9999;
+}
+
+body {
+  background-color: var(--color-navy-950);
 }

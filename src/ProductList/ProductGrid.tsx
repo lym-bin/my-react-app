@@ -17,15 +17,16 @@ export default function ProductGrid({ products }: ProductGridProps) {
 
   if (products.length === 0) {
     return (
-      <section className="mx-auto w-full max-w-[1200px] px-[20px] py-[80px] text-center text-[14px] text-gray-700">
+      <section className="mx-auto w-full max-w-[1200px] px-[20px] py-[80px] text-center text-[14px] bg-navy-950 text-cream/60">
         조건에 맞는 상품이 없습니다.
       </section>
     );
   }
   const visibleProducts = products.slice(0, visibleCount);
   const hasMore = visibleCount < products.length;
+
   return (
-    <section className="mx-auto w-full max-w-[1200px] px-[20px]">
+    <section className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[20px]">
       <ul className="mb-[40px] grid grid-cols-3 gap-[24px]">
         {visibleProducts.map((product) => (
           <ProductCard
@@ -34,7 +35,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
             href={`products/${product.id}`}
             imgSrc={product.imgSrc}
             name={product.name}
-            price={`$ ${product.price.toLocaleString}`}
+            price={`${product.price.toLocaleString()} $`}
           />
         ))}
       </ul>
@@ -42,7 +43,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
       <div className="mt-[48px] mb-[40px] flex justify-center">
         <button
           type="button"
-          className="cursor-pointer border border-gray-400 bg-paper px-[40px] py-[12px] text-[14px] font-medium transition-colors hover:border-ink hover:bg-ink"
+          className="cursor-pointer border border-terracotta-500 bg-transparent px-[40px] py-[12px] text-[14px] font-medium transition-colors text-terracotta-500 hover:bg-terracotta-500 hover:text-navy-950"
         >
           더보기
         </button>
