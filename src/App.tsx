@@ -2,17 +2,16 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
-
-// 각 페이지 컴포넌트 임포트 (폴더 경로에 맞게 확인 후 사용하세요)
+// 각 페이지 컴포넌트 임포트
 import MainPage from "./pages/Main/MainPage";
 import LoginPage from "./Login/LoginPage";
 import OrderSuccessPage from "./OrderSuccess/OrderSuccessPage";
 import OrderPage from "./Order/OrderPage";
-import ProductDetailPage from "./ProductDetail/ProductDetailPage";
 import MyPage from "./Mypage/Mypage";
 import ProductListPage from "./ProductList/ProductListPage";
-import { AuthProvider } from "./Context/AuthContext";
-import { CartProvider } from "./Context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
+import { CartProvider } from "./context/CartContext";
+import { ProductDetailPage } from "./ProductDetail/ProductDetailPage";
 
 function AppLayout() {
   const location = useLocation();

@@ -17,9 +17,8 @@ import { auth } from "../firebase";
 
 interface AuthContextValue {
   isLoggedIn: boolean;
-  // Firebase가 새로고침 직후 로그인 상태를 확인하는 동안 true입니다.
-  // 이 값이 true인 동안은 isLoggedIn을 신뢰하지 말고 로딩 처리하세요.
   isLoading: boolean;
+  user: User | null;
   nickname: string | null;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
@@ -62,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         isLoggedIn: user !== null,
         isLoading,
+        user,
         nickname,
         login,
         signup,

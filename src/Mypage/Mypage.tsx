@@ -1,8 +1,28 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
+import { useAuth } from "../context/AuthContext";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../firebase"; // 👈 firebase 설정 파일 경로에 맞게 조정
 
-// TODO: 각 메뉴에 대응하는 실제 페이지가 생기면 버튼을 Link로 바꾸고 경로를 연결하세요.
+interface OrderItem {
+  id: string;
+  name: string;
+  price: number;
+  qty: number;
+  color?: string;
+  size?: string;
+  imgSrc?: string;
+}
+
+interface OrderData {
+  id: string;
+  orderId: string;
+  createdAt: string;
+  totalPrice: number;
+  items: OrderItem[];
+  paymentMethod: string;
+}
+
 const benefits = [
   { id: 1, label: "적립금", value: "111원" },
   { id: 2, label: "쿠폰", value: "2장" },
@@ -19,14 +39,45 @@ const subNavComingSoon = ["공지사항", "고객센터", "이벤트"];
 
 export default function MyPage() {
   const navigate = useNavigate();
-  const { isLoggedIn, isLoading, nickname, logout } = useAuth();
+  const { isLoggedIn, isLoading, user, nickname, logout } = useAuth();
 
-  // 로그인 안 한 상태로 마이페이지에 들어오면 로그인 페이지로 보냅니다.
+  // 주문 내역 상태 관리
+  const [orders, setOrders] = useState<OrderData[]>([]);
+  const [isOrderLoading, setIsOrderLoading] = useState(true);
+
+  // 로그인 상태 확인 및 주문 내역 페치
   useEffect(() => {
     if (!isLoading && !isLoggedIn) {
       navigate("/login");
+      return;
     }
-  }, [isLoading, isLoggedIn, navigate]);
+
+    async function fetchOrders() {
+      if (!user) return;
+      try {
+        // userId가 현재 로그인한 유저의 uid와 일치하는 문서 조회
+        // (만약 게스트 주문까지 함께 보고 싶다면 조건 로직을 조정할 수 있습니다)
+        const q = query(
+          collection(db, "orders"),
+          where("userId", "==", user.uid),
+        );
+        const querySnapshot = await getDocs(q);
+        const fetchedOrders: OrderData[] = [];
+        querySnapshot.forEach((doc) => {
+          fetchedOrders.push({ id: doc.id, ...doc.data() } as OrderData);
+        });
+        setOrders(fetchedOrders);
+      } catch (error) {
+        console.error("주문 내역을 불러오는 중 에러 발생:", error);
+      } finally {
+        setIsOrderLoading(false);
+      }
+    }
+
+    if (isLoggedIn && user) {
+      fetchOrders();
+    }
+  }, [isLoading, isLoggedIn, user, navigate]);
 
   const handleComingSoon = () => {
     alert("아직 준비 중인 페이지입니다.");
@@ -81,6 +132,59 @@ export default function MyPage() {
         </div>
       </section>
 
+      {/* 🟢 실시간 주문 내역 섹션 추가 */}
+      <section className="mt-[30px]">
+        <h2 className="text-[16px] font-bold text-cream mb-[14px]">
+          최근 주문 내역
+        </h2>
+        {isOrderLoading ? (
+          <p className="text-[14px] text-cream/50">
+            주문 내역을 불러오는 중...
+          </p>
+        ) : orders.length === 0 ? (
+          <div className="rounded-[8px] bg-navy-900 p-[20px] text-center text-[14px] text-cream/60">
+            주문 내역이 없습니다.
+          </div>
+        ) : (
+          <div className="flex flex-col gap-[16px]">
+            {orders.map((order) => (
+              <div
+                key={order.id}
+                className="rounded-[8px] bg-navy-900 p-[16px] border border-navy-800"
+              >
+                <div className="flex justify-between items-center border-b border-navy-800 pb-[10px] mb-[12px] text-[13px] text-cream/70">
+                  <span>
+                    주문번호: <strong>{order.orderId}</strong>
+                  </span>
+                  <span>{new Date(order.createdAt).toLocaleDateString()}</span>
+                </div>
+                <div className="flex flex-col gap-[8px]">
+                  {order.items.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex justify-between items-center text-[14px] text-cream"
+                    >
+                      <span>
+                        {item.name} ({item.color} / {item.size}) x {item.qty}개
+                      </span>
+                      <span className="font-medium">
+                        {(item.price * item.qty).toLocaleString()}원
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-[12px] pt-[10px] border-t border-navy-800 flex justify-between items-center text-[14px]">
+                  <span className="text-cream/70">총 결제금액</span>
+                  <span className="font-bold text-terracotta-400">
+                    {order.totalPrice.toLocaleString()}원
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
       <section className="mt-[40px]">
         <div className="flex flex-col gap-[30px]">
           <nav>
@@ -89,7 +193,12 @@ export default function MyPage() {
                 <li key={item}>
                   <button
                     type="button"
-                    onClick={handleComingSoon}
+                    onClick={
+                      item === "주문 내역"
+                        ? () =>
+                            window.scrollTo({ top: 300, behavior: "smooth" })
+                        : handleComingSoon
+                    }
                     className="text-[14px] text-cream/80 hover:text-terracotta-400 hover:underline"
                   >
                     {item}
@@ -98,16 +207,6 @@ export default function MyPage() {
               ))}
             </ul>
           </nav>
-
-          <aside className="h-[200px] w-full overflow-hidden bg-navy-800">
-            <Link to="/" className="block h-full w-full">
-              <img
-                src=""
-                alt="광고 배너 이벤트 안내"
-                className="h-full w-full object-cover"
-              />
-            </Link>
-          </aside>
 
           <nav className="mb-[40px]">
             <ul className="flex flex-col gap-[16px] p-0">

@@ -1,39 +1,29 @@
-// src/pages/ProductDetail/components/CartSidebar.tsx
-interface CartItem {
-  name: string;
-  price: string;
-  color: string;
-  size: string;
-  qty: number;
-}
+// src/ProductDetail/CartSidebar.tsx
+import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom"; // 1. useNavigate 임포트
 
 interface CartSidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  item: CartItem;
-  onCheckout: () => void;
+  onCheckout?: () => void; // 선택적 prop으로 유지
 }
 
-export default function CartSidebar({
-  isOpen,
-  onClose,
-  item,
-  onCheckout,
-}: CartSidebarProps) {
-  const handleCancel = () => {
-    onClose();
-  };
+export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
+  const { items, removeItem, totalPrice } = useCart();
+  const navigate = useNavigate(); // 2. 네비게이트 훅 선언
 
   return (
     <aside
-      className={`fixed top-0 right-0 z-sidebar flex h-screen w-[360px] flex-col border-1 border-navy-700 bg-navy-900 shadow-[-5px_0_15px_rgba(0,0,0,0.1)] transition-transform duration-300 ${
+      className={`fixed top-0 right-0 z-sidebar flex h-screen w-[360px] flex-col border-l border-navy-700 bg-navy-900 shadow-[-5px_0_15px_rgba(0,0,0,0.4)] transition-transform duration-300 ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
       aria-label="장바구니"
     >
-      {/* 장바구니 사이드바 헤더: border -> border-b 로 수정 */}
+      {/* 장바구니 사이드바 헤더 */}
       <header className="flex items-center justify-between border-b border-navy-700 p-[24px]">
-        <h3 className="m-0 text-[18px] font-bold text-cream">Cart</h3>
+        <h3 className="m-0 text-[18px] font-bold text-cream">
+          Cart{items.length > 0 ? ` (${items.length})` : ""}
+        </h3>
         <button
           type="button"
           className="cursor-pointer border-none bg-transparent text-[14px] font-semibold text-cream/70 hover:text-cream"
@@ -44,65 +34,88 @@ export default function CartSidebar({
         </button>
       </header>
 
-      {/* 원본 CSS의 .cart-form 구조 반영 */}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onCheckout();
-        }}
-        className="flex flex-1 flex-col overflow-hidden"
-      >
+      <div className="flex flex-1 flex-col overflow-hidden">
         {/* 스크롤 가능한 본문 영역 */}
         <div className="flex-1 overflow-y-auto p-[24px]">
-          <article>
-            <div className="h-[300px] w-full overflow-hidden bg-navy-800">
-              <img
-                src=""
-                alt={`${item.name} 이미지`}
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="mt-[20px]">
-              <h4 className="mb-[8px] text-[20px] font-bold text-cream">
-                제품명 : <span>{item.name}</span>
-              </h4>
-              <p className="mb-[4px] text-[14px] text-cream/60">
-                가격 : <span>{item.price}</span>
-              </p>
-              <p className="mb-[4px] text-[14px] text-cream/60">
-                색상 : <span>{item.color}</span>
-              </p>
-              <p className="mb-[4px] text-[14px] text-cream/60">
-                사이즈 : <span>{item.size}</span>
-              </p>
-              <p className="mb-[4px] text-[14px] text-cream/60">
-                수량 : <span>{item.qty}</span>
-              </p>
-            </div>
-          </article>
+          {items.length === 0 ? (
+            <p className="text-[14px] text-cream/50">
+              장바구니가 비어 있습니다.
+            </p>
+          ) : (
+            <ul className="flex flex-col gap-[20px]">
+              {items.map((item) => (
+                <li
+                  key={item.id}
+                  className="flex gap-[14px] border-b border-navy-700 pb-[20px] last:border-b-0"
+                >
+                  <div className="h-[90px] w-[90px] flex-shrink-0 overflow-hidden bg-navy-800">
+                    <img
+                      src={item.imgSrc}
+                      alt={item.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-1 flex-col gap-[4px]">
+                    <strong className="text-[15px] text-cream">
+                      {item.name}
+                    </strong>
+                    <span className="text-[13px] text-cream/60">
+                      색상: {item.color} / 사이즈: {item.size}
+                    </span>
+                    <span className="text-[13px] text-cream/60">
+                      수량: {item.qty}개
+                    </span>
+                    <div className="mt-[2px] flex items-center justify-between">
+                      <span className="text-[14px] font-semibold text-terracotta-400">
+                        ₩ {(item.price * item.qty).toLocaleString()}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => removeItem(item.id)}
+                        className="text-[12px] text-cream/40 underline hover:text-terracotta-400"
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
-        {/* 하단 푸터 고정 영역: 불필요한 mx-[10px] 제거 */}
+        {/* 하단 푸터 고정 영역 */}
         <footer className="border-t border-navy-700 bg-navy-900 p-[24px]">
+          <div className="mb-[14px] flex items-center justify-between text-[14px] text-cream/80">
+            <span>총 상품 금액</span>
+            <strong className="text-[16px] text-cream">
+              ₩ {totalPrice.toLocaleString()}
+            </strong>
+          </div>
           <div className="flex items-center justify-center">
             <button
-              type="submit"
-              className="w-full cursor-pointer bg-terracotta-500 py-[15px] text-[14px] font-bold text-navy-950 hover:bg-terracotta-600"
+              type="button"
+              disabled={items.length === 0}
+              onClick={() => {
+                onClose(); // 3. 사이드바 닫기
+                navigate("/order"); // 4. 주문/결제 페이지로 이동
+              }}
+              className="w-full cursor-pointer bg-terracotta-500 py-[15px] text-[14px] font-bold text-navy-950 transition-colors hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              결제
+              결제하기
             </button>
           </div>
           <div className="mt-[12px] flex items-center justify-center">
             <button
               type="button"
-              className="w-full cursor-pointer border border-navy-600 bg-transparent py-[15px] text-[14px] font-bold text-cream hover:bg-terracotta-400 hover:text-terracotta-400"
-              onClick={handleCancel}
+              className="w-full cursor-pointer border border-navy-600 bg-transparent py-[15px] text-[14px] font-bold text-cream transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
+              onClick={onClose}
             >
-              취소
+              닫기
             </button>
           </div>
         </footer>
-      </form>
+      </div>
     </aside>
   );
 }

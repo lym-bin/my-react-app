@@ -1,40 +1,97 @@
 import { Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function MainBanner() {
+  const bannerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // 1. 타이틀 텍스트 한 줄씩 위로 솟아오르는 애니메이션
+      gsap.from(".gsap-title-line", {
+        y: 60,
+        opacity: 0,
+        duration: 1.2,
+        stagger: 0.15,
+        ease: "power3.out",
+      });
+
+      // 2. 우측 룸 뷰 이미지 스크롤 연동 패럴랙스 & 스케일 줌인
+      gsap.to(".banner-image", {
+        scale: 1.06,
+        yPercent: 5,
+        ease: "none",
+        scrollTrigger: {
+          trigger: bannerRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true, // 스크롤바와 실시간 동기화
+        },
+      });
+    }, bannerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="w-full bg-navy-950" aria-label="메인 프로모션 배너">
-      {/* 반응형 패딩 적용: 모바일(20px) -> 태블릿이상(80px) */}
-      <div className="mx-auto flex w-full max-w-[1400px] flex-col items-center justify-between px-[20px] md:flex-row md:px-[80px]">
+    <section
+      ref={bannerRef}
+      className="w-full bg-navy-950 overflow-hidden"
+      aria-label="메인 프로모션 배너"
+    >
+      <div className="mx-auto flex w-full max-w-[1400px] flex-col items-center justify-between px-[20px] md:flex-row md:px-[80px] py-[40px] md:py-[80px]">
         {/* 배너 좌측 텍스트 영역 */}
-        <div className="flex flex-1 flex-col gap-[20px] py-[40px] md:py-[60px]">
-          <h2 className="text-[1.8rem] font-bold italic leading-[1.2] text-cream md:text-[2rem]">
-            / Minimalist <br />
-            COLLECTION
+        <div className="flex flex-1 flex-col gap-[20px] py-[20px] md:py-[40px] overflow-hidden">
+          <div className="overflow-hidden">
+            <span className="gsap-title-line inline-block text-[12px] tracking-[0.3em] text-cream/50 uppercase font-light">
+              Objet & B Editorial
+            </span>
+          </div>
+
+          <h2 className="font-serif text-[2.2rem] md:text-[3.4rem] font-light italic leading-[1.1] text-cream tracking-tight">
+            <div className="overflow-hidden pb-1">
+              <span className="gsap-title-line inline-block">/ Minimalist</span>
+            </div>
+            <div className="overflow-hidden pb-1">
+              <span className="gsap-title-line inline-block not-italic font-normal">
+                COLLECTION
+              </span>
+            </div>
           </h2>
-          <p className="max-w-[300px] text-[0.9rem] leading-[1.6] text-cream/70">
-            Objet & B가 제안하는 미니멀 컬렉션. 절제된 실루엣과 정교한 디테일로
-            완성한, 오브제처럼 오래 곁에 두고 싶은 옷을 만나보세요.
-          </p>
-          <button
-            type="button"
-            className="cursor-pointer self-start border border-terracotta-500 bg-transparent px-[30px] py-[10px] font-bold text-terracotta-500 transition-colors hover:bg-terracotta-500 hover:text-navy-950"
-            aria-label="미니멀리스트 컬렉션 상품 115달러에 구매하기"
-          >
-            BUY $115
-          </button>
+
+          <div className="overflow-hidden">
+            <p className="gsap-title-line max-w-[340px] text-[0.95rem] leading-[1.6] text-cream/70 font-light tracking-wide [word-break:keep-all]">
+              Objet & B가 제안하는 미니멀 컬렉션. 절제된 실루엣과 정교한
+              디테일로 완성한, 오브제처럼 오래 곁에 두고 싶은 옷을 만나보세요.
+            </p>
+          </div>
+
+          <div className="overflow-hidden pt-[10px]">
+            <div className="gsap-title-line">
+              <Link
+                to="/products/1"
+                className="group relative inline-flex items-center justify-center border border-cream/30 bg-transparent px-[32px] py-[13px] text-[13px] tracking-[0.2em] text-cream uppercase transition-all duration-300 hover:border-cream hover:bg-cream hover:text-navy-950"
+              >
+                <span>BUY $115</span>
+              </Link>
+            </div>
+          </div>
         </div>
 
-        {/* 우측 이미지 영역 */}
-        <div className="flex w-full flex-[2] items-center justify-center md:justify-end">
+        {/* 우측 이미지 영역 (패럴랙스 적용) */}
+        <div className="flex w-full flex-[1.8] items-center justify-center md:justify-end mt-[20px] md:mt-0 overflow-hidden">
           <Link
             to="/products"
             aria-label="미니멀리스트 컬렉션 룸 뷰 상품 리스트로 이동하기"
-            className="w-full"
+            className="w-full group"
           >
             <img
               src="/images/main-banner.svg"
               alt="Minimalist Collection Room View"
-              className="block h-auto w-full object-contain"
+              className="banner-image block h-auto w-full object-contain transition-transform duration-700"
             />
           </Link>
         </div>
