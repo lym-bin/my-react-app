@@ -10,6 +10,7 @@ export interface Product {
   images?: string[]; // 추가 이미지들 담을 배열 추가
   isLarge?: boolean;
   similarProductIds?: number[]; // 비슷한 제품들의 ID배열 추가
+  reviewProductIds?: number[]; // 후기 컷용 ID 배열 추가
 }
 
 export const PRODUCTS: Product[] = [
@@ -25,8 +26,8 @@ export const PRODUCTS: Product[] = [
       "images/premium-cotton-oversized-white-tshirt-model.jpg",
     ],
     similarProductIds: [2, 3], // 외부에서 상품 목록을 받아올 수 있게 추가
+    reviewProductIds: [3, 4], // 후기컷
   },
-
   {
     id: 2,
     name: "베이직 시그니처 화이트 셔츠",

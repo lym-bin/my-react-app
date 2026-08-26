@@ -26,7 +26,11 @@ export default function SimilarProducts({
           >
             <div className="overflow-hidden bg-navy-800 h-[400px]">
               <img
-                src={product.imgSrc}
+                src={
+                  product.imgSrc.startsWith("/")
+                    ? product.imgSrc
+                    : `/${product.imgSrc}`
+                }
                 alt={product.name}
                 className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
               />

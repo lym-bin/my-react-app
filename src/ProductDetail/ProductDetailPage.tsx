@@ -231,8 +231,18 @@ export default function ProductDetailPage() {
       </main>
 
       {/* 비슷한 제품 영역: product.similarProductId에 있는 ID들로 상품을 찾아 전달*/}
-      <SimilarProducts title="비슷한 제품" />
-      <SimilarProducts title="후기 컷" />
+      <SimilarProducts
+        title="비슷한 제품"
+        products={product.similarProductIds
+          ?.map((id) => PRODUCTS.find((p) => p.id === id))
+          .filter((p): p is NonNullable<typeof p> => p !== undefined)}
+      />
+      <SimilarProducts
+        title="후기 컷"
+        products={product.reviewProductIds
+          ?.map((id) => PRODUCTS.find((p) => p.id === id))
+          .filter((p): p is NonNullable<typeof p> => p !== undefined)}
+      />
     </div>
   );
 }
