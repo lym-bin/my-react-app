@@ -88,28 +88,28 @@ export default function ProductDetailPage() {
 
       <main className="mx-auto flex w-full max-w-[1200px] flex-col justify-between gap-[30px] px-[20px] py-[30px] md:flex-row md:gap-[40px] md:px-[40px] md:py-[40px]">
         <section className="w-full md:w-[400px]">
+          {/* 첫 번째 이미지 (상품 대표 이미지) */}
           <div>
-            {product.imgSrc && (
+            {product.images?.[0] || product.imgSrc ? (
               <img
-                src={product.imgSrc}
+                src={`/${product.images?.[0] || product.imgSrc}`}
                 alt={`${product.name} 상품 대표 이미지`}
                 className="mt-[20px] h-[280px] w-full bg-navy-800 object-cover sm:h-[400px]"
               />
-            )}
-            {!product.imgSrc && (
+            ) : (
               <div className="mt-[20px] h-[280px] w-full bg-navy-800 sm:h-[400px]" />
             )}
           </div>
+
+          {/* 두 번째 이미지 (모델 이미지 또는 상세 컷)*/}
           <div>
-            {/* TODO: 상품당 이미지가 1장뿐이라 대표 이미지를 재사용했습니다. 모델 컷 등 추가 이미지 필드가 생기면 교체하세요. */}
-            {product.imgSrc && (
+            {product.images?.[1] ? (
               <img
-                src={product.imgSrc}
-                alt={`${product.name} 모델 이미지`}
-                className="mt-[20px] h-[280px] w-full bg-navy-800 object-cover sm:h-[400px]"
+                src={`/${product.images[1]}`}
+                alt={`${product.name}모델 이미지`}
+                className="mt-[20px] h-[280px] w-full bg-navy-800 object-cover object-top sm:h-[400px]"
               />
-            )}
-            {!product.imgSrc && (
+            ) : (
               <div className="mt-[20px] h-[280px] w-full bg-navy-800 sm:h-[400px]" />
             )}
           </div>
@@ -230,6 +230,7 @@ export default function ProductDetailPage() {
         </section>
       </main>
 
+      {/* 비슷한 제품 영역: product.similarProductId에 있는 ID들로 상품을 찾아 전달*/}
       <SimilarProducts title="비슷한 제품" />
       <SimilarProducts title="후기 컷" />
     </div>

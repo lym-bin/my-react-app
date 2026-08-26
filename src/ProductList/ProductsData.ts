@@ -7,7 +7,9 @@ export interface Product {
   price: number;
   category: CategoryId;
   imgSrc: string;
+  images?: string[]; // 추가 이미지들 담을 배열 추가
   isLarge?: boolean;
+  similarProductIds?: number[]; // 비슷한 제품들의 ID배열 추가
 }
 
 export const PRODUCTS: Product[] = [
@@ -18,7 +20,13 @@ export const PRODUCTS: Product[] = [
     price: 48000,
     category: "top",
     imgSrc: "images/modalgrid_1.jpg",
+    images: [
+      "images/premium-cotton-oversized-white-tshirt.png",
+      "images/premium-cotton-oversized-white-tshirt-model.jpg",
+    ],
+    similarProductIds: [2, 3], // 외부에서 상품 목록을 받아올 수 있게 추가
   },
+
   {
     id: 2,
     name: "베이직 시그니처 화이트 셔츠",
@@ -31,14 +39,14 @@ export const PRODUCTS: Product[] = [
     name: "릴랙스드 핏 니트 풀오버",
     price: 82000,
     category: "top",
-    imgSrc: "images/pashion_3.jpg",
+    imgSrc: "images/relaxed-fit-knit-pullover.jpg",
   },
   {
     id: 4,
     name: "스트라이프 코튼 롱슬리브",
     price: 55000,
     category: "top",
-    imgSrc: "images/modalgrid_1.jpg",
+    imgSrc: "images/stripe-cotton-long-sleeve.jpg",
   },
 
   // --- 아우터 (Outer) ---
