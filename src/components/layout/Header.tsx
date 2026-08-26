@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CATEGORIES } from "../../ProductList/categories";
+import { CATEGORIES } from "../../ProductList/Categories";
 import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 

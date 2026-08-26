@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../firebase"; // 👈 firebase 설정 파일 경로에 맞게 조정
+import { db } from "../firebase";
 
 interface OrderItem {
   id: string;
@@ -52,11 +52,12 @@ export default function MyPage() {
       return;
     }
 
+    let isCancelled = false;
+
     async function fetchOrders() {
       if (!user) return;
       try {
         // userId가 현재 로그인한 유저의 uid와 일치하는 문서 조회
-        // (만약 게스트 주문까지 함께 보고 싶다면 조건 로직을 조정할 수 있습니다)
         const q = query(
           collection(db, "orders"),
           where("userId", "==", user.uid),
@@ -132,7 +133,7 @@ export default function MyPage() {
         </div>
       </section>
 
-      {/* 🟢 실시간 주문 내역 섹션 추가 */}
+      {/* 실시간 주문 내역*/}
       <section className="mt-[30px]">
         <h2 className="text-[16px] font-bold text-cream mb-[14px]">
           최근 주문 내역

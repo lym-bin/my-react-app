@@ -50,8 +50,8 @@ export default function LoginPage() {
       >
         <img
           src="/images/Logo_1.svg"
-          alt="ObjetB 로고"
-          className="mx-auto h-[65px] object-contain brigtness-90 invert"
+          alt="Objet & B 로고"
+          className="mx-auto h-[65px] object-contain brightness-90 invert"
         />
       </Link>
 
@@ -122,7 +122,7 @@ export default function LoginPage() {
             setMode((prev) => (prev === "login" ? "signup" : "login"));
             setError("");
           }}
-          className="mb-[20px] w-full cursor-pointer text-[13px] text-cream/60 hover-text-terracotta-400"
+          className="mb-[20px] w-full cursor-pointer text-[13px] text-cream/60 hover:text-terracotta-400"
         >
           {mode === "signup"
             ? "이미 계정이 있으신가요? 로그인"
