@@ -7,8 +7,8 @@ export default function ProductList() {
 
   return (
     <section className="bg-navy-950">
-      <div className="mx-auto mb-[50px] max-w-[1200px] px-[16px] py-[40px]">
-        <ul className="grid w-full grid-cols-3 gap-x-[30px] gap-y[60px] text-center">
+      <div className="mx-auto mb-[50px] max-w-[1200px] px-[16px] py-[40px] sm:py-[40px]">
+        <ul className="grid w-full grid-cols-2 gap-x-[16px] gap-y[36px] text-center sm:gap-x-[30px] sm:gap-y[60px] md:grid-cols-3">
           {featured.map((product) => (
             <li key={product.id}>
               <Link
@@ -17,21 +17,22 @@ export default function ProductList() {
               >
                 {/* 이미지 영역 */}
                 <div className="mb-[20px] aspect-[3/4] w-full overflow-hidden bg-navy-800">
-                  <img
-                    src={product.imgSrc}
-                    alt={product.name}
-                    className="block h-full w-full object-cover transition-transform duration-500 ease-in-out hover:scale-110"
-                  />
+                  {product.imgSrc && (
+                    <img
+                      src={product.imgSrc}
+                      alt={product.name}
+                      className="block h-full w-full object-cover transition-transform duration-500 ease-in-out hover:scale-110"
+                    />
+                  )}
                 </div>
 
                 {/* 텍스트 정보 */}
-
                 <div className="flex flex-col gap-[4px]">
                   <em className="text-[15px] text-[15px] font-medium text-cream">
                     {product.name}
                   </em>
                   <strong className="text-[15px] font-bold text-terracotta-400">
-                    ${product.price.toLocaleString()}
+                    $ {product.price.toLocaleString()}
                   </strong>
                 </div>
               </Link>
