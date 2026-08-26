@@ -8,6 +8,8 @@ gsap.registerPlugin(ScrollTrigger);
 export default function MainBanner() {
   const bannerRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+  const imageLinkRef = useRef<HTMLAnchorElement>(null);
+  const viewBadgeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -46,22 +48,63 @@ export default function MainBanner() {
     return () => ctx.revert();
   }, []);
 
+  // 3. 커서를 따라다니는 "VIEW" 라벨 (데스크톱 전용, GSAP quickTo로 부드럽게 추적)
+  useEffect(() => {
+    const link = imageLinkRef.current;
+    const badge = viewBadgeRef.current;
+    if (!link || !badge) return;
+
+    const xTo = gsap.quickTo(badge, "x", { duration: 0.35, ease: "power3" });
+    const yTo = gsap.quickTo(badge, "y", { duration: 0.35, ease: "power3" });
+
+    function handleMove(e: MouseEvent) {
+      const rect = link!.getBoundingClientRect();
+      xTo(e.clientX - rect.left);
+      yTo(e.clientY - rect.top);
+    }
+
+    function handleEnter() {
+      gsap.to(badge, { opacity: 1, scale: 1, duration: 0.25 });
+    }
+
+    function handleLeave() {
+      gsap.to(badge, { opacity: 0, scale: 0.7, duration: 0.25 });
+    }
+
+    link.addEventListener("mousemove", handleMove);
+    link.addEventListener("mouseenter", handleEnter);
+    link.addEventListener("mouseleave", handleLeave);
+
+    return () => {
+      link.removeEventListener("mousemove", handleMove);
+      link.removeEventListener("mouseenter", handleEnter);
+      link.removeEventListener("mouseleave", handleLeave);
+    };
+  }, []);
+
   return (
     <section
       ref={bannerRef}
       className="w-full bg-navy-950 overflow-hidden"
       aria-label="메인 프로모션 배너"
     >
-      <div className="mx-auto flex w-full max-w-[1400px] flex-col items-center justify-between px-[20px] md:flex-row md:px-[80px] py-[40px] md:py-[80px]">
+      {/* 배경 대형 워터마크 타이포 (장식용, 스크린리더에서 옮김*/}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-[7rem] font-black tracking-tighter whitespace-nowrap text-cream/[0.04] select-none sm:text-[10rem] md:text-[14rem]"
+      >
+        OBJET
+      </span>
+      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col items-center justify-center overflow-hidden px-[20px] py-[40px] md:flex-row md:px-[80px] md:py-[80px]">
         {/* 배너 좌측 텍스트 영역 */}
-        <div className="flex w-full flex-col items-center text-center gap-[20px] py-[20px] md:w-auto md:flex-1 md:items-start md:text-left md:py-[40px] overflow-hidden">
+        <div className="flex w-full flex-col items-center gap-[20px] overflow-hidden py-[20px] text-center md:w-auto md:flex-1 md:items-start md:py-[40px] md:text-left">
           <div className="overflow-hidden">
             <span className="gsap-title-line inline-block text-[12px] tracking-[0.3em] text-cream/50 uppercase font-light">
               Objet & B Editorial
             </span>
           </div>
 
-          <h2 className="font-serif text-[1.9rem] sm:text-[2.2rem] md:text-[3.4rem] font-light italic leading-[1.1] text-cream tracking-tight">
+          <h2 className="font-serif text-[1.9rem] font-light italic leading-[1.1] tracking-tight text-cream sm:text-[2.2rem] md:text-[3.4rem]">
             <div className="overflow-hidden pb-1">
               <span className="gsap-title-line inline-block">/ Minimalist</span>
             </div>
@@ -91,19 +134,26 @@ export default function MainBanner() {
           </div>
         </div>
 
-        {/* 우측 이미지 영역 (패럴랙스 적용) */}
-        <div className="flex w-full items-center justify-center mt-[30px] md:mt-0 md:w-auto md:flex-[1.8] md:justify-end overflow-hidden">
+        {/* 우측 이미지 영역 (패럴랙스 + 호버 확대 + 커서 추적 VIEW 라벨) */}
+        <div className="mt-[30px] flex w-full items-center justify-center overflow-hidden md:mt-0 md:w-auto md:flex[1.8] md:justify-end">
           <Link
             to="/products"
             aria-label="미니멀리스트 컬렉션 룸 뷰 상품 리스트로 이동하기"
-            className="w-full max-w-[480px] md:max-w-none group"
+            className="group relative w-full max-w[480px] md:max-w-none"
           >
             <img
               ref={imgRef}
               src="/images/main-banner.svg"
               alt="Minimalist Collection Room View"
-              className="banner-image block h-auto max-h-[60vh] w-full object-contain transition-transform duration-700"
+              className="banner-image block h-auto max-h-[60vh] w-full object-contain transition-transform duration-700 group-hover:scale-[1.04]"
             />
+
+            {/* 커서를 따라다니는 VIEW 라벨 (데스크톱 전용)*/}
+            <div
+              ref={viewBadgeRef}
+              aria-hidden="true"
+              className="pointer-events-none absolute top-0 left-0 hidden h-[64px] w-[64px] -translate-x-1/2 -translate-y-1/2 scale-75 items-center justify-center rounded-full bg-terracotta-500 text-[11px] font-bold tracking-[0.15em] text-navy-950 uppercase opacity-0 md:flex"
+            ></div>
           </Link>
         </div>
       </div>
