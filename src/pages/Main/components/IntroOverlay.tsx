@@ -17,7 +17,7 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
         },
       });
 
-      // 초기 상태: 투명도 0, 살짝 아래에 위치
+      // 초기 상태 설정
       tl.set(introRef.current, { opacity: 1 })
         .set(textRef.current, { opacity: 0, y: 30 })
 
@@ -29,11 +29,8 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
           ease: "power3.out",
         })
 
-        // 2단계: 잠시 머무름 (시선 집중, 3초 유지)
-        .to(textRef.current, {
-          opacity: 1,
-          duration: 3,
-        })
+        // 2단계: 3초 동안 머무름 (시선 집중) - "+=3"은 이전 애니메이션 종료 후 3초 대기
+        .to({}, { duration: 3 })
 
         // 3단계: 전체 화면 오버레이가 서서히 어두워지며 사라짐 (Fade Out)
         .to(introRef.current, {
@@ -43,7 +40,7 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
         });
     }, introRef);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => ctx.revert(); // 컴포넌트 언마운트 시 클린업
   }, []);
 
   return (
