@@ -5,7 +5,7 @@ import SizeGuideSidebar from "./SizeGuideSidebar";
 import SimilarProducts from "./SimilarProducts";
 import { PRODUCTS } from "../ProductList/ProductsData";
 import { useCart } from "../context/CartContext";
-export function ProductDetailPage() {
+export default function ProductDetailPage() {
   const { id } = useParams();
   const { addItem } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
