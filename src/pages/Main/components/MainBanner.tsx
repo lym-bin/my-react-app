@@ -152,7 +152,7 @@ export default function MainBanner() {
           <div className="gsap-title-line">
             <Link
               to="/products"
-              className="group relative inline-flex items-center justify-center border border-cream/30 bg-transparent px-[32px] py-[13px] text-[13px] tracking-[0.2em] text-cream uppercase transition-all duration-300 hover:border-cream hover:bg-cream hover:text-navy-950"
+              className="md:hidden group relative inline-flex items-center justify-center border border-cream/30 bg-transparent px-[32px] py-[13px] text-[13px] tracking-[0.2em] text-cream uppercase transition-all duration-300 hover:border-cream hover:bg-cream hover:text-navy-950"
             >
               <span>BUY $115</span>
             </Link>
