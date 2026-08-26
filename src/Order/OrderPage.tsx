@@ -4,6 +4,7 @@ import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import AddressModal from "./AddressModal";
 
 interface Address {
   id: string;
@@ -13,7 +14,7 @@ interface Address {
   phone: string;
 }
 
-const savedAddresses: Address[] = [
+const initialAddresses: Address[] = [
   {
     id: "1",
     title: "기본 배송지",
@@ -44,8 +45,10 @@ export default function OrderPage() {
   const { items, totalPrice, clearCart } = useCart();
   const [selectedpm, setSelectedpm] = useState("toss");
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [addresses, setAddresses] = useState<Address[]>(initialAddresses);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentAddress, setCurrentAddress] = useState<Address>(
-    savedAddresses[0],
+    initialAddresses[0],
   );
 
   // 1. 비회원 접근 차단
@@ -72,9 +75,10 @@ export default function OrderPage() {
 
   const handleSubmitOrder = async () => {
     if (items.length === 0) return;
+    setIsSubmitting(true);
 
     const orderData = {
-      userId: user.uid, // 이제 확실하게 실제 회원 UID가 들어갑니다
+      userId: user.uid,
       nickname: nickname ?? "회원",
       items,
       totalPrice,
@@ -91,6 +95,8 @@ export default function OrderPage() {
     } catch (error) {
       console.error("주문 저장 중 오류가 발생했습니다.", error);
       alert("결제 처리에 실패했습니다. 다시 시도해 주세요.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -110,12 +116,12 @@ export default function OrderPage() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-[1200px] gap-[40px] bg-navy-950 px-[20px] py-[40px] relative">
+    <main className="relative mx-auto flex w-full max-w-[1200px] flex-col gap-[30px] bg-navy-950 px-[16px] py-[30px] sm:px-[20px] md:flex-row md:gap-[40px] md:py-[40px]">
       <div className="flex flex-1 flex-col gap-[40px]">
         {/* 배송 정보 */}
         <section className="border-b border-navy-700 pb-[30px]">
           <h2 className="mb-[20px] text-cream">배송 정보</h2>
-          <div className="mb-[10px] flex items-center gap-[20px]">
+          <div className="mb-[10px] flex flex-wrap items-center gap-[12px] sm:gap-[20px]">
             <strong className="text-cream">{nickname ?? "회원"}</strong>
             <span className="rounded-[4px] bg-navy-800 px-[4px] py-[2px] text-[14px] text-cream/70">
               {currentAddress.title}
@@ -139,15 +145,22 @@ export default function OrderPage() {
           <h2 className="mb-[20px] text-cream">주문 상품 ({items.length})</h2>
           <ul className="flex flex-col gap-[24px]">
             {items.map((item) => (
-              <li key={item.id} className="flex items-center gap-[20px]">
-                <img
-                  src={item.imgSrc}
-                  alt={item.name}
-                  className="h-[150px] w-[150px] bg-navy-800 object-cover"
-                />
-                <div className="flex flex-col gap-[10px]">
+              <li
+                key={item.id}
+                className="flex items-center gap-[20px] sm:gap-[20px]"
+              >
+                {item.imgSrc ? (
+                  <img
+                    src={item.imgSrc}
+                    alt={item.name}
+                    className="h-[90px] w-[90px] flex-shrink-0 bg-navy-800 object-cover sm:h-[150px] sm:w-[150px]"
+                  />
+                ) : (
+                  <div className="h-[90px] w-[90px] flex-shrink-0 bg-navy-800 sm:h-[150px] sm:w-[150px]"></div>
+                )}
+                <div className="flex flex-col gap-[8px] sm:gap-[10px]">
                   <h3 className="text-cream">{item.name}</h3>
-                  <div className="text-[14px] text-cream/60 flex items-center gap-[6px]">
+                  <div className="flex flex-wrap items-center gap-[6px] text-[13px] text-cream/60 sm:text-[14px]">
                     <span>색상: {item.color}</span>
                     <span className="text-navy-600">|</span>
                     <span>사이즈: {item.size}</span>
@@ -166,7 +179,7 @@ export default function OrderPage() {
         {/* 결제 수단 */}
         <section className="border-b border-navy-700 pb-[30px]">
           <h2 className="mb-[20px] text-cream">결제 수단</h2>
-          <ul className="mb-[16px] flex gap-[20px]">
+          <ul className="mb-[16px] flex flex-wrap gap-[14px] sm:gap-[20px]">
             {pmMethods.map((method) => (
               <li key={method.id} className="flex items-center gap-[10px]">
                 <input
@@ -191,7 +204,7 @@ export default function OrderPage() {
       </div>
 
       {/* 결제 금액 패널 */}
-      <aside className="flex w-[360px] flex-col gap-[20px] border border-navy-700 bg-navy-900 p-[20px] h-fit">
+      <aside className="flex w-full flex-col gap-[20px] border border-navy-700 bg-navy-900 p-[20px] md:h-fit md:w-[360px]">
         <h2 className="text-cream">결제 금액</h2>
         <div className="bg-navy-800 p-[14px]">
           <ul className="m-0 flex flex-col gap-[16px] p-0">
@@ -209,7 +222,7 @@ export default function OrderPage() {
               <span className="text-[16px] font-bold text-cream">
                 총 결제 금액
               </span>
-              <strong className="text-[24px] font-bold text-terracotta-400">
+              <strong className="text-[24px] font-bold text-terracotta-400 sm:text-[24px]">
                 {totalPrice.toLocaleString()}원
               </strong>
             </li>
@@ -218,14 +231,23 @@ export default function OrderPage() {
 
         <button
           type="button"
-          className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-[16px] font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-600"
+          className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-[16px] font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-600 disabled:cursur-not-allowed disabled:opacity-50"
           onClick={handleSubmitOrder}
         >
-          {totalPrice.toLocaleString()}원 결제하기
+          {isSubmitting
+            ? "처리 중...."
+            : `${totalPrice.toLocaleString()}원 결제하기}`}
         </button>
       </aside>
 
-      {/* 배송지 변경 모달 생략 가능 부분 */}
+      <AddressModal
+        isOpen={isAddressModalOpen}
+        onClose={() => setIsAddressModalOpen(false)}
+        addresses={addresses}
+        selectedId={currentAddress.id}
+        onSelect={(addr) => setCurrentAddress(addr)}
+        onAdd={(newAddress) => setAddresses((prev) => [...prev, newAddress])}
+      />
     </main>
   );
 }
