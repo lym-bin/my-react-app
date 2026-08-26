@@ -4,19 +4,19 @@
 export const CATEGORIES = [
   {
     id: "outer",
-    label: "OUTER",
+    label: "아우터",
   },
   {
     id: "top",
-    label: "TOP",
+    label: "상의",
   },
   {
     id: "pants",
-    label: "PANTS",
+    label: "바지",
   },
   {
     id: "shoes",
-    label: "SHOES",
+    label: "신발",
   },
 ] as const;
 

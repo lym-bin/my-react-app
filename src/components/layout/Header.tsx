@@ -1,20 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { CATEGORIES } from "../../ProductList/categories";
 import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 
-// 기존 원본 카테고리 배열
-const CATEGORIES = [
-  { id: "outer", label: "아우터", category: "outer" },
-  { id: "top", label: "상의", category: "top" },
-  { id: "pants", label: "바지", category: "pants" },
-  { id: "shoes", label: "신발", category: "shoes" },
-];
-// 헤더 드롭다운 메뉴 전용 배열
-const CATRGORIES_MENU = [
+// "전체보기"는 카테고리 파라미터 없이 /products로 이동합니다.
+const CATEGORY_MENU = [
   { id: "all", label: "전체보기", category: "" },
   ...CATEGORIES.map((c) => ({ id: c.id, label: c.label, category: c.id })),
 ];
+
 export default function Header() {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
@@ -78,7 +73,7 @@ export default function Header() {
               aria-label="카테고리 메뉴 열기"
               aria-expanded={isCategoryOpen}
               onClick={() => setIsCategoryOpen((prev) => !prev)}
-              className="cursor-pointer flex items-center justify-center transition hover:opacity-70"
+              className="flex cursor-pointer items-center justify-center transition hover:opacity-70"
             >
               <img
                 src="/images/category_1.svg"
@@ -95,13 +90,13 @@ export default function Header() {
                 aria-label="카테고리 목록"
                 className="absolute top-[calc(100%+12px)] left-0 z-10 w-[160px] rounded-[4px] border border-navy-700 bg-navy-900 py-[8px] shadow-lg"
               >
-                {CATEGORIES.map((item) => (
+                {CATEGORY_MENU.map((item) => (
                   <li key={item.id} role="none">
                     <button
                       type="button"
                       role="menuitem"
                       onClick={() => handleCategoryClick(item.category)}
-                      className="block w-full px-[16px] py-[8px] text-left text-[13px] text-cream transition hover:bg-navy-800 hover: text-terracotta-400"
+                      className="block w-full px-[16px] py-[8px] text-left text-[13px] text-cream transition hover:bg-navy-800 hover:text-terracotta-400"
                     >
                       {item.label}
                     </button>
@@ -123,7 +118,7 @@ export default function Header() {
             alt="Objet & B 로고"
             width={80}
             height={80}
-            className="brightness-90 invert"
+            className="invert brightness-90"
           />
         </Link>
 
@@ -182,9 +177,9 @@ export default function Header() {
                   height={20}
                   className="invert"
                 />
-                {/* 로그인 상태 일 때 작은 점으로 표시 */}
+                {/* 로그인 상태일 때 작은 점으로 표시 */}
                 {isLoggedIn && (
-                  <span className="absolute -top-[2px] -right[2px] h-[8px] w-[8px] rounded-full bg-terracotta-500"></span>
+                  <span className="absolute -top-[2px] -right-[2px] h-[8px] w-[8px] rounded-full bg-terracotta-500" />
                 )}
               </Link>
             </li>
@@ -195,31 +190,37 @@ export default function Header() {
       {/* 검색 모달 */}
       {isSearchOpen && (
         <div
-          className="fixed inset-0 z-[1000] flex items-start justify-center bg-ink/40 px-[18px] pt-[120px]"
+          className="fixed inset-0 z-[1000] flex items-start justify-center bg-navy-950/70 px-[18px] pt-[120px]"
           onClick={() => setIsSearchOpen(false)}
         >
           <div
-            className="w-full max-w-[520px] rounded-[6px] bg-paper p-[24px] shadow-xl"
+            className="w-full max-w-[520px] rounded-[6px] border border-navy-700 bg-navy-900 p-[24px] shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <form
               onSubmit={handleSearchSubmit}
-              className="flex items-center gap-[10px] border-b border-gray-400 pb-[10px]"
+              className="flex items-center gap-[10px] border-b border-navy-600 pb-[10px]"
             >
-              <img src="/images/search_1.svg" alt="" width={18} height={18} />
+              <img
+                src="/images/search_1.svg"
+                alt=""
+                width={18}
+                height={18}
+                className="invert"
+              />
               <input
                 ref={searchInputRef}
                 type="text"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="상품명, 브랜드로 검색해보세요"
-                className="w-full text-[14px] text-gray-900 outline-none placeholder:text-gray-600"
+                className="w-full bg-transparent text-[14px] text-cream outline-none placeholder:text-cream/40"
               />
               <button
                 type="button"
                 aria-label="검색창 닫기"
                 onClick={() => setIsSearchOpen(false)}
-                className="text-[13px] text-gray-700 hover:text-gray-900"
+                className="text-[13px] text-cream/60 hover:text-cream"
               >
                 ✕
               </button>
