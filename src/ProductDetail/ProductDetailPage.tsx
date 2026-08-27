@@ -1,5 +1,5 @@
 // src/ProductDetail/ProductDetailPage.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useDisclosure from "../hooks/useDisclosure";
 import SizeGuideSidebar from "./SizeGuideSidebar";
@@ -10,7 +10,7 @@ import { useCart } from "../context/CartContext";
 // (실제 경로가 다르면 프로젝트 구조에 맞게 이 경로만 조정하세요)
 import { PRODUCTS } from "../ProductList/ProductsData";
 import { COLOR_OPTIONS, SIZE_OPTIONS } from "../ProductList/OptionsData";
-
+import { addRecentlyViewed } from "../ProductList/recentlyViewed";
 export default function ProductDetailPage() {
   const { id } = useParams();
   const cart = useDisclosure();
@@ -21,6 +21,9 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState("");
 
   const product = PRODUCTS.find((p) => p.id === Number(id));
+  useEffect(() => {
+    if (product) addRecentlyViewed(product.id);
+  }, [product]);
   const colors = product?.colors ?? COLOR_OPTIONS;
   const sizes = product?.sizes ?? SIZE_OPTIONS;
 

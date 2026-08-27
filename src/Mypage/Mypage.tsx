@@ -1,7 +1,9 @@
 import useDisclosure from "../hooks/useDisclosure";
 import EditProfileModal from "./EditProfileModal";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { PRODUCTS } from "../ProductList/ProductsData";
+import { getRecentlyViewed } from "../ProductList/recentlyViewed";
 import { useAuth } from "../context/AuthContext";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
@@ -47,6 +49,12 @@ export default function MyPage() {
   // 주문 내역 상태 관리
   const [orders, setOrders] = useState<OrderData[]>([]);
   const [isOrderLoading, setIsOrderLoading] = useState(true);
+  const recentlyViewedIds = getRecentlyViewed();
+  const recentlyViewedProducts = recentlyViewedIds
+    .map((id) => PRODUCTS.find((p) => p.id === id))
+    .filter((p): p is NonNullable<typeof p> => p !== undefined);
+
+  const recentlyViewedRef = useRef<HTMLDivElement>(null);
 
   // 로그인 상태 확인 및 주문 내역 페치
   useEffect(() => {
@@ -189,6 +197,28 @@ export default function MyPage() {
         )}
       </section>
 
+      {/* 최근 본 상품*/}
+      {recentlyViewedProducts.length > 0 && (
+        <h2 className="text-[16px] font-bold text-cream mb-[14px]">
+          최근 본 상품
+        </h2>
+      )}
+      <ul className="flex gap-[12px] overflow-x-auto pd-[8px]">
+        {recentlyViewedProducts.map((p) => (
+          <li key={p.id} className="w-[110px] flex-shrink-0">
+            <Link to={`/products/${p.id}`} className="block">
+              <img
+                src={`/${p.imgSrc}`}
+                alt={p.name}
+                className="mb-[6px] h-[110px] w-[110px] bg-navy-800 object-cover"
+              />
+              <span className="line-clamp-2 text-[12px] text-cream/70">
+                {p.name}
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
       <section className="mt-[40px]">
         <div className="flex flex-col gap-[30px]">
           <nav>
@@ -201,7 +231,12 @@ export default function MyPage() {
                       item === "주문 내역"
                         ? () =>
                             window.scrollTo({ top: 300, behavior: "smooth" })
-                        : handleComingSoon
+                        : item === "최근 본 상품"
+                          ? () =>
+                              recentlyViewedRef.current?.scrollIntoView({
+                                behavior: "smooth",
+                              })
+                          : handleComingSoon
                     }
                     className="text-[14px] text-cream/80 hover:text-terracotta-400 hover:underline"
                   >

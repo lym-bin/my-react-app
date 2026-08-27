@@ -38,6 +38,21 @@ const pmMethods = [
   { id: "pm-order", value: "order", label: "기타결제" },
 ];
 
+const ADDRESS_STORAGE_KEY = "objet-b-addresses";
+
+function loadInitalAddresses(): Address[] {
+  try {
+    const raw = localStorage.getItem(ADDRESS_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as Address[];
+      if (parsed.length > 0) return parsed;
+    }
+  } catch {
+    // ignore
+  }
+  return initialAddresses;
+}
+
 export default function OrderPage() {
   const navigate = useNavigate();
   const { user, isLoading, nickname } = useAuth();
@@ -45,11 +60,20 @@ export default function OrderPage() {
   const { items, totalPrice, clearCart } = useCart();
   const [selectedpm, setSelectedpm] = useState("toss");
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-  const [addresses, setAddresses] = useState<Address[]>(initialAddresses);
+  const [addresses, setAddresses] = useState<Address[]>(loadInitalAddresses);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentAddress, setCurrentAddress] = useState<Address>(
-    initialAddresses[0]!,
+    loadInitalAddresses()[0]!,
   );
+
+  // addresses가 바뀔 때마다 localStorage에 저장
+  useEffect(() => {
+    try {
+      localStorage.setItem(ADDRESS_STORAGE_KEY, JSON.stringify(addresses));
+    } catch {
+      // ignore
+    }
+  }, [addresses]);
 
   // 1. 비회원 접근 차단
   useEffect(() => {
