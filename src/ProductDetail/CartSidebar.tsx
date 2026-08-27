@@ -1,6 +1,6 @@
 // src/ProductDetail/CartSidebar.tsx
 import { useCart } from "../context/CartContext";
-import { useNavigate } from "react-router-dom"; // 1. useNavigate 임포트
+import { useNavigate } from "react-router-dom";
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -9,7 +9,7 @@ interface CartSidebarProps {
 }
 
 export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
-  const { items, removeItem, totalPrice } = useCart();
+  const { items, removeItem, updateQty, totalPrice } = useCart();
   const navigate = useNavigate(); // 2. 네비게이트 훅 선언
 
   return (
@@ -62,9 +62,30 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                     <span className="text-[13px] text-cream/60">
                       색상: {item.color} / 사이즈: {item.size}
                     </span>
-                    <span className="text-[13px] text-cream/60">
-                      수량: {item.qty}개
-                    </span>
+                    <div className="flex items-center gap-[8px] text-[13px] text-cream/60">
+                      <span>수량:</span>
+                      <button
+                        type="button"
+                        aria-label="수량 감소"
+                        onClick={() => updateQty(item.id, item.qty - 1)}
+                        disabled={item.qty <= 1}
+                        className="flex h-[20ox] w-[20px] cursur-pointer items-center justify-center border border-navy-600 text-cream/70 trasition-colors hover:border-terracotta-400 hover:text-terracotta-400 disabled:cursur-not-allowed disabled:opacity-30"
+                      >
+                        -
+                      </button>
+                      <span className="w-[16px] text-center text-cream">
+                        {item.qty}
+                      </span>
+                      <button
+                        type="button"
+                        aria-label="수량 증가"
+                        onClick={() => updateQty(item.id, item.qty + 1)}
+                        className="flex h-[20px] w-[20px] cursor-pointer items-center justify-center botder border-navy-600 text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
+                      >
+                        +
+                      </button>
+                    </div>
+
                     <div className="mt-[2px] flex items-center justify-between">
                       <span className="text-[14px] font-semibold text-terracotta-400">
                         ₩ {(item.price * item.qty).toLocaleString()}
