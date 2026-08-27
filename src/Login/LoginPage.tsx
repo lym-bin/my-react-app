@@ -4,13 +4,15 @@ import { useAuth } from "../context/AuthContext";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { login, signup } = useAuth();
+  const { login, signup, resetPassword } = useAuth();
 
   // 로그인/회원가입 폼에서 토글
   const [mode, setMode] = useState<"login" | "signup">("login");
+  const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,7 +22,7 @@ export default function LoginPage() {
 
     try {
       if (mode === "signup") {
-        await signup(email, password);
+        await signup(email, password, nickname);
       } else {
         await login(email, password);
       }
@@ -41,6 +43,21 @@ export default function LoginPage() {
     alert("아직 준비중인 페이지입니다.");
   };
 
+  const handlePasswordReset = async () => {
+    setError("");
+    setInfo("");
+    if (!email) {
+      setError("비밀번호를 재설정할 이메일을 먼저 입력해주세요.");
+      return;
+    }
+    try {
+      await resetPassword(email);
+      setInfo("비밀번호 재설정 메일을 보냈습니다. 메일함을 확인해주세요.");
+    } catch {
+      setError("재설정 메일 발송에 실패했습니다. 이메일을 확인해주세요.");
+    }
+  };
+
   return (
     <main className="mx-auto my-[90px] w-full max-w-[500px] rounded-[12px] border border-navy-700 bg-navy-900 px-[35px] py-[45px] shadow-sm">
       <Link
@@ -56,14 +73,26 @@ export default function LoginPage() {
       </Link>
 
       <form onSubmit={handleSubmit} className="flex flex-col">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="이메일을 입력해 주세요."
-          required
-          className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-[14px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
-        />
+        {mode === "signup" && (
+          <input
+            type="text"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            placeholder="닉네임을 입력해 주세요."
+            required
+            className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-[14px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+          />
+        )}
+        {mode === "signup" && (
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="이메일을 입력해 주세요."
+            required
+            className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-[14px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+          />
+        )}
         <input
           type="password"
           value={password}
@@ -75,6 +104,9 @@ export default function LoginPage() {
         />
 
         {error && <p className="mb-[16px] text-[13px] text-danger">{error}</p>}
+        {info && (
+          <p className="mb-[16px] text-[13px] text-terracotta-400">{info}</p>
+        )}
 
         <div className="mb-[20px] flex items-center justify-between text-[13px] text-cream/60">
           <div className="flex items-center gap-[6px]">
@@ -96,7 +128,7 @@ export default function LoginPage() {
             <span>|</span>
             <button
               type="button"
-              onClick={handleComingSoon}
+              onClick={handlePasswordReset}
               className="hover:text-terracotta-400 hover:underline"
             >
               비밀번호 찾기
@@ -131,22 +163,20 @@ export default function LoginPage() {
       </form>
 
       <section className="flex flex-col gap-[10px] border-t border-navy-700 pt-[20px]">
-        <a
-          href="https://nid.naver.com/nidlogin.login"
+        <button
+          type="button"
           className="flex items-center justify-center rounded-[8px] bg-naver py-[12px] text-[14px] font-medium text-white"
-          target="_blank"
-          rel="noreferrer"
+          onClick={handleComingSoon}
         >
           네이버 로그인
-        </a>
-        <a
-          href="https://accounts.kakao.com/login"
+        </button>
+        <button
+          type="button"
           className="flex items-center justify-center rounded-[8px] bg-kakao py-[12px] text-[14px] font-medium text-[#3c1e1e]"
-          target="_blank"
-          rel="noreferrer"
+          onClick={handleComingSoon}
         >
           카카오 로그인
-        </a>
+        </button>
       </section>
     </main>
   );

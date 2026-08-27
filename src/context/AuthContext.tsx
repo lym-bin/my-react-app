@@ -15,6 +15,7 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
   updatePassword as firebaseUpdatePassword,
+  sendPasswordResetEmail,
   type User,
 } from "firebase/auth";
 import { auth } from "../firebase";
@@ -25,13 +26,14 @@ interface AuthContextValue {
   user: User | null;
   nickname: string | null;
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string, nickname?: string) => Promise<void>;
   logout: () => Promise<void>;
   updateNickname: (nickname: string) => Promise<void>;
   changePassword: (
     currentPassword: string,
     newPassword: string,
   ) => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -54,14 +56,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signInWithEmailAndPassword(auth, email, password);
   };
 
-  const signup = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+  const signup = async (email: string, password: string, nickname?: string) => {
+    const credential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    if (nickname) {
+      await updateProfile(credential.user, { displayName: nickname });
+      setUser({ ...credential.user } as User);
+    }
   };
-
   const logout = async () => {
     await firebaseSignOut(auth);
   };
 
+  const resetPassword = async (email: string) => {
+    await sendPasswordResetEmail(auth, email);
+  };
   const updateNickname = async (nickname: string) => {
     if (!auth.currentUser) throw new Error("로그인이 필요합니다");
     await updateProfile(auth.currentUser, { displayName: nickname });
@@ -96,6 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         signup,
         logout,
+        resetPassword,
         updateNickname,
         changePassword,
       }}
