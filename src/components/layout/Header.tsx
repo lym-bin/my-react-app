@@ -4,7 +4,7 @@ import { CATEGORIES } from "../../ProductList/Categories";
 import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 
-// "전체보기"는 카테고리 파라미터 없이 /products로 이동합니다.
+// "전체보기"는 카테고리 파라미터 없이 /productsd로 이동합니다.
 const CATEGORY_MENU = [
   { id: "all", label: "전체보기", category: "" },
   ...CATEGORIES.map((c) => ({ id: c.id, label: c.label, category: c.id })),

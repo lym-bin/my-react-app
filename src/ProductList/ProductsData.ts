@@ -1,5 +1,6 @@
 // src/ProductList/ProductsData.ts
 import type { CategoryId } from "./Categories";
+import { COLOR_OPTIONS, type ColorOption } from "./optionsData";
 
 export interface Product {
   id: number;
@@ -11,6 +12,13 @@ export interface Product {
   isLarge?: boolean;
   similarProductIds?: number[]; // 비슷한 제품들의 ID배열 추가
   reviewProductIds?: number[]; // 후기 컷용 ID 배열 추가
+  colors?: ColorOption[]; // 상품별 선택 가능한 색상 (없으면 전체 옵션 노출)
+  sizes?: string[]; // 상품별 선택 가능한 사이즈 (없으면 전체 옵션 노출)
+}
+
+// COLOR_OPTIONS(단일 소스)에서 value 기준으로 골라 상품에 붙이기 위한 헬퍼
+function pickColors(...values: string[]): ColorOption[] {
+  return COLOR_OPTIONS.filter((c) => values.includes(c.value));
 }
 
 export const PRODUCTS: Product[] = [
@@ -27,6 +35,8 @@ export const PRODUCTS: Product[] = [
     ],
     similarProductIds: [2, 3], // 외부에서 상품 목록을 받아올 수 있게 추가
     reviewProductIds: [3, 4], // 후기컷
+    colors: pickColors("white", "black", "beige", "gray"),
+    sizes: ["S", "M", "L", "XL"],
   },
   {
     id: 2,
@@ -34,6 +44,8 @@ export const PRODUCTS: Product[] = [
     price: 64000,
     category: "top",
     imgSrc: "images/modalgrid_3.jpg",
+    colors: pickColors("white", "black", "blue"),
+    sizes: ["XS", "S", "M", "L", "XL"],
   },
   {
     id: 3,
@@ -41,6 +53,8 @@ export const PRODUCTS: Product[] = [
     price: 82000,
     category: "top",
     imgSrc: "images/relaxed-fit-knit-pullover.jpg",
+    colors: pickColors("beige", "brown", "black"),
+    sizes: ["S", "M", "L"],
   },
   {
     id: 4,
@@ -48,6 +62,8 @@ export const PRODUCTS: Product[] = [
     price: 55000,
     category: "top",
     imgSrc: "images/stripe-cotton-long-sleeve.jpg",
+    colors: pickColors("white", "blue", "black"),
+    sizes: ["XS", "S", "M", "L", "XL"],
   },
 
   // --- 아우터 (Outer) ---
@@ -57,6 +73,8 @@ export const PRODUCTS: Product[] = [
     price: 189000,
     category: "outer",
     imgSrc: "images/modalgrid_2.jpg",
+    colors: pickColors("black", "gray", "brown"),
+    sizes: ["S", "M", "L", "XL"],
   },
   {
     id: 6,
@@ -64,6 +82,8 @@ export const PRODUCTS: Product[] = [
     price: 135000,
     category: "outer",
     imgSrc: "images/modalgrid_5.jpg",
+    colors: pickColors("blue", "black"),
+    sizes: ["S", "M", "L"],
   },
   {
     id: 7,
@@ -72,6 +92,8 @@ export const PRODUCTS: Product[] = [
     category: "outer",
     imgSrc: "images/modalgrid_2.jpg",
     isLarge: true,
+    colors: pickColors("beige", "black", "brown"),
+    sizes: ["S", "M", "L", "XL"],
   },
   {
     id: 8,
@@ -79,6 +101,7 @@ export const PRODUCTS: Product[] = [
     price: 260000,
     category: "outer",
     imgSrc: "images/modalgrid_5.jpg",
+    colors: pickColors("black", "gray", "brown"),
   },
 
   // --- 바지 (Pants) ---
@@ -89,6 +112,8 @@ export const PRODUCTS: Product[] = [
     category: "pants",
     imgSrc: "images/modalgrid_4.jpg",
     isLarge: true,
+    colors: pickColors("beige", "black", "gray"),
+    sizes: ["XS", "S", "M", "L", "XL"],
   },
   {
     id: 10,
@@ -96,6 +121,8 @@ export const PRODUCTS: Product[] = [
     price: 68000,
     category: "pants",
     imgSrc: "images/modalgrid_4.jpg",
+    colors: pickColors("black", "gray", "brown"),
+    sizes: ["S", "M", "L", "XL"],
   },
   {
     id: 11,
@@ -103,6 +130,8 @@ export const PRODUCTS: Product[] = [
     price: 72000,
     category: "pants",
     imgSrc: "images/modalgrid_4.jpg",
+    colors: pickColors("blue", "black"),
+    sizes: ["XS", "S", "M", "L"],
   },
   {
     id: 12,
@@ -110,6 +139,8 @@ export const PRODUCTS: Product[] = [
     price: 59000,
     category: "pants",
     imgSrc: "images/modalgrid_4.jpg",
+    colors: pickColors("black", "gray", "beige"),
+    sizes: ["S", "M", "L", "XL"],
   },
 
   // --- 신발 (Shoes) ---
@@ -119,6 +150,8 @@ export const PRODUCTS: Product[] = [
     price: 143000,
     category: "shoes",
     imgSrc: "images/modalgrid_6.jpg",
+    colors: pickColors("black", "white", "gray"),
+    sizes: ["S", "M", "L"],
   },
   {
     id: 14,
@@ -126,6 +159,8 @@ export const PRODUCTS: Product[] = [
     price: 165000,
     category: "shoes",
     imgSrc: "images/modalgrid_6.jpg",
+    colors: pickColors("brown", "beige", "black"),
+    sizes: ["S", "M", "L"],
   },
   {
     id: 15,
@@ -133,6 +168,8 @@ export const PRODUCTS: Product[] = [
     price: 198000,
     category: "shoes",
     imgSrc: "images/modalgrid_6.jpg",
+    colors: pickColors("black", "brown"),
+    sizes: ["M", "L", "XL"],
   },
   {
     id: 16,
@@ -140,5 +177,7 @@ export const PRODUCTS: Product[] = [
     price: 49000,
     category: "shoes",
     imgSrc: "images/modalgrid_6.jpg",
+    colors: pickColors("white", "black", "red"),
+    sizes: ["S", "M", "L", "XL"],
   },
 ];

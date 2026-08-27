@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    // Vite가 번들링하는 방식과 동일하게 모듈을 찾도록 설정
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+
+    // Vite/esbuild가 실제 빌드를 담당하므로 tsc는 타입체크 전용으로만 사용
+    "noEmit": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+
+    // 엄격한 타입 체크
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+
+    "resolveJsonModule": true,
+    "allowJs": false
+  },
+  "include": ["src"]
+}
