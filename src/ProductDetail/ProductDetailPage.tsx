@@ -201,13 +201,9 @@ export default function ProductDetailPage() {
             </div>
 
             <div>
-              {/* TODO: 상품 설명 필드가 아직 데이터에 없어 임시 문구를 그대로 뒀습니다. */}
               <p className="mt-[20px] text-left text-[14px] font-light leading-[1.6] text-cream/60">
-                풍부한 질감이 느껴지는 블랙 데님 소재의 와이드 스트레이트 레그
-                미드 라이즈 진. 톤온톤 탑스티칭 및 클래식한 파이브 포켓 디자인.
-                시간이 지날수록 독특한 매력을 더하는 깊고 섬세한 색감과 의도적인
-                자연스러운 질감이 특징으로 천연 면사를 방적하고 염색하여 제작한
-                패브릭.
+                {product.description ??
+                  "풍부한 질감이 느껴지는 소재로 완성한 미니멀 실루엣. 톤온톤 디테일과 정교한 마감으로 시간이 지날수록 깊은 매력을 더합니다."}
               </p>
             </div>
           </form>
