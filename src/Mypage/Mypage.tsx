@@ -1,3 +1,5 @@
+import useDisclosure from "../hooks/useDisclosure";
+import EditProfileModal from "./EditProfileModal";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -40,6 +42,7 @@ const subNavComingSoon = ["공지사항", "고객센터", "이벤트"];
 export default function MyPage() {
   const navigate = useNavigate();
   const { isLoggedIn, isLoading, user, nickname, logout } = useAuth();
+  const editProfile = useDisclosure();
 
   // 주문 내역 상태 관리
   const [orders, setOrders] = useState<OrderData[]>([]);
@@ -106,7 +109,7 @@ export default function MyPage() {
           </strong>
           <button
             type="button"
-            onClick={handleComingSoon}
+            onClick={editProfile.open}
             className="rounded-[4px] border border-navy-600 bg-transparent px-[8px] py-[4px] text-[12px] text-cream/80 transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
           >
             회원 정보 수정
@@ -235,6 +238,17 @@ export default function MyPage() {
           </nav>
         </div>
       </section>
+      {/* 회원정보 수정 사이드바 오픈 시 배경 Dimmed 효과 */}
+      {editProfile.isOpen && (
+        <div
+          className="fixed inset-0 z-[9998] bg-navy-950/70 transition-opacity"
+          onClick={editProfile.close}
+        />
+      )}
+      <EditProfileModal
+        isOpen={editProfile.isOpen}
+        onClose={editProfile.close}
+      />
     </main>
   );
 }
