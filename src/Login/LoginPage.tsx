@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Logo from "../components/layout/Logo";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -62,14 +63,10 @@ export default function LoginPage() {
     <main className="mx-auto my-[90px] w-full max-w-[500px] rounded-[12px] border border-navy-700 bg-navy-900 px-[35px] py-[45px] shadow-sm">
       <Link
         to="/"
-        className="mb-[40px] block text-center"
+        className="mb-[40px] flex justify-center"
         aria-label="홈으로 이동"
       >
-        <img
-          src="/images/Logo_1.svg"
-          alt="Objet & B 로고"
-          className="mx-auto h-[65px] object-contain brightness-90 invert"
-        />
+        <Logo size="lg" />
       </Link>
 
       <form onSubmit={handleSubmit} className="flex flex-col">

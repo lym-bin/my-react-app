@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Logo from "./Logo";
 
 const ftNav = [
   { id: 1, label: "COMPANY" },
@@ -18,14 +19,9 @@ export default function Footer() {
         {/* 1. 왼쪽 구역 */}
         <div className="footer-left flex flex-col items-center md:items-start">
           <Link to="/" aria-label="홈으로 이동하기">
-            <img
-              src="/images/Logo_1.svg"
-              alt="Objet & B 로고"
-              width={100}
-              height={100}
-              className="h-[70px] w-[70px] brightness-90 invert md:h-[100px] md:w-[100px]"
-            />
+            <Logo size="lg" />
           </Link>
+
           <p className="my-[5px] text-[12px] text-cream/70">
             대표 : 임상빈 | persie24@naver.com
           </p>
