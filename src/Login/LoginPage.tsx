@@ -83,16 +83,15 @@ export default function LoginPage() {
             className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-[14px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
           />
         )}
-        {mode === "signup" && (
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="이메일을 입력해 주세요."
-            required
-            className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-[14px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
-          />
-        )}
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="이메일을 입력해 주세요."
+          required
+          className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-[14px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+        />
+
         <input
           type="password"
           value={password}
