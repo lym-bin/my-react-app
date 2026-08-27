@@ -4,10 +4,18 @@ import { useSearchParams } from "react-router-dom";
 import useDisclosure from "../hooks/useDisclosure";
 import FilterSidebar from "../ProductList/FilterSidebar";
 import ProductGrid from "../ProductList/ProductGrid";
-import { Product, PRODUCTS } from "./ProductsData";
-const sortOptions = ["신상품 순", "낮은 가격순", "높은 가격순", "인기순"];
+import { PRODUCTS, type Product } from "./ProductsData";
 
-function sortProducts(products: Product[], sort: string): Product[] {
+const sortOptions = [
+  "신상품 순",
+  "낮은 가격순",
+  "높은 가격순",
+  "인기순",
+] as const;
+type SortOption = (typeof sortOptions)[number];
+
+// 매개변수 타입을 string 대신 SortOption으로 명시
+function sortProducts(products: Product[], sort: SortOption): Product[] {
   const sorted = [...products];
   switch (sort) {
     case "낮은 가격순":
@@ -15,17 +23,16 @@ function sortProducts(products: Product[], sort: string): Product[] {
     case "높은 가격순":
       return sorted.sort((a, b) => b.price - a.price);
     case "신상품 순":
-      return sorted.sort((a, b) => b.id - a.id);
+      return sorted.sort((a, b) => a.id - b.id);
     case "인기순":
     default:
-      // TODO: 실제 인기도(조회수/판매량 등) 필드가 생기면 그 기준으로 정렬
       return sorted;
   }
 }
 
 export default function ProductListPage() {
   const filterSidebar = useDisclosure();
-  const [activeSort, setActiveSort] = useState(sortOptions[0]);
+  const [activeSort, setActiveSort] = useState<SortOption>(sortOptions[0]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -45,6 +52,7 @@ export default function ProductListPage() {
     });
   };
 
+  // ✅ useMemo 내부로 필터링 및 정렬 로직을 깔끔하게 통합
   const filteredProducts = useMemo(() => {
     let result = PRODUCTS;
 
@@ -57,11 +65,19 @@ export default function ProductListPage() {
       result = result.filter((p) => p.name.toLowerCase().includes(q));
     }
 
-    // TODO: selectedFilters(색상/사이즈)는 아직 Product 데이터에 대응 필드가 없어 미적용 상태.
-    // 실제 색상/사이즈 데이터가 추가되면 여기서 같이 필터링.
+    // 선택된 필터(색상/사이즈) 처리
+    if (selectedFilters.length > 0) {
+      result = result.filter((p) =>
+        selectedFilters.every(
+          (f) =>
+            p.colors?.some((c) => c.value === f) ||
+            p.sizes?.some((s) => s.toLowerCase() === f.toLowerCase()),
+        ),
+      );
+    }
 
     return sortProducts(result, activeSort);
-  }, [activeCategory, activeSearch, activeSort]);
+  }, [activeCategory, activeSearch, selectedFilters, activeSort]);
 
   const clearCategory = () => {
     const next = new URLSearchParams(searchParams);

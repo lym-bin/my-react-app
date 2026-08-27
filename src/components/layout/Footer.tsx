@@ -73,7 +73,7 @@ export default function Footer() {
         </nav>
 
         {/* 3. 오른쪽 구역 */}
-        <div className="text-center text-[12px] whitespace-nowrap text-cream/50 md:text-right">
+        <div className="text-center text-[12px] whitespace-normal text-cream/50 md:text-right">
           &copy;2026 Objet - B. All rights reserved.
         </div>
       </div>

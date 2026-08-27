@@ -39,15 +39,18 @@ export default function ProductGrid({ products }: ProductGridProps) {
           />
         ))}
       </ul>
-      {/* 더보기 버튼 영역 */}
-      <div className="mt-[48px] mb-[40px] flex justify-center">
-        <button
-          type="button"
-          className="cursor-pointer border border-terracotta-500 bg-transparent px-[40px] py-[12px] text-[14px] font-medium transition-colors text-terracotta-500 hover:bg-terracotta-500 hover:text-navy-950"
-        >
-          더보기
-        </button>
-      </div>
+      {/* 더보기 버튼 영역: 더 보여줄 상품이 남아 있을 때만 노출*/}
+      {hasMore && (
+        <div className="mt-[48px] mb-[40px] flex justify-center">
+          <button
+            type="button"
+            onClick={() => setVisibleCount((v) => v + PAGE_SIZE)}
+            className="cursor-pointer border border-terracotta-500 bg-transparent px-[40px] py-[12px] text-[14px] font-medium transition-colors text-terracotta-500 hover:bg-terracotta-500 hover:text-navy-950"
+          >
+            더보기
+          </button>
+        </div>
+      )}
     </section>
   );
 }

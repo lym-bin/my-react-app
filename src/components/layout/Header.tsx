@@ -64,7 +64,7 @@ export default function Header() {
 
   return (
     <header className="border-b border-navy-700 bg-navy-950">
-      <div className="mx-auto flex h-[80px] w-full max-w-[1200px] items-center justify-between px-[18px] py-[8px]">
+      <div className="mx-auto flex h-[80px] w-full max-w-[1200px] items-center justify-between px-[12px] py-[8px] sm:px-[18px]">
         {/* 좌측 카테고리 */}
         <ul className="relative flex flex-1 justify-start">
           <li ref={categoryRef} className="relative">
@@ -110,7 +110,7 @@ export default function Header() {
         {/* 중앙 로고 */}
         <Link
           to="/"
-          className="flex items-center justify-center"
+          className="flex flex-shrink-0 items-center justify-center"
           aria-label="홈으로 이동하기"
         >
           <img
@@ -118,7 +118,7 @@ export default function Header() {
             alt="Objet & B 로고"
             width={80}
             height={80}
-            className="invert brightness-90"
+            className="h-[44px] w-[44px] invert brightness-90 sm:h-[64px] md:h-[80px] md:w-[80px]"
           />
         </Link>
 
@@ -127,7 +127,7 @@ export default function Header() {
           className="flex flex-1 justify-end"
           aria-label="상단 유틸리티 메뉴"
         >
-          <ul className="flex items-center gap-[30px]">
+          <ul className="flex items-center gap-[16px] sm:gap-[30px]">
             <li>
               <button
                 type="button"

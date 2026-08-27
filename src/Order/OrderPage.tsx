@@ -48,7 +48,7 @@ export default function OrderPage() {
   const [addresses, setAddresses] = useState<Address[]>(initialAddresses);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentAddress, setCurrentAddress] = useState<Address>(
-    initialAddresses[0],
+    initialAddresses[0]!,
   );
 
   // 1. 비회원 접근 차단
@@ -236,7 +236,7 @@ export default function OrderPage() {
         >
           {isSubmitting
             ? "처리 중...."
-            : `${totalPrice.toLocaleString()}원 결제하기}`}
+            : `${totalPrice.toLocaleString()}원 결제하기`}
         </button>
       </aside>
 

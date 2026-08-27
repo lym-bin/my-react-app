@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Product, PRODUCTS } from "../ProductList/ProductsData";
+import { PRODUCTS, type Product } from "../ProductList/ProductsData";
 
 interface SimilarProductsProps {
   title?: string;
