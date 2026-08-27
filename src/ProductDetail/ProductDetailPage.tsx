@@ -9,15 +9,7 @@ import { useCart } from "../context/CartContext";
 // 상품 데이터는 ProductList 페이지와 동일한 소스를 공유합니다.
 // (실제 경로가 다르면 프로젝트 구조에 맞게 이 경로만 조정하세요)
 import { PRODUCTS } from "../ProductList/ProductsData";
-
-const colors = [
-  { value: "red", label: "레드" },
-  { value: "black", label: "블랙" },
-  { value: "white", label: "화이트" },
-  { value: "gray", label: "그레이" },
-];
-
-const sizes = ["XXXS", "XXS", "XS", "S", "M", "L", "XL", "XXL"];
+import { COLOR_OPTIONS, SIZE_OPTIONS } from "../ProductList/optionsData";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -29,8 +21,9 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState("");
 
   const product = PRODUCTS.find((p) => p.id === Number(id));
+  const colors = product?.colors ?? COLOR_OPTIONS;
+  const sizes = product?.sizes ?? SIZE_OPTIONS;
 
-  // 사이드바는 한 번에 하나만 열리도록 서로 닫아줍니다.
   const openCart = () => {
     sizeGuide.close();
     cart.open();
@@ -47,11 +40,13 @@ export default function ProductDetailPage() {
       alert("색상과 사이즈를 선택해주세요.");
       return;
     }
+    const colorLabel =
+      colors.find((c) => c.value === selectedColor)?.label ?? selectedColor;
     addItem({
       productId: product.id,
       name: product.name,
       price: product.price,
-      color: selectedColor,
+      color: colorLabel,
       size: selectedSize,
       qty: 1,
       imgSrc: product.imgSrc,
