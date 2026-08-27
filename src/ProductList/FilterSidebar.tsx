@@ -1,32 +1,11 @@
 // src/pages/ProductList/components/FilterSidebar.tsx
+import { COLOR_OPTIONS, SIZE_OPTIONS } from "./OptionsData";
 interface FilterSidebarProps {
   isOpen: boolean;
   onClose: () => void;
   selected: string[];
   onToggle: (value: string) => void;
 }
-
-const colors = [
-  "블랙",
-  "화이트",
-  "블루",
-  "그레이",
-  "브라운",
-  "베이지",
-  "레드",
-  "옐로우",
-];
-const colorValues = [
-  "black",
-  "white",
-  "blue",
-  "gray",
-  "brown",
-  "beige",
-  "red",
-  "yellow",
-];
-const sizes = ["XXXS", "XXS", "XS", "S", "M", "L", "XL", "XXL"];
 
 export default function FilterSidebar({
   isOpen,
@@ -64,8 +43,7 @@ export default function FilterSidebar({
           <section>
             <h4 className="mb-[14px] text-[15px] font-bold text-cream">색상</h4>
             <div className="grid grid-cols-2 gap-[10px]">
-              {colors.map((label, i) => {
-                const val = colorValues[i];
+              {COLOR_OPTIONS.map(({ value: val, label }) => {
                 const isChecked = selected.includes(val);
                 return (
                   <label key={val} className="cursor-pointer">
@@ -98,7 +76,7 @@ export default function FilterSidebar({
               사이즈
             </h4>
             <div className="grid grid-cols-3 gap-[10px]">
-              {sizes.map((size) => {
+              {SIZE_OPTIONS.map((size) => {
                 const val = size.toLowerCase();
                 const isChecked = selected.includes(val);
                 return (

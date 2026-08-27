@@ -9,7 +9,7 @@ import { useCart } from "../context/CartContext";
 // 상품 데이터는 ProductList 페이지와 동일한 소스를 공유합니다.
 // (실제 경로가 다르면 프로젝트 구조에 맞게 이 경로만 조정하세요)
 import { PRODUCTS } from "../ProductList/ProductsData";
-import { COLOR_OPTIONS, SIZE_OPTIONS } from "../ProductList/optionsData";
+import { COLOR_OPTIONS, SIZE_OPTIONS } from "../ProductList/OptionsData";
 
 export default function ProductDetailPage() {
   const { id } = useParams();

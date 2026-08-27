@@ -1,6 +1,6 @@
 // src/ProductList/ProductsData.ts
 import type { CategoryId } from "./Categories";
-import { COLOR_OPTIONS, type ColorOption } from "./optionsData";
+import { COLOR_OPTIONS, type ColorOption } from "./OptionsData";
 
 export interface Product {
   id: number;
