@@ -5,6 +5,7 @@ import Footer from "./components/layout/Footer";
 import PageTransition from "./pages/Main/components/PageTransition";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
+import NotFoundPage from "./NotFound/NotFoundPage";
 
 // 각 페이지 컴포넌트 임포트
 import MainPage from "./pages/Main/MainPage";
@@ -34,6 +35,7 @@ function AppLayout() {
             <Route path="/order" element={<OrderPage />} />
             <Route path="/ordersuccess" element={<OrderSuccessPage />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </PageTransition>
       </main>
