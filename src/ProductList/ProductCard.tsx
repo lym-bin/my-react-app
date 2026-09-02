@@ -3,6 +3,8 @@ interface ProductCardProps {
   isLarge?: boolean;
   href?: string;
   imgSrc?: string;
+  imgPosition?: string;
+  imgFit?: "cover" | "contain";
   name?: string;
   price?: string;
 }
@@ -11,6 +13,8 @@ export default function ProductCard({
   isLarge = false,
   href = "#",
   imgSrc = "",
+  imgPosition,
+  imgFit = "cover",
   name = "제품명 : *****",
   price = "$ ***",
 }: ProductCardProps) {
@@ -23,7 +27,10 @@ export default function ProductCard({
             src={imgSrc}
             alt={isLarge ? `${name} 큰 제품 이미지` : `${name} 제품 이미지`}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+            style={imgPosition ? { objectPosition: imgPosition } : undefined}
+            className={`h-full w-full transition-transform duration-500 ease-in-out group-hover:scale-105 ${
+              imgFit === "contain" ? "object-contain" : "object-cover"
+            }`}
           />
         </div>
 

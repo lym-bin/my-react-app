@@ -15,6 +15,8 @@ export interface Product {
   colors?: ColorOption[]; // 상품별 선택 가능한 색상 (없으면 전체 옵션 노출)
   sizes?: string[]; // 상품별 선택 가능한 사이즈 (없으면 전체 옵션 노출)
   description?: string; // 상품 상세 설명 (없으면 기본 문구 노출)
+  imgPosition?: string; // 목록 썸네일 크롭 기준점 (CSS object-position)
+  imgFit?: "cover" | "contain"; // 목록 썸네일 채움 방식(기본 cover, 전체를 채우려면 contain)
 }
 
 // COLOR_OPTIONS(단일 소스)에서 value 기준으로 골라 상품에 붙이기 위한 헬퍼
@@ -47,6 +49,8 @@ export const PRODUCTS: Product[] = [
     price: 64000,
     category: "top",
     imgSrc: "images/modalgrid_3.jpg",
+    similarProductIds: [3, 4],
+    reviewProductIds: [4, 1],
     colors: pickColors("white", "black", "blue"),
     sizes: ["XS", "S", "M", "L", "XL"],
     description:
@@ -58,6 +62,8 @@ export const PRODUCTS: Product[] = [
     price: 82000,
     category: "top",
     imgSrc: "images/relaxed-fit-knit-pullover.jpg",
+    similarProductIds: [4, 1],
+    reviewProductIds: [1, 2],
     colors: pickColors("beige", "brown", "black"),
     sizes: ["S", "M", "L"],
     description:
@@ -69,6 +75,8 @@ export const PRODUCTS: Product[] = [
     price: 55000,
     category: "top",
     imgSrc: "images/stripe-cotton-long-sleeve.jpg",
+    similarProductIds: [1, 2],
+    reviewProductIds: [2, 3],
     colors: pickColors("white", "blue", "black"),
     sizes: ["XS", "S", "M", "L", "XL"],
     description:
@@ -82,6 +90,8 @@ export const PRODUCTS: Product[] = [
     price: 189000,
     category: "outer",
     imgSrc: "images/modalgrid_2.jpg",
+    similarProductIds: [6, 7],
+    reviewProductIds: [7, 8],
     colors: pickColors("black", "gray", "brown"),
     sizes: ["S", "M", "L", "XL"],
     description:
@@ -93,6 +103,8 @@ export const PRODUCTS: Product[] = [
     price: 135000,
     category: "outer",
     imgSrc: "images/modalgrid_5.jpg",
+    similarProductIds: [7, 8],
+    reviewProductIds: [8, 5],
     colors: pickColors("blue", "black"),
     sizes: ["S", "M", "L"],
     description:
@@ -105,6 +117,8 @@ export const PRODUCTS: Product[] = [
     category: "outer",
     imgSrc: "images/modalgrid_2.jpg",
     isLarge: true,
+    similarProductIds: [8, 5],
+    reviewProductIds: [5, 6],
     colors: pickColors("beige", "black", "brown"),
     sizes: ["S", "M", "L", "XL"],
     description:
@@ -115,7 +129,9 @@ export const PRODUCTS: Product[] = [
     name: "모던 싱글 체스터필드 코트",
     price: 260000,
     category: "outer",
-    imgSrc: "images/modalgrid_5.jpg",
+    imgSrc: "images/chesterfield-coat.png",
+    similarProductIds: [5, 6],
+    reviewProductIds: [6, 7],
     colors: pickColors("black", "gray", "brown"),
     description:
       "깔끔하게 떨어지는 싱글 브레스트 라인으로 클래식하면서도 모던한 분위기를 연출하는 코트입니다.",
@@ -127,8 +143,10 @@ export const PRODUCTS: Product[] = [
     name: "와이드 핏 베이지 슬랙스",
     price: 79000,
     category: "pants",
-    imgSrc: "images/modalgrid_4.jpg",
+    imgSrc: "images/wide-fit-beige-slacks.jpg",
     isLarge: true,
+    similarProductIds: [10, 11],
+    reviewProductIds: [11, 12],
     colors: pickColors("beige", "black", "gray"),
     sizes: ["XS", "S", "M", "L", "XL"],
     description:
@@ -139,7 +157,9 @@ export const PRODUCTS: Product[] = [
     name: "센스 투턱 스트레이트 팬츠",
     price: 68000,
     category: "pants",
-    imgSrc: "images/modalgrid_4.jpg",
+    imgSrc: "images/tuck-straigh-pants.png",
+    similarProductIds: [11, 12],
+    reviewProductIds: [12, 9],
     colors: pickColors("black", "gray", "brown"),
     sizes: ["S", "M", "L", "XL"],
     description:
@@ -150,7 +170,9 @@ export const PRODUCTS: Product[] = [
     name: "캐주얼 코튼 데님 팬츠",
     price: 72000,
     category: "pants",
-    imgSrc: "images/modalgrid_4.jpg",
+    imgSrc: "images/casual-cotton-denim-pants.jpg",
+    similarProductIds: [12, 9],
+    reviewProductIds: [9, 10],
     colors: pickColors("blue", "black"),
     sizes: ["XS", "S", "M", "L"],
     description:
@@ -161,20 +183,23 @@ export const PRODUCTS: Product[] = [
     name: "이지 드로우스트링 조거 팬츠",
     price: 59000,
     category: "pants",
-    imgSrc: "images/modalgrid_4.jpg",
+    imgSrc: "images/drawstring-jogger-pants.jpg",
+    similarProductIds: [9, 10],
+    reviewProductIds: [10, 11],
     colors: pickColors("black", "gray", "beige"),
     sizes: ["S", "M", "L", "XL"],
     description:
       "허리 밴딩과 드로우스트링으로 편안한 착용감을 극대화한 캐주얼 조거 팬츠입니다.",
   },
-
   // --- 신발 (Shoes) ---
   {
     id: 13,
     name: "미니멀 가죽 레더 스니커즈",
     price: 143000,
     category: "shoes",
-    imgSrc: "images/modalgrid_6.jpg",
+    imgSrc: "images/minimal-leather-sneakers.png",
+    similarProductIds: [14, 15],
+    reviewProductIds: [15, 16],
     colors: pickColors("black", "white", "gray"),
     sizes: ["S", "M", "L"],
     description:
@@ -185,7 +210,10 @@ export const PRODUCTS: Product[] = [
     name: "클래식 스웨이드 로퍼",
     price: 165000,
     category: "shoes",
-    imgSrc: "images/modalgrid_6.jpg",
+    imgSrc: "images/classic-suede-loafers.jpg",
+    imgPosition: "30% 50%",
+    similarProductIds: [15, 16],
+    reviewProductIds: [16, 13],
     colors: pickColors("brown", "beige", "black"),
     sizes: ["S", "M", "L"],
     description:
@@ -196,7 +224,10 @@ export const PRODUCTS: Product[] = [
     name: "어반 컴포트 첼시 부츠",
     price: 198000,
     category: "shoes",
-    imgSrc: "images/modalgrid_6.jpg",
+    imgSrc: "images/urban-chelsea-boots.jpg",
+    imgFit: "contain",
+    similarProductIds: [16, 13],
+    reviewProductIds: [13, 14],
     colors: pickColors("black", "brown"),
     sizes: ["M", "L", "XL"],
     description:
@@ -207,7 +238,14 @@ export const PRODUCTS: Product[] = [
     name: "데일리 캔버스 슬립온",
     price: 49000,
     category: "shoes",
-    imgSrc: "images/modalgrid_6.jpg",
+    imgSrc: "images/daily-canvas-slip-on.jpg",
+    imgFit: "contain",
+    images: [
+      "images/daily-canvas-slip-on.jpg",
+      "images/daily-canvas-model.jpg",
+    ],
+    similarProductIds: [13, 14],
+    reviewProductIds: [14, 15],
     colors: pickColors("white", "black", "red"),
     sizes: ["S", "M", "L", "XL"],
     description:

@@ -34,6 +34,8 @@ export default function ProductGrid({ products }: ProductGridProps) {
             isLarge={product.isLarge}
             href={`products/${product.id}`}
             imgSrc={product.imgSrc}
+            imgPosition={product.imgPosition}
+            imgFit={product.imgFit}
             name={product.name}
             price={`${product.price.toLocaleString()} $`}
           />
