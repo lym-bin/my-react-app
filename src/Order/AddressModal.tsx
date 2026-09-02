@@ -44,6 +44,16 @@ export default function AddressModal({
 
   if (!isOpen) return null;
 
+  //ESC키로 닫기
+  useEffect(() => {
+    if (!isOpen) return;
+    function handleEsc(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [isOpen, onClose]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !recipient || !address || !phone) {

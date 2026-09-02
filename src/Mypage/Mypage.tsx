@@ -210,6 +210,7 @@ export default function MyPage() {
               <img
                 src={`/${p.imgSrc}`}
                 alt={p.name}
+                loading="lazy"
                 className="mb-[6px] h-[110px] w-[110px] bg-navy-800 object-cover"
               />
               <span className="line-clamp-2 text-[12px] text-cream/70">

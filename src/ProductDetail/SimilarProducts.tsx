@@ -32,6 +32,7 @@ export default function SimilarProducts({
                     : `/${product.imgSrc}`
                 }
                 alt={product.name}
+                loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
               />
             </div>

@@ -52,6 +52,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                     <img
                       src={item.imgSrc}
                       alt={item.name}
+                      loading="lazy"
                       className="h-full w-full object-cover"
                     />
                   </div>

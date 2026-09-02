@@ -22,6 +22,7 @@ export default function ProductCard({
           <img
             src={imgSrc}
             alt={isLarge ? `${name} 큰 제품 이미지` : `${name} 제품 이미지`}
+            loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
           />
         </div>
