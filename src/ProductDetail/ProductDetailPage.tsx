@@ -99,18 +99,16 @@ export default function ProductDetailPage() {
             )}
           </div>
 
-          {/* 두 번째 이미지 (모델 이미지 또는 상세 컷)*/}
-          <div>
-            {product.images?.[1] ? (
+          {/* 두 번째 이미지 (모델 이미지 또는 상세 컷): 없으면 아예 렌더링 안 함 */}
+          {product.images?.[1] && (
+            <div>
               <img
                 src={`/${product.images[1]}`}
                 alt={`${product.name}모델 이미지`}
                 className="mt-[20px] h-[280px] w-full bg-navy-800 object-cover object-top sm:h-[400px]"
               />
-            ) : (
-              <div className="mt-[20px] h-[280px] w-full bg-navy-800 sm:h-[400px]" />
-            )}
-          </div>
+            </div>
+          )}
         </section>
 
         <section className="mt-[20px] flex-1">
