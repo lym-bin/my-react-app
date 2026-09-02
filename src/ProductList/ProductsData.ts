@@ -115,7 +115,7 @@ export const PRODUCTS: Product[] = [
     name: "미니멀 하프 트렌치 코트",
     price: 210000,
     category: "outer",
-    imgSrc: "images/modalgrid_2.jpg",
+    imgSrc: "images/half-trench-coat.png",
     isLarge: true,
     similarProductIds: [8, 5],
     reviewProductIds: [5, 6],
