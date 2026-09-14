@@ -1,5 +1,6 @@
 // src/Mypage/EditProfileModal.tsx
-import { useEffect, useState } from "react";
+// 닉네임/비밀번호 수정 폼, Firebase 에러를 한글로 변환해서 보여줌
+import { useEffect, useState, type FormEvent } from "react"; // FormEvent 없음
 import { useAuth } from "../context/AuthContext";
 
 interface EditProfileModalProps {
@@ -7,11 +8,15 @@ interface EditProfileModalProps {
   onClose: () => void;
 }
 
+// Firebase 에러 코드를 한글 메시지로 변환하는 순수 함수 (컴포넌트 밖)
 function mapAuthError(error: unknown): string {
+  // catch로 잡히는 error는 타입이 unknows(뭔지 모름)이라 바로 .code 못 씀
+  // (error as { code?: string})로 "code 필드가 있을 수도 있는 객체"라고 임시로 단정
+  // ?.code로(옵셔널 체이닝) 안전하게 꺼내고. ?? ""로 없으면 빈 문자열
   const code = (error as { code?: string })?.code ?? "";
   switch (code) {
     case "auth/wrong-password":
-    case "auth/invalid-credential":
+    case "auth/invalid-credential": // 두 케이스가 같은 결과 (연속 case로 묶음, sortProducts에서도 봤던 패턴)
       return "현재 비밀번호가 일치하지 않습니다.";
     case "auth/weak-password":
       return "새 비밀번호는 6자 이상이어야 합니다.";
@@ -33,12 +38,15 @@ export default function EditProfileModal({
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  // 객체 모양 state: "성공/실패 여부와 "메시지 내용"을 한 덩어리로 관리
+  // type 필드는 "success" | "error"를 둘 중 하나의 객체로 묶음(항상 같이 움직이니까)
+  // | null: 아직 아무 메시지도 없을 땐 통째로 null
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
 
-  // 열릴 때마다 현재 닉네임으로 초기화하고 비밀번호 입력은 비워둡니다.
+  // 열릴 때마다 현재 닉네임으로 초기화하고 리셋 (AddressModal의 "열릴 때 초기화" 패턴 재사용).
   useEffect(() => {
     if (isOpen) {
       setNickname(user?.displayName ?? "");
@@ -49,14 +57,17 @@ export default function EditProfileModal({
     }
   }, [isOpen, user]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setMessage(null);
 
+    // 셋 중 하나라도 같이 있으면 -> "비밀번호도 바꾸려는 의도로 판단"
+    // 여기선 ||가 정확히 맞음 : ""(빈 문자열)은 "입력 안 함" 이니까 falsy 취급이 의도와 맞게 떨어짐
     const wantsPasswordChange =
       currentPassword || newPassword || newPasswordConfirm;
 
     if (wantsPasswordChange) {
+      // 가드절 3연타: 하나씩 검증하고 안 맞으면 바로 종료
       if (!currentPassword || !newPassword || !newPasswordConfirm) {
         setMessage({
           type: "error",
@@ -82,11 +93,12 @@ export default function EditProfileModal({
 
     setIsSaving(true);
     try {
+      // 닉네임이 실제로 바뀌었을 때만 API 호출 (안 바뀌었으면 불필요한 요청 안 보냄)
       if (nickname !== (user?.displayName ?? "")) {
         await updateNickname(nickname);
       }
       if (wantsPasswordChange) {
-        await changePassword(currentPassword, newPassword);
+        await changePassword(currentPassword, newPassword); // AuthContex의 재인증+변경 로직
       }
       setMessage({ type: "success", text: "회원정보가 수정되었습니다." });
       setCurrentPassword("");
@@ -131,7 +143,7 @@ export default function EditProfileModal({
             type="text"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            placeholder={user?.email ?? ""}
+            placeholder={user?.email ?? ""} // 값이 아니라 "비었을 때 흐리게 보이는 힌트"로 이메일 사용
             className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-[14px] text-cream outline-none focus:border-terracotta-400"
           />
         </div>
@@ -140,6 +152,7 @@ export default function EditProfileModal({
           <p className="mb-[14px] text-[13px] font-medium text-cream/70">
             비밀번호 변경 (변경하지 않으면 비워두세요)
           </p>
+          {/* 세 입력창 다 같은 controlled input 패턴*/}
 
           <div className="mb-[12px]">
             <label
@@ -190,6 +203,7 @@ export default function EditProfileModal({
           </div>
         </div>
 
+        {/* message 객체가 있을 때만 표시. type 값에 따라 색상 분기*/}
         {message && (
           <p
             className={`mb-[16px] text-[13px] ${

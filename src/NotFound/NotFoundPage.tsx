@@ -1,4 +1,5 @@
 // src/NotFound/NotFoundPage.tsx
+// 고정된 404 안내 화면
 import { Link } from "react-router-dom";
 
 export default function NotFoundPage() {

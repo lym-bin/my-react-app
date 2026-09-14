@@ -1,3 +1,5 @@
+// src/pages/Main/components/BestReview.tsx
+// 베스트 리뷰 영역
 import { useEffect, useState } from "react";
 
 interface Review {
@@ -61,20 +63,22 @@ const reviews: Review[] = [
 
 export default function BestReview() {
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  // EditProfileModal의 message state랑 같은 형태: "선택된 객체 하나 또는 null"
 
   // ESC 키로 모달 닫기 (다른 모달들과 동작 통일)
   useEffect(() => {
-    if (!selectedReview) return;
+    if (!selectedReview) return; // 모달 안 열려있으면 리스너 등록 자체를 안 함
     function handleEsc(e: KeyboardEvent) {
       if (e.key === "Escape") setSelectedReview(null);
     }
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
-  }, [selectedReview]);
+  }, [selectedReview]); // AddressModal의 ESC 훅이랑 완전히 같은 구조
 
   return (
     <section className="bg-navy-950 px-[20px] py-[50px]">
       <div className="mx-auto max-w-[1200px]">
+        {/* 반응형 3단계: 모바일 1열 -> SM 2열 -> lg(데스크톱) 4열*/}
         <h2 className="mb-[30px] text-center text-[2rem] font-bold italic leading-[1.2] text-cream">
           Best Review
         </h2>
@@ -86,6 +90,9 @@ export default function BestReview() {
               key={r.id}
               className="flex flex-col rounded-[4px] border-t-2 border-terracotta-500 bg-navy-800 p-[14px] transition-transform duration-300 ease-in-out hover:-translate-y-[10px]"
             >
+              {/* <article> : 리뷰 카드 하나하나가 "독립적으로 의미있는 콘텐츠 단위라 시맨틱하게 article 사용*/}
+              {/* hover: -translate-y-[10px]: 마우스 올리면 카드가 10px 위로 살짝 떠오름(translate로 이동, 큭 변화 없음)*/}
+              {/* 카드 전체가 클릭 가능한 버튼(li 안에 a 였던 ProductCard와 달리, 여긴 모달을 열기만*/}
               <button
                 type="button"
                 onClick={() => setSelectedReview(r)}
@@ -111,6 +118,7 @@ export default function BestReview() {
                     <span>평소 사이즈 : {r.usualSize}</span>
                   </div>
 
+                  {/* line-clamp-2: 텍스트가 길어도 2줄까지만 보이고 나머지는 ...으로 잘림*/}
                   <p className="line-clamp-2 text-[0.9rem] leading-[1.4] text-cream/80 [word-break:keep-all]">
                     {r.body}
                   </p>
@@ -126,7 +134,7 @@ export default function BestReview() {
         </div>
       </div>
 
-      {/* 팝업 모달 */}
+      {/* 팝업 모달 나머지 구조는 AddressModal/SizeGuideSidebar와 동일 */}
       {selectedReview && (
         <div
           className="fixed inset-0 z-sidebar flex items-center justify-center bg-navy-950/70 p-[20px]"
@@ -136,6 +144,7 @@ export default function BestReview() {
             className="relative w-full max-w-[600px] rounded-lg border border-navy-700 bg-navy-900 p-6 text-cream shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* selectedReview.xxx로 클릭한 리뷰의 전체 내용을 크게 다시 보여줌*/}
             <button
               type="button"
               onClick={() => setSelectedReview(null)}

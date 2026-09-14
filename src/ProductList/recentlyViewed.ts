@@ -1,5 +1,5 @@
 // src/Product/recentlyViewed.ts
-
+// localStorage로 최근 본 상품 ID 저장/조회하는 순수 함수들
 const STORAGE_KEY = "objet-b-recently-viewed";
 const MAX_ITEMS = 20;
 

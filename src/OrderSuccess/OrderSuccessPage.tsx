@@ -1,3 +1,6 @@
+// src/OrderSuccess/OrderSuccessPage.tsx
+// OrderPage가 navigate로 전달한 주문정보를 받아 보여주는 결제완료 페이지
+// useLocation(): 현재 URL 정보 + navigate(path, { state })로 넘겨 받는 state를 읽는 훅
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import type { CartItem } from "../context/CartContext";
@@ -19,6 +22,7 @@ interface OrderSuccessState {
   createdAt?: string;
 }
 
+// Record<string, string> = "카드 문자열, 값도 문자열인 객체" 타입 (딕셔너리/매핑 테이블에 자주 씀)
 const paymentLabels: Record<string, string> = {
   toss: "토스페이",
   kakao: "카카오페이",
@@ -28,10 +32,14 @@ const paymentLabels: Record<string, string> = {
 
 export default function OrderSuccessPage() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const location = useLocation(); // 현재 경로 정보 + navigate로 넘겨받은 state를 읽는 훅
   const { nickname } = useAuth();
 
+  // orderPage의 navigate("/ordersuccess", { state: orderData })로 넘어온 데이터
+  // location.state는 타입이 unknown이라 as로 OrderSucccessState 맞다 선언
+  // null까지 붙인 이유 : 새로고침하면 state가 통쨰로 사라져서 null이 될 수 있음
   const state = location.state as OrderSuccessState | null;
+  // state가 없으면(새로고침 등)각 값마다 안전한 기본값으로 대체
   const items = state?.items ?? [];
   const totalPrice = state?.totalPrice ?? 0;
   const address = state?.address;
@@ -47,7 +55,7 @@ export default function OrderSuccessPage() {
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-      })
+      }) // 150 날짜 문자열 -> "2026년 0월 00일 오전 9:40" 한국어 형식으로 변환
     : "확인 불가";
   return (
     <main className="mx-auto w-full max-w-[800px] bg-navy-950 px-[20px] py-[60px] sm:px-[20px] sm:py-[60px]">
@@ -63,6 +71,7 @@ export default function OrderSuccessPage() {
             주문번호: <strong className="text-cream/80">{orderId}</strong>
           </span>
           <span className="hidden sm:inline">|</span>
+          {/* 모바일에선 숨기고 sm 이상에서만 구분선 표시*/}
           <span>결제일시: {orderDate}</span>
         </div>
       </div>
@@ -74,13 +83,14 @@ export default function OrderSuccessPage() {
             <strong className="text-[16px] text-cream">
               {nickname ?? "guest"}
             </strong>
-            {address?.title && (
+            {address?.title && ( // address가 있고 title도 있을 때만 태그 표시
               <span className="rounded-[4px] bg-navy-800 px-[6px] py-[2px] text-[12px] text-terracotta-400 font-semibold">
                 {address.title}
               </span>
             )}
           </div>
           <address className="not-italic">
+            {/* address 없으면(주문 데이터 유실) 더마 에시 주소로 대체 표시*/}
             <p className="my-[4px] text-[14px] leading-[1.6] text-cream/70">
               {address ? address.address : "경기도 수원시 팔달구 123"}
             </p>
@@ -91,6 +101,7 @@ export default function OrderSuccessPage() {
         </div>
 
         <div className="flex flex-col justify-center border-t border-navy-700 pt-[20px] md:border-t-0 md:border-1 md:pt-0 md:pl-[20px]">
+          {/* 객체(동적 키)로 값 찾기: paymentMethod가 "toss"면 paymentLabels["toss"] -> 토스페이*/}
           <span className="text-[13px] text-cream/50 mb-[4px]">결제 수단</span>
           <strong className="text-[15px] text-cream">
             {paymentLabels[paymentMethod] ?? "토스페이"}
@@ -119,8 +130,8 @@ export default function OrderSuccessPage() {
                 key={item.id}
                 className="flex flex-col gap-[12px] border-b border-navy-700 px-[12px] py-[14px] sm:grid sm:grid-cols-[2fr,1fr] sm:items-center sm:gap-0 sm:px-[20px] sm:text-center"
               >
-                <div className="flex items-center gap-[14px] text-left sm:gap[20px]">
-                  <div className="h-[70px] w-[70px] flex-shrink-0 overflow-hidden bg-navy-800 sm:h[90px] sm:w[90px]">
+                <div className="flex items-center gap-[14px] text-left sm:gap-[20px]">
+                  <div className="h-[70px] w-[70px] flex-shrink-0 overflow-hidden bg-navy-800 sm:h-[90px] sm:w-[90px]">
                     {item.imgSrc && (
                       <img
                         src={item.imgSrc}
@@ -145,7 +156,7 @@ export default function OrderSuccessPage() {
               </div>
             ))}
 
-            <div className="my-[24px] flex items-center justify-end gap-[16px] bg-navy-800 px-[16px] py-[16px] text-[14px] text-cream/80 rounded bg-navy-800 sm:my-[30px] sm-gap-[20px] sm:px-[30px] sm:py-[20px]">
+            <div className="my-[24px] flex items-center justify-end gap-[16px] bg-navy-800 px-[16px] py-[16px] text-[14px] text-cream/80 rounded sm:my-[30px] sm:gap-[20px] sm:px-[30px] sm:py-[20px]">
               <div className="text-[16px] font-bold text-cream">
                 총 결제 금액 :{" "}
                 <span className="text-[20px] text-terracotta-400">

@@ -1,3 +1,5 @@
+// src/pages/Main/components/PageTransition.tsx
+// 페이지 전환 애니메이션 감싸는 래퍼
 import { useEffect, useRef, type ReactNode } from "react";
 import gsap from "gsap";
 import { useLocation } from "react-router-dom";

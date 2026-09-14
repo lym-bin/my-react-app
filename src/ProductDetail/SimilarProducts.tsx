@@ -1,15 +1,19 @@
-import { Link } from "react-router-dom";
+// src/ProductDetail/SlmilarProducts.tsx
+// 상품 카드 그리드를 재 사용하는 컴포넌트 ("비슷한 제품" / "후기 컷" 둘 다 이걸 씀)
+import { Link } from "react-router-dom"; // SPA 전용 링크 컴포넌트
 import { PRODUCTS, type Product } from "../ProductList/ProductsData";
 
+// 유사한 제품 props
 interface SimilarProductsProps {
   title?: string;
-  count?: number;
+  count?: number; // 선언은 돼있지만 아래에서 안 씀 (CartSidebar의 onCheckout이랑 같은 케이스)
   products?: Product[];
 }
 
+// export로 SimilarProducts 외부 활용
 export default function SimilarProducts({
   title = "비슷한 상품",
-  products = PRODUCTS.slice(1, 3), // 기본 값
+  products = PRODUCTS.slice(1, 3), // props 안 넘어오면 기본으로 2~3번 상품 보여줌
 }: SimilarProductsProps) {
   return (
     <section className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[20px] pt-[80px] pb-[40px]">
@@ -18,6 +22,8 @@ export default function SimilarProducts({
       </h2>
       <div className="grid grid-cols-2 gap-[20px]">
         {products.map((product) => (
+          // <a href> 대신 <Link to> : 클릭해도 브라우저가 페이지 전체를 다시 안 불러옴
+          // (SPA 방식 - 리액트 라우터가 화면만 바꿔치기, <a>는 서버에 새로 요청함)
           <Link
             to={`/products/${product.id}`}
             key={product.id}
@@ -26,6 +32,7 @@ export default function SimilarProducts({
           >
             <div className="overflow-hidden bg-navy-800 h-[400px]">
               <img
+                // imgSrc가 이미 "/" 로 시작하면 그대로, 아니면 앞에 "/" 붙혀서경로 통일
                 src={
                   product.imgSrc.startsWith("/")
                     ? product.imgSrc

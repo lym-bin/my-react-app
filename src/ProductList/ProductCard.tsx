@@ -1,4 +1,5 @@
 // src/pages/ProductList/components/ProductCard.tsx
+// props로 받은 값(name, price, imgSrc)등 그대로 화면에 꽂아 넣는 표시용 컴포넌트
 interface ProductCardProps {
   isLarge?: boolean;
   href?: string;

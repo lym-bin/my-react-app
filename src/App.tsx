@@ -1,4 +1,6 @@
 // src/App.tsx
+// 전역상태(로그인/장바구니)를 설치하고, 라우터를 달고 url마다 어떤 페이지를 보여줄지 정하는 파일
+// 매핑을 도와주는 파일
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
@@ -48,8 +50,10 @@ function AppLayout() {
 
 export default function App() {
   return (
+    // 감싸는 이유는 로그인/장바구니 정보를 어디서든 꺼낼 수있게
     <AuthProvider>
       <CartProvider>
+        {/* 라우팅 기능을 쓸 수있게*/}
         <BrowserRouter>
           <AppLayout />
         </BrowserRouter>

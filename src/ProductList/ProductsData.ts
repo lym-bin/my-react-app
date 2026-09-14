@@ -1,15 +1,20 @@
 // src/ProductList/ProductsData.ts
-import type { CategoryId } from "./Categories";
-import { COLOR_OPTIONS, type ColorOption } from "./OptionsData";
+// 상품 데이터의 단일 소스 (정적 배열) 목록/상세/추천/최근 본 상품 모두 여기서 참조
+import type { CategoryId } from "./Categories"; // "top" | "outer" | "pants" | "shoes" 중 하나인 타입
+import { COLOR_OPTIONS, type ColorOption } from "./OptionsData"; // 색상 옵션 다일 소스 + 그 타입
 
+// 상품 하나의 "모양" 설계도
+// 옵셔널: ?(있어도 되고 없어도 되는 필드 없으면 undefined)
+// 옵셔널 체이닝: ?.(없으면 안전하게 undefined주고 넘어가라)
+// 둘 다 존재 여부가 불확실해서 쓰는 것
 export interface Product {
   id: number;
   name: string;
   price: number;
-  category: CategoryId;
-  imgSrc: string;
-  images?: string[]; // 추가 이미지들 담을 배열 추가
-  isLarge?: boolean;
+  category: CategoryId; // 위에서 import한 타입 -> 오탈자 방지 ("tops같은 오탈자 방지")
+  imgSrc: string; // 목록 썸네일용 대표 이미지
+  images?: string[]; // ? = 선택, 상세페이지용 추가 이미지들 (대표컷/모델컷)
+  isLarge?: boolean; // ? 그리드에서 2칸 차지할지
   similarProductIds?: number[]; // 비슷한 제품들의 ID배열 추가
   reviewProductIds?: number[]; // 후기 컷용 ID 배열 추가
   colors?: ColorOption[]; // 상품별 선택 가능한 색상 (없으면 전체 옵션 노출)
@@ -20,10 +25,13 @@ export interface Product {
 }
 
 // COLOR_OPTIONS(단일 소스)에서 value 기준으로 골라 상품에 붙이기 위한 헬퍼
+// 예: pickColors("white", "black") -> [{value: "white", label:"화이트"}, {value:"black", label:"블랙"}]
+// ...values = 나머지 매개변수(rest parameter). 인자를 몇 개든 받아서 배열로 묶음
 function pickColors(...values: string[]): ColorOption[] {
-  return COLOR_OPTIONS.filter((c) => values.includes(c.value));
+  return COLOR_OPTIONS.filter((c) => values.includes(c.value)); // value가 넘긴 목록에 포함도니 것만 남김
 }
 
+// 실제 상품 데이터 배열
 export const PRODUCTS: Product[] = [
   // --- 상의 (Top) ---
   {
@@ -31,14 +39,15 @@ export const PRODUCTS: Product[] = [
     name: "프리미엄 코튼 오버사이즈 화이트 티셔츠",
     price: 48000,
     category: "top",
-    imgSrc: "images/modalgrid_1.jpg",
+    imgSrc: "images/modalgrid_1.jpg", // 목록 썸네일
     images: [
+      // 상세 페이지 2장 (이 상품만 모델컷)
       "images/premium-cotton-oversized-white-tshirt.png",
       "images/premium-cotton-oversized-white-tshirt-model.jpg",
     ],
-    similarProductIds: [2, 3], // 외부에서 상품 목록을 받아올 수 있게 추가
-    reviewProductIds: [3, 4], // 후기컷
-    colors: pickColors("white", "black", "beige", "gray"),
+    similarProductIds: [2, 3], // 상세 페이지 "비슷한 제품"에 2,3번 노출
+    reviewProductIds: [3, 4], // "후기 컷"에 3,4번 노출
+    colors: pickColors("white", "black", "beige", "gray"), // 헬퍼로 4개 색상 골라 넣음
     sizes: ["S", "M", "L", "XL"],
     description:
       "고밀도 코튼 100%로 짜 늘어짐 없이 오래 입을 수 있는 오버사이즈 티셔츠. 어깨선을 살짝 내려 편안한 실루엣을 완성했습니다",

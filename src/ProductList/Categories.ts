@@ -1,6 +1,6 @@
 // src/ProductList/categories.ts
 // Header 카테고리 드롭다운, QuickNav, ProductData 참조
-
+// 카테고리 목록 단일 소스
 export const CATEGORIES = [
   {
     id: "outer",

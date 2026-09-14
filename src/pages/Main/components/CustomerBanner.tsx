@@ -1,3 +1,5 @@
+// src/pages/Main/components/CustomerBanner.tsx
+// 고객/브랜드 소개 슬라이드
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 

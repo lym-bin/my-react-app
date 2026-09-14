@@ -1,3 +1,5 @@
+// src/firebase.ts
+// Firebase 프로젝트 접속 통로, auth/db를 다른 파일들에 내보냄
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";

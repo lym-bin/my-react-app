@@ -1,5 +1,9 @@
 // src/pages/ProductList/components/FilterSidebar.tsx
+// 선택된 필터 값을 부모에게 알려주는 체크박스 목록 사이드바
 import { COLOR_OPTIONS, SIZE_OPTIONS } from "./OptionsData";
+// QuickNav의 icon: IconComponent처럼, 구조분해하면서 이름을 value -> val로 바꿈
+// (아래서 <input value={val}을 또 쓰니까, 번수명 val과 JSX 속성명 value가 겹치지않게 구분)
+
 interface FilterSidebarProps {
   isOpen: boolean;
   onClose: () => void;
@@ -87,7 +91,7 @@ export default function FilterSidebar({
                       value={val}
                       className="hidden"
                       checked={isChecked}
-                      onChange={() => onToggle(val)}
+                      onChange={() => onToggle(val)} // 부모(ProductListPage)의 toggleFilter 호출
                     />
                     <span
                       className={`block rounded border py-[10px] text-center text-[13px] transition-colors ${

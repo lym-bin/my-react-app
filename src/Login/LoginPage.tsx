@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+// src/Login/LoginPage.tsx
+// mode(login/signup) state로 폼 하나를 로그인/회원가입 겸용으로 쓰고
+// useAuth의 login/signup/resetPassword를 호출하는 로그인 페이지
+import React, { useState } from "react"; // React 자체 import (FormEvent 제네릭 쓰려고)
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Logo from "../components/layout/Logo";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { login, signup, resetPassword } = useAuth();
+  const { login, signup, resetPassword } = useAuth(); // AuthContext에서 3개 함수만 꺼냄
 
   // 로그인/회원가입 폼에서 토글
   const [mode, setMode] = useState<"login" | "signup">("login");
@@ -13,12 +16,14 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [info, setInfo] = useState("");
+  const [info, setInfo] = useState(""); // 에러 아닌 "안내 메시지용" (비밀번호 재설정 메일 발송 성공 등)
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // <HTMLFormElement> = 제네릭. "이 FormEvent는 어떤 HTML 요소에서 발생했는지"를 구체적으로 지정
+  // (FormEvent 자체는 여러요소에 두루 쓰이는 범용 타입이라 폼이란걸 명시함)
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
+    setError(""); // 이전 에러 지우고 시작
     setIsSubmitting(true);
 
     try {
@@ -27,8 +32,9 @@ export default function LoginPage() {
       } else {
         await login(email, password);
       }
-      navigate("/");
+      navigate("/"); // 성공하면 홈으로
     } catch {
+      // Firebase가 구체적 에러코드를 줘도, 여기선 그냥 통 메시지로(보안상 "이메일이 없습니다" 식으로 세분화 안 함)
       setError(
         mode === "signup"
           ? "회원가입에 실패 했습니다. 이메일 형식과 비밀번호(6자 이상)을 확인 해주세요."
@@ -49,10 +55,10 @@ export default function LoginPage() {
     setInfo("");
     if (!email) {
       setError("비밀번호를 재설정할 이메일을 먼저 입력해주세요.");
-      return;
+      return; // 조기 종료
     }
     try {
-      await resetPassword(email);
+      await resetPassword(email); // AuthContext의 sendPasswordResetEmail 호출
       setInfo("비밀번호 재설정 메일을 보냈습니다. 메일함을 확인해주세요.");
     } catch {
       setError("재설정 메일 발송에 실패했습니다. 이메일을 확인해주세요.");
@@ -70,6 +76,7 @@ export default function LoginPage() {
       </Link>
 
       <form onSubmit={handleSubmit} className="flex flex-col">
+        {/* 회원가입 모드일 때만 닉네임 입력창 표시 */}
         {mode === "signup" && (
           <input
             type="text"
@@ -99,6 +106,7 @@ export default function LoginPage() {
           className="mb-[16px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-[14px] text-cream placeholder:text-cream/40 outline-none focus:border-terracotta-400"
         />
 
+        {/* error/info 각각 있을 때만 표시, 동시에 둘 다 올 수도 있는 구조(서로 배타적이지 않음)*/}
         {error && <p className="mb-[16px] text-[13px] text-danger">{error}</p>}
         {info && (
           <p className="mb-[16px] text-[13px] text-terracotta-400">{info}</p>
@@ -106,6 +114,8 @@ export default function LoginPage() {
 
         <div className="mb-[20px] flex items-center justify-between text-[13px] text-cream/60">
           <div className="flex items-center gap-[6px]">
+            {/* checked/onChange 없는 체크박스: 브라우저가 알아서 체크 상태 관리(uncontrolled)*/}
+            {/* 이 값을 읽어서 쓰는 로직이 없어서 "자동로그인" 기능 자체는 아직 안 붙음*/}
             <input
               type="checkbox"
               id="keep"
@@ -147,8 +157,9 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => {
+            // 함수형 업데이트로 login <-> signup toggle
             setMode((prev) => (prev === "login" ? "signup" : "login"));
-            setError("");
+            setError(""); // 모드 바뀌면 이전 에러 지움
           }}
           className="mb-[20px] w-full cursor-pointer text-[13px] text-cream/60 hover:text-terracotta-400"
         >

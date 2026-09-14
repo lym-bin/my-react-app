@@ -1,9 +1,11 @@
 // src/pages/ProductDetail/components/SizeGuideSidebar.tsx
+// 부모가 관리하는 state(isOpen)를 props로 받아서 따르는 컴포넌트 (자기 state 없음)
 interface SizeGuideSidebarProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+// 정적 데이터: 객체 배열 (사이즈표 한 행 = 객체 하나)
 const sizeTable = [
   { size: "XXS", pants: 34, alt: 28 },
   { size: "XXS ~ XS", pants: 36, alt: 30 },
@@ -42,6 +44,7 @@ export default function SizeGuideSidebar({
 
       {/* 스크롤 가능한 테이블 본문 영역 */}
       <div className="flex-1 overflow-y-auto p-[24px]">
+        {/* 3열 그리드: Size / Pants / 인치 헤더 3칸*/}
         <div className="grid grid-cols-3 border-t border-l border-navy-700">
           <div className="border-r border-b border-navy-700 bg-navy-800 px-[10px] py-[14px] text-center text-[14px] font-bold text-cream">
             Size
@@ -53,6 +56,7 @@ export default function SizeGuideSidebar({
             인치(Alternative)
           </div>
 
+          {/* sizeTable 배열을 돌면서 행마다 셀 3개씩 그림 */}
           {sizeTable.map((row) => (
             <div key={row.size} style={{ display: "contents" }}>
               <div className="border-r border-b border-navy-700 px-[10px] py-[14px] text-center text-[14px] font-medium text-cream/80">

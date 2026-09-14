@@ -1,9 +1,12 @@
+// src/Order/OrderPage.tsx
+// 로그인 안 됐거나 로딩중이거나 장바구니 비었으면 그에 맞는 화면을 보여줌
+// 다 통과하면 배송지/결제수단 골라서 Firestore에 주문 저장하는 페이지
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { collection, addDoc } from "firebase/firestore"; // Firestore(DB) 관련 함수들
+import { db } from "../firebase"; // firebase.ts에서 만든 Firestore 접속 통로
 import AddressModal from "./AddressModal";
 
 interface Address {
@@ -14,6 +17,7 @@ interface Address {
   phone: string;
 }
 
+// 배송지 기본값(localStorage에 저장된 게 없을 때 씀)
 const initialAddresses: Address[] = [
   {
     id: "1",
@@ -31,6 +35,7 @@ const initialAddresses: Address[] = [
   },
 ];
 
+// 결제수단 4개
 const pmMethods = [
   { id: "pm-toss", value: "toss", label: "토스페이" },
   { id: "pm-kakao", value: "kakao", label: "카카오페이" },
@@ -40,6 +45,7 @@ const pmMethods = [
 
 const ADDRESS_STORAGE_KEY = "objet-b-addresses";
 
+// localStorage에서 저장된 배송지 목록 불러오기 (CartContext의 loadinitiallItems랑 똑같은 패턴)
 function loadInitalAddresses(): Address[] {
   try {
     const raw = localStorage.getItem(ADDRESS_STORAGE_KEY);
@@ -50,20 +56,24 @@ function loadInitalAddresses(): Address[] {
   } catch {
     // ignore
   }
-  return initialAddresses;
+  return initialAddresses; // 저장된 게 없거나 실패하면 기본 배송지2개
 }
 
 export default function OrderPage() {
   const navigate = useNavigate();
-  const { user, isLoading, nickname } = useAuth();
+  const { user, isLoading, nickname } = useAuth(); // 로그인 정보
 
-  const { items, totalPrice, clearCart } = useCart();
-  const [selectedpm, setSelectedpm] = useState("toss");
+  const { items, totalPrice, clearCart } = useCart(); // 장바구니 정보
+  const [selectedpm, setSelectedpm] = useState("toss"); // 선택된 결제수단
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  // (A) 함수 자체를 넘김 (괄호 없음) -> "lazy 초기화" : 첫 렌더링 때만 딱 한 번 실행 됨
   const [addresses, setAddresses] = useState<Address[]>(loadInitalAddresses);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // (B) 함수를 호출해서 (괄호 있음) 그 결과를 넘김 -> 매 렌더링마다 다시 실행됨 (비효율)
+  // [0]! : "!" = TS한테 "이 배열의 0번째, null/undefined 아닌 거 내가 보장해"
   const [currentAddress, setCurrentAddress] = useState<Address>(
-    loadInitalAddresses()[0]!,
+    // 함수 참조만 넘기고, 결과에서 [0] 꺼내는 건 함수 안으로 옮김 (lazy 초기화)
+    () => loadInitalAddresses()[0]!,
   );
 
   // addresses가 바뀔 때마다 localStorage에 저장
@@ -158,16 +168,18 @@ export default function OrderPage() {
               배송지 변경
             </button>
           </div>
+          {/* <address>는 "연락처 정보 전용 시맨틱 태그, non-italic으로 기본 기울임체 해제*/}
           <address className="not-italic leading-[1.7] text-cream/70">
             <p>{currentAddress.address}</p>
             <p>{currentAddress.phone}</p>
           </address>
         </section>
 
-        {/* 주문 상품 */}
+        {/* 주문 상품 목록*/}
         <section className="border-b border-navy-700 pb-[30px]">
           <h2 className="mb-[20px] text-cream">주문 상품 ({items.length})</h2>
           <ul className="flex flex-col gap-[24px]">
+            {/* 이미지 있으면 img, 없으면 빈 색상 박스 (ProductDetailPage 패턴 재사용 ) */}
             {items.map((item) => (
               <li
                 key={item.id}
@@ -187,6 +199,7 @@ export default function OrderPage() {
                   <div className="flex flex-wrap items-center gap-[6px] text-[13px] text-cream/60 sm:text-[14px]">
                     <span>색상: {item.color}</span>
                     <span className="text-navy-600">|</span>
+                    {/* 구분선 역할하는 텍스트 파이프*/}
                     <span>사이즈: {item.size}</span>
                     <span className="text-navy-600">|</span>
                     <span>수량: {item.qty}개</span>
@@ -200,21 +213,23 @@ export default function OrderPage() {
           </ul>
         </section>
 
-        {/* 결제 수단 */}
+        {/* 결제 수단: ProductDatailPage 색상/사이즈 라이도랑 다른 방식 */}
         <section className="border-b border-navy-700 pb-[30px]">
           <h2 className="mb-[20px] text-cream">결제 수단</h2>
           <ul className="mb-[16px] flex flex-wrap gap-[14px] sm:gap-[20px]">
+            {/* 네이티브 라디오 그대로 노출 (hidden 안 씀). accent-*로 체크 색상*/}
             {pmMethods.map((method) => (
               <li key={method.id} className="flex items-center gap-[10px]">
                 <input
                   type="radio"
-                  id={method.id}
+                  id={method.id} // <- 이 id를
                   name="pm-method"
                   value={method.value}
                   checked={selectedpm === method.value}
                   onChange={() => setSelectedpm(method.value)}
-                  className="accent-terracotta-500"
+                  className="accent-terracotta-500" // 네이티브 라디오 체크 색상 커스텀 (Tailwind 유틸)
                 />
+                {/* label과 input이 형제 관계 htmlFor={method.id)로 id랑 "이름으로" 연결*/}
                 <label
                   htmlFor={method.id}
                   className="text-cream/60 cursor-pointer"
@@ -255,22 +270,24 @@ export default function OrderPage() {
 
         <button
           type="button"
-          className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-[16px] font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-600 disabled:cursur-not-allowed disabled:opacity-50"
+          className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-[16px] font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={handleSubmitOrder}
         >
+          {/* inSubmitting이면 "처리 중..." 버튼 텍스트로. 아니면 실제 결제 금액 표시*/}
           {isSubmitting
             ? "처리 중...."
             : `${totalPrice.toLocaleString()}원 결제하기`}
         </button>
       </aside>
 
+      {/* 배송지 선택/추가 모델*/}
       <AddressModal
         isOpen={isAddressModalOpen}
         onClose={() => setIsAddressModalOpen(false)}
         addresses={addresses}
         selectedId={currentAddress.id}
         onSelect={(addr) => setCurrentAddress(addr)}
-        onAdd={(newAddress) => setAddresses((prev) => [...prev, newAddress])}
+        onAdd={(newAddress) => setAddresses((prev) => [...prev, newAddress])} // 함수형 업데이트로 배열에 새 배송치 추가
       />
     </main>
   );

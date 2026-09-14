@@ -1,3 +1,5 @@
+// src/pages/Main/components/QuickNav.tsx
+// 배너 아래 혜택 스트림
 import { Truck, Zap, RefreshCw, ShieldCheck } from "lucide-react";
 
 const BENEFITS = [

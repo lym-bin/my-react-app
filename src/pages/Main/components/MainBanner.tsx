@@ -1,3 +1,5 @@
+// src/pages/Main/componets/MainBanner.tsx
+// 상단 큰 배너
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
@@ -29,8 +31,8 @@ export default function MainBanner() {
         ease: "none",
         scrollTrigger: {
           trigger: bannerRef.current,
-          start: "top bottom",
-          end: "bottom top",
+          start: "top bottom", // 배너의 top이 뷰포트의 bottom에 닿는 순간 = 시작
+          end: "bottom top", // 배너의 bottom이 뷰포트의 top에 닿는 순간 = 끝
           scrub: true,
           invalidateOnRefresh: true, // 리사이즈/새로고침 시 값 재계산
         },
