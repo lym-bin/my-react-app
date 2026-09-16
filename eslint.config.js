@@ -3,8 +3,9 @@ import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import { defineConfig, globalIgnores } from "eslint/config";
-// typescript-eslint(TS 문법을 읽는 파서+규칙 모음)는 설치는 했지만,
-// 아직 TS 7을 지원 안 해서(하드 에러) 여기서 import/사용을 잠시 뺌 (아래 TODO 참고)
+// typescript-eslint(TS 문법을 읽는 파서+규칙 모음)는 TS 7을 아직 지원 안 해서(하드 에러)
+// 설치하지 않음 (아래 TODO 참고). --legacy-peer-deps로 억지 설치했다가
+// Vercel 배포가 ERESOLVE 충돌로 실패해서(로컬은 flag로 우회되지만 Vercel의 npm install은 아님) 다시 제거함.
 
 export default defineConfig([
   globalIgnores(["dist"]),
