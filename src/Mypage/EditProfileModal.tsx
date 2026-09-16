@@ -55,6 +55,7 @@ export default function EditProfileModal({
       setNewPasswordConfirm("");
       setMessage(null);
     }
+    // effect가 실행되는 조건(isOpen이 바뀌면, 열리든 닫히든)
   }, [isOpen, user]);
 
   const handleSubmit = async (e: FormEvent) => {

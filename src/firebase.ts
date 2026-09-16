@@ -1,5 +1,5 @@
 // src/firebase.ts
-// Firebase 프로젝트 접속 통로, auth/db를 다른 파일들에 내보냄
+// Firebase 프로젝트 접속 통로, auth/db를 다른 파일들에 내보냄(export)
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
@@ -15,7 +15,7 @@ const firebaseConfig = {
   measurementId: "G-R0TTFMV5RP",
 };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const analytics = getAnalytics(app);
-export const db = getFirestore(app);
+const app = initializeApp(firebaseConfig); // Firebase 프로젝트에 접속
+export const auth = getAuth(app); // 인증 서비스 통로
+export const analytics = getAnalytics(app); // 분석 서비스 통로
+export const db = getFirestore(app); // DB 서비스 통로

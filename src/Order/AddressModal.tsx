@@ -10,12 +10,13 @@ interface Address {
   phone: string;
 }
 
+// 상태+함수 전달(실제 배송지 목록은 부모(OrderPage)가 갖고 있음)
 interface AddressModalProps {
   isOpen: boolean;
   onClose: () => void;
   addresses: Address[];
   selectedId: string;
-  onSelect: (address: Address) => void; // Address 하나를 받아서 암궛도 안 리턴하는 함수 타입
+  onSelect: (address: Address) => void; // Address 하나를 받아서 아무것도 안 리턴하는 함수 타입
   onAdd: (address: Address) => void;
 }
 

@@ -67,10 +67,6 @@ export default function ProductDetailPage() {
     openCart(); // 담고 나서 장바구니 사이드바 자동으로 열기
   };
 
-  const handleCheckout = () => {
-    cart.close();
-  };
-
   // 둘 중 하나라도 열려있으면 배경 dimmed 처리
   const isDimmedOpen = cart.isOpen || sizeGuide.isOpen;
 
@@ -237,7 +233,6 @@ export default function ProductDetailPage() {
           <CartSidebar
             isOpen={cart.isOpen}
             onClose={cart.close}
-            onCheckout={handleCheckout}
           />
         </section>
       </main>

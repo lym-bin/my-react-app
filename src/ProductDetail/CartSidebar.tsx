@@ -6,11 +6,8 @@ import { useNavigate } from "react-router-dom"; // 코드로 페이지 이동시
 interface CartSidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  onCheckout?: () => void; // 선택적 prop으로 유지
 }
 
-// { isOpen, onClose }만 구조분해 -> onCheckout은 타입에 있지만
-// 이 컴포넌트에서 실제로 안 씀(아래 참고)
 export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
   const { items, removeItem, updateQty, totalPrice } = useCart(); // CartContext에서 필요한 것만 꺼냄
   // useNavigate: 버튼 클릭 같은 이벤트 헨들러 안에서 코드로 페이지를 이동 시키는 HOOK
@@ -78,7 +75,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                         aria-label="수량 감소"
                         onClick={() => updateQty(item.id, item.qty - 1)} // 현재 수량 -1
                         disabled={item.qty <= 1} // 1개월 일 땐 더 못 줄이게 비활성화
-                        className="flex h-[20px] w-[20px] cursur-pointer items-center justify-center border border-navy-600 text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400 disabled:cursur-not-allowed disabled:opacity-30"
+                        className="flex h-[20px] w-[20px] cursor-pointer items-center justify-center border border-navy-600 text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400 disabled:cursor-not-allowed disabled:opacity-30"
                       >
                         -
                       </button>
@@ -119,7 +116,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
         <footer className="border-t border-navy-700 bg-navy-900 p-[24px]">
           <div className="mb-[14px] flex items-center justify-between text-[14px] text-cream/80">
             <span>총 상품 금액</span>
-            {/* CartContext가 이미 계산해둔 총액*/}
+            {/* CartContext가 이미 계산해둔 총액 수량 바뀌면 바로바로 최신 값반영(reduce)*/}
             <strong className="text-[16px] text-cream">
               ₩ {totalPrice.toLocaleString()}
             </strong>

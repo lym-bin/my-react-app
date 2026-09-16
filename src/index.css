@@ -1,6 +1,10 @@
 /* src/index.css */
+
+/* Tailwind 자체를 불러오는 줄*/
 @import "tailwindcss";
 
+/* Tailwind v4의 커스텀 색상/설정 정의소(v4 부터는 CSS파일 안에서 직접 정의)*/
+/* @theme안에 --color-xxx 처럼 정의하면 Tailwind가 자동으로 bg-xxx,text-xxx 유틸리티 클래스를 만들어줌*/
 @theme {
   --color-ink: #000000;
   --color-paper: #ffffff;

@@ -11,15 +11,19 @@ interface PageTransitionProps {
 export default function PageTransition({ children }: PageTransitionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const curtainRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
+  const location = useLocation(); // OrderSuccessPage Hook
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0); // 페이지 바뀔 떄마다(렌더링 직후) 스크롤을 맨 위로
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
 
+      // GSAP 타임라인
       // 1. 페이지 진입 시 커튼(어두운 오버레이)이 아래로 밀려나며 사라짐
+      // tl.set : 커튼을 보이게 세팅
+      // .fromto: 콘텐츠가 살짝 확대되어 나타남
+      // to: 커튼이 위로 사라짐
       tl.set(curtainRef.current, { yPercent: 0, display: "block" })
         .fromTo(
           containerRef.current,
@@ -47,7 +51,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
     }, containerRef);
 
     return () => ctx.revert();
-  }, [location.pathname]);
+  }, [location.pathname]); // 의존성 배열(URL 경로가 바뀔 떄마다 effect 실행)
 
   return (
     <div className="relative overflow-hidden">

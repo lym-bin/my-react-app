@@ -6,7 +6,6 @@ import { PRODUCTS, type Product } from "../ProductList/ProductsData";
 // 유사한 제품 props
 interface SimilarProductsProps {
   title?: string;
-  count?: number; // 선언은 돼있지만 아래에서 안 씀 (CartSidebar의 onCheckout이랑 같은 케이스)
   products?: Product[];
 }
 
@@ -33,6 +32,7 @@ export default function SimilarProducts({
             <div className="overflow-hidden bg-navy-800 h-[400px]">
               <img
                 // imgSrc가 이미 "/" 로 시작하면 그대로, 아니면 앞에 "/" 붙혀서경로 통일
+                // startWith("/"): 문자열이 "/"로 시작하는지 확인하는 boolean 메서드
                 src={
                   product.imgSrc.startsWith("/")
                     ? product.imgSrc

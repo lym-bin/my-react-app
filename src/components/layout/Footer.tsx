@@ -22,7 +22,7 @@ export default function Footer() {
     <footer className="w-full border-t border-navy-700 bg-navy-950 px-[20px] py-[40px] md:px-[50px]">
       <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-[32px] text-center md:flex-row md:items-center md:justify-between md:gap-0 md:text-left">
         {/* 1. 왼쪽 구역 로고 + 대표자 정보 + 노션 링크 */}
-        <div className="footer-left flex flex-col items-center md:items-start">
+        <div className="flex flex-col items-center md:items-start">
           <Link to="/" aria-label="홈으로 이동하기">
             <Logo size="lg" />
           </Link>

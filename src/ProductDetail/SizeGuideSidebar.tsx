@@ -57,6 +57,7 @@ export default function SizeGuideSidebar({
           </div>
 
           {/* sizeTable 배열을 돌면서 행마다 셀 3개씩 그림 */}
+          {/* .map()으로 리스트를 만들 땐 key를 달 wrapper 요소가 필요한데 3열 그리드 안에서 wrappper가 잇으면 꺠짐 contents속성 추가*/}
           {sizeTable.map((row) => (
             <div key={row.size} style={{ display: "contents" }}>
               <div className="border-r border-b border-navy-700 px-[10px] py-[14px] text-center text-[14px] font-medium text-cream/80">
