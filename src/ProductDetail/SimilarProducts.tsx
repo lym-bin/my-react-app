@@ -1,9 +1,11 @@
 // src/ProductDetail/SlmilarProducts.tsx
 // 상품 카드 그리드를 재 사용하는 컴포넌트 ("비슷한 제품" / "후기 컷" 둘 다 이걸 씀)
+// title/products를 props로 받는 재사용 컴포넌트 -> 이미지 경로 가드 -> 2열 그리드 Link로 상세 페이지 연결
 import { Link } from "react-router-dom"; // SPA 전용 링크 컴포넌트
 import { PRODUCTS, type Product } from "../ProductList/ProductsData";
 
 // 유사한 제품 props
+// products만 갈아끼우면 완전히 다른 섹션(유사한 제품, 후기컷)으로 재사용할 수 있게 설계
 interface SimilarProductsProps {
   title?: string;
   products?: Product[];
@@ -31,7 +33,7 @@ export default function SimilarProducts({
           >
             <div className="overflow-hidden bg-navy-800 h-[400px]">
               <img
-                // imgSrc가 이미 "/" 로 시작하면 그대로, 아니면 앞에 "/" 붙혀서경로 통일
+                // imgSrc가 이미 "/" 로 시작하면 그대로, 아니면 앞에 "/" 붙혀서 절대 경로 통일
                 // startWith("/"): 문자열이 "/"로 시작하는지 확인하는 boolean 메서드
                 src={
                   product.imgSrc.startsWith("/")

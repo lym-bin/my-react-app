@@ -1,5 +1,6 @@
 // src/pages/ProductList/components/ProductGrid.tsx
 // 받은 상품 목록중, 몇 개까지 보여줄지(페이지 네이션)을 관리하는 컴포넌트
+// 받은 상품은 ProductListPage에서 받음
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import type { Product } from "./ProductsData";
@@ -37,6 +38,8 @@ export default function ProductGrid({ products }: ProductGridProps) {
   const visibleProducts = products.slice(0, visibleCount); // 앞에서 부터 visibleCount개만 잘라냄
   const hasMore = visibleCount < products.length; // 아직 안 보여진게 있는지 boolean확인
 
+  // 카드 렌더링 시작
+  // toLocaleString(): 천 단위 콤마를 자동으로 넣어주는 JS메서드
   return (
     <section className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[20px]">
       <ul className="mb-[40px] grid grid-cols-3 gap-[24px]">
@@ -45,7 +48,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
           <ProductCard
             key={product.id} // 리스트 구분용 고유 값
             isLarge={product.isLarge} // 2칸 차지 여부(없으면 undefined -> 정상)
-            href={`products/${product.id}`} // 상세페이지 링크 (백틱 템플릿 리터럴)
+            href={`/products/${product.id}`} // 상세페이지 링크 (백틱 템플릿 리터럴)
             imgSrc={product.imgSrc}
             imgPosition={product.imgPosition}
             imgFit={product.imgFit}

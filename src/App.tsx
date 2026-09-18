@@ -1,6 +1,7 @@
 // src/App.tsx
 // 전역상태(로그인/장바구니)를 설치하고, 라우터를 달고 url마다 어떤 페이지를 보여줄지 정하는 파일
 // 매핑을 도와주는 파일
+// 전역 데이터(Provider) 설치 -> 주소 감시 시작(Router) -> 주소에 맞는 페이지 하나만 골라서 헤더/푸터 그리기
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
@@ -19,6 +20,7 @@ import MyPage from "./Mypage/Mypage";
 import ProductListPage from "./ProductList/ProductListPage";
 
 function AppLayout() {
+  // 지금 주소가 뭔지 알려주는 센서같은 느낌
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
 

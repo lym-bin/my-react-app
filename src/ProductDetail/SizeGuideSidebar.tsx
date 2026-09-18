@@ -1,11 +1,16 @@
 // src/pages/ProductDetail/components/SizeGuideSidebar.tsx
 // 부모가 관리하는 state(isOpen)를 props로 받아서 따르는 컴포넌트 (자기 state 없음)
+// 슬라이드 인/아웃 -> 고정된 정적 데이터를 3열 그리드로 렌더링
+
+// CartSidebar랑 같은 패턴 자기 state 없이 부모(useDisclosure)가 내려준 값을 따름
+// 제어형 컴포넌트
 interface SizeGuideSidebarProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 // 정적 데이터: 객체 배열 (사이즈표 한 행 = 객체 하나)
+// 렌더링마다 새로 만들 필요 없는 데이터라 함수 밖에 둠
 const sizeTable = [
   { size: "XXS", pants: 34, alt: 28 },
   { size: "XXS ~ XS", pants: 36, alt: 30 },
@@ -57,7 +62,7 @@ export default function SizeGuideSidebar({
           </div>
 
           {/* sizeTable 배열을 돌면서 행마다 셀 3개씩 그림 */}
-          {/* .map()으로 리스트를 만들 땐 key를 달 wrapper 요소가 필요한데 3열 그리드 안에서 wrappper가 잇으면 꺠짐 contents속성 추가*/}
+          {/* .map()으로 리스트를 만들 땐 key를 달 wrapper 요소가 필요한데 3열 그리드 안에서 wrappper가 있으면 꺠짐 contents속성 추가*/}
           {sizeTable.map((row) => (
             <div key={row.size} style={{ display: "contents" }}>
               <div className="border-r border-b border-navy-700 px-[10px] py-[14px] text-center text-[14px] font-medium text-cream/80">

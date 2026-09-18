@@ -1,7 +1,10 @@
 // src/context/AuthContext.tsx
+// 아바트 경비실 CCTV 시스템
 // 로그인 정보를 앱 전체가 같이 보는 창고
 // Firebase Auth와 리액트 state를 연결하는 다리
 // 누가 로그인했는지, isLoading 아직 확인중인지 값 체크를 해주는 파일
+// Provider가 Firebase 리스너를 구독->로그인상태감지->useAuth()로 꺼내씀
+// 리스너가 못 보는 부분(닉네임/프로필 변경)만 수동 setUser 보정
 
 import {
   createContext,
@@ -34,6 +37,7 @@ interface AuthContextValue {
   nickname: string | null; // displayName 없으면 email
   // 이메일이랑 비밀번호(문자열)을 받아서 Promise(void) 비동기 작업
   login: (email: string, password: string) => Promise<void>;
+  // ts에서 void는 반환할 결과 값은 없다
   signup: (email: string, password: string, nickname?: string) => Promise<void>;
   logout: () => Promise<void>;
   updateNickname: (nickname: string) => Promise<void>;
@@ -44,20 +48,26 @@ interface AuthContextValue {
   resetPassword: (email: string) => Promise<void>;
 }
 
-// 빈 상자 생성, 기본 값 undefined = Provider 밖에서 잘못 쓰면 감지 해야함
+// 빈 상자 생성
+// useAuth()에서 undefined면 AuthProvider가 배치가 안된 것이니까 에러를 던지자(안전장치)
+// createContext: 경비실에 빈 모니터를 설치하는 것
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 // children이라는 props 하나를 받는데 그 안에 화면에 그릴 수 있는 JSX가 들어있다
+// AuthProvider: 그 모니터를 실제로 켜고 지키는 경비원
+// Firebase라는 진짜 CCTV(onAuthStateChanged)를 지켜봄
 export function AuthProvider({ children }: { children: ReactNode }) {
   // useState는 [현재값, 값 바꾸는 함수]를 return;
+  // useState가 두 개인 이유는 user:누가 로그인했는지, isLoading: Firebase한테 아직 물어보는 중인지
   const [user, setUser] = useState<User | null>(null); // 현재 로그인 사용자
-  // firebase한테 지금 로그인 되있는지 안되있는지 isLoading이 true인지 확인
+  // Firebase한테 지금 로그인 되있는지 안되있는지 isLoading이 true인지 확인
   const [isLoading, setIsLoading] = useState(true);
 
   // 바닐라 js로 비유하면 이벤트리스너DOM로드처럼 준비되면 한 번 실행
   useEffect(() => {
     // Firebase가 브라우저에 세션을 저장해두기 때문에, 새로고침해도
     // 이 콜백이 실제 로그인 상태를 다시 알려줌.
+    // onAuthStateChanged(리스너 역할 콜백함수 등록) = element.addEventListener("click", fn)
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser); // 로그인/로그아웃/세션복구 될 때마다 user state 갱신
       setIsLoading(false); // 한 번이라도 확인 끝나면 "로딩 아님"으로
@@ -67,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // async function login(email, password) {과 같음}
   // 로그인 : Firebase 함수를 그대로 호출 만함. user state는 안 건드림
-  // (성공하면 위의 onAuthStateChanged 리스너가 알아서 seyUser 해줌)
+  // (성공하면 위의 onAuthStateChanged 리스너가 알아서 setUser 해줌)
   const login = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
   };
@@ -112,6 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     newPassword: string,
   ) => {
     const current = auth.currentUser;
+    // 비밀번호 변경은 가드구문 필수 보안상
     if (!current || !current.email) throw new Error("로그인이 필요합니다");
     // 1) "이메일 + 현재 비밀번호"로 증명서(credential)생성
     const credential = EmailAuthProvider.credential(
@@ -127,6 +138,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // "user 있으면 -> displayName 우선, 없으면 email / user 없으면 null"
   const nickname = user ? user.displayName || user.email : null;
 
+  // 빈 모니터(AuthContext)에 실제화면(value)를 연결 하는 영역
+  // {children}을 그대로 그 안에 넣어줌 이 아래자식들은 정부 이 정보를 볼 수있다.
   return (
     <AuthContext.Provider
       value={{

@@ -1,5 +1,7 @@
 // src/pages/Main/componets/MainBanner.tsx
 // 상단 큰 배너
+// 마운트 시 타이틀 줄들을 STAGGER로 순차 등장 -> 배경 이미지에 스크롤 연동 패럴렉스 설정
+// 별도 effect로 마우스 움직이에 반응하는 뱃지 추적 -> 언마운트시 각각 정리
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
@@ -7,20 +9,21 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+//
 export default function MainBanner() {
-  const bannerRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
-  const imageLinkRef = useRef<HTMLAnchorElement>(null);
-  const viewBadgeRef = useRef<HTMLDivElement>(null);
+  const bannerRef = useRef<HTMLDivElement>(null); // 섹션 전체 (scrollTrigger 범위+trigger)
+  const imgRef = useRef<HTMLImageElement>(null); // 이미지 (로드 완료 감지용)
+  const imageLinkRef = useRef<HTMLAnchorElement>(null); // Link(마우스 이벤트 리스너 달 대상)
+  const viewBadgeRef = useRef<HTMLDivElement>(null); // VIEW 뱃지(직접 움직일 대상)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. 타이틀 텍스트 한 줄씩 위로 솟아오르는 애니메이션
+      // 1. 타이틀 텍스트 한 줄씩 위로 솟아오르는 애니메이션(stagger)
       gsap.from(".gsap-title-line", {
         y: 60,
         opacity: 0,
         duration: 1.2,
-        stagger: 0.15,
+        stagger: 0.15, // 각 요소가 0.15초씩 시간차를 두고 순서대로
         ease: "power3.out",
       });
 
@@ -33,7 +36,7 @@ export default function MainBanner() {
           trigger: bannerRef.current,
           start: "top bottom", // 배너의 top이 뷰포트의 bottom에 닿는 순간 = 시작
           end: "bottom top", // 배너의 bottom이 뷰포트의 top에 닿는 순간 = 끝
-          scrub: true,
+          scrub: true, // 애니메이션 진행도를 스크롤 위치에서 직접 연결
           invalidateOnRefresh: true, // 리사이즈/새로고침 시 값 재계산
         },
       });
@@ -56,6 +59,7 @@ export default function MainBanner() {
     const badge = viewBadgeRef.current;
     if (!link || !badge) return;
 
+    // 커서를 따라다니느 VIEW 뱃지
     const xTo = gsap.quickTo(badge, "x", { duration: 0.35, ease: "power3" });
     const yTo = gsap.quickTo(badge, "y", { duration: 0.35, ease: "power3" });
 

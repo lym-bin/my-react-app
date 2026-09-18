@@ -9,6 +9,7 @@ import { collection, addDoc } from "firebase/firestore"; // Firestore(DB) 관련
 import { db } from "../firebase"; // firebase.ts에서 만든 Firestore 접속 통로
 import AddressModal from "./AddressModal";
 
+// 정적 데이터
 interface Address {
   id: string;
   title: string;
@@ -86,6 +87,11 @@ export default function OrderPage() {
   }, [addresses]);
 
   // 1. 비회원 접근 차단
+
+  // useEffect는 렌더링이 끝난 뒤이므로 로그인 안된 사람이 페이지 접근 시
+  // 한 번 렌더링 해야하는 순간 !user가 실행 -> (navigate("/login")) 발동
+  // !user인 상태로 배송지/결제 로직이 실행되면 에러 날 수 있으니
+  // if (!user) return null; 아무것도 그리지마라는 안전한 빈 화면 보여줌
   useEffect(() => {
     if (!isLoading && !user) {
       alert("로그인이 필요한 서비스입니다.");
@@ -108,6 +114,8 @@ export default function OrderPage() {
   }
 
   const handleSubmitOrder = async () => {
+    // 이미 제출 중이면 무시 (중복 클릭 방지)
+    if (isSubmitting) return;
     if (items.length === 0) return;
     setIsSubmitting(true);
 
@@ -122,6 +130,15 @@ export default function OrderPage() {
       createdAt: new Date().toISOString(),
     };
 
+    // collection(db, "orders") : Firebase DB 안의 orders라는 테이블
+    // addDoc(그 컬렉션, orderData): 그 안에 새 문서(레코드) 하나를 추가
+    // CartContext가 localStorage에 저장했던 것과 달리 진짜 서버(firebase)DB에
+    // 저장 해야 하므로 비동기(await) 사용하고 try/catch로 예외처리
+    // finally : 성공하든 실패하든 무조건 실행
+    // setIsSybmitting(false): 성공 시엔 어차피 다른 페이지로 이동, 실패 했을 때도 "처리중"
+    // 버튼이 계속 멈춰있지 않고 다시 누를 수 있는 상태로 돌아오게 하려면 반드시 실행해야하므로
+    // navigate("/ordersuccess", { state: orderData }) : useNavigate에
+    // 두 번째 인자로 객체를 넘기면 데이터가 URL에 안 보이지만 OrderSuccessPage로 그대로 전달
     try {
       await addDoc(collection(db, "orders"), orderData);
       navigate("/ordersuccess", { state: orderData });
@@ -213,7 +230,7 @@ export default function OrderPage() {
           </ul>
         </section>
 
-        {/* 결제 수단: ProductDatailPage 색상/사이즈 라이도랑 다른 방식 */}
+        {/* 결제 수단: ProductDatailPage 색상/사이즈 라디오랑 다른 방식 */}
         <section className="border-b border-navy-700 pb-[30px]">
           <h2 className="mb-[20px] text-cream">결제 수단</h2>
           <ul className="mb-[16px] flex flex-wrap gap-[14px] sm:gap-[20px]">
@@ -270,6 +287,7 @@ export default function OrderPage() {
 
         <button
           type="button"
+          disabled={isSubmitting}
           className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-[16px] font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={handleSubmitOrder}
         >

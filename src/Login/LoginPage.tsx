@@ -26,6 +26,9 @@ export default function LoginPage() {
     setError(""); // 이전 에러 지우고 시작
     setIsSubmitting(true);
 
+    // mode에 따라 AuthContext에서 빌려온 signup/login 중 하나를 골라 호출
+    // 성공하면 (/)으로 이동
+    // catch 구문에 구체적에러코드 대신 뭉뚱그리게 메시지로만 처리
     try {
       if (mode === "signup") {
         await signup(email, password, nickname);
@@ -50,6 +53,8 @@ export default function LoginPage() {
     alert("아직 준비중인 페이지입니다.");
   };
 
+  // 가드절로 이메일 미입력을 먼저 걸러내고, AuthContex의 resetPassword를 호출
+  // error(실패용), info(성공 안내용) -> 에러가 아닌 메시지 전용 state
   const handlePasswordReset = async () => {
     setError("");
     setInfo("");
@@ -173,6 +178,7 @@ export default function LoginPage() {
         <button
           type="button"
           className="flex items-center justify-center rounded-[8px] bg-naver py-[12px] text-[14px] font-medium text-white"
+          // handleComingSoon : alert("아직 준비중인 페이지 입니다")
           onClick={handleComingSoon}
         >
           네이버 로그인

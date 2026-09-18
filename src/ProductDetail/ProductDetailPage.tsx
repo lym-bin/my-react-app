@@ -1,5 +1,8 @@
 // src/ProductDetail/ProductDetailPage.tsx
-// URL에서 상품 하나를 찾아와서 색상/사이즈를 고르고 장바구니에 담는 페이지
+// URL에서 상품 하나를 찾아와서 색상/사이즈를 고르고 장바구니에 담는
+// 탈의실 카운터로 비유
+// 손님이 데스크에서 상품 하나를 골라 카운터로 가져와서 색상/사이즈를 고름
+// 담기 버튼을 누르면 장바구니 사이드바가 스르륵 열리는 흐름
 import { useEffect, useState, type FormEvent } from "react";
 // useParams는 항상 문자열로 옴 -> Number(id)
 import { useParams } from "react-router-dom"; // URL 경로의 동적 부분(:id 같은)을 읽는 쪽
@@ -13,9 +16,11 @@ import { PRODUCTS } from "../ProductList/ProductsData";
 import { COLOR_OPTIONS, SIZE_OPTIONS } from "../ProductList/OptionsData";
 import { addRecentlyViewed } from "../ProductList/recentlyViewed";
 export default function ProductDetailPage() {
-  // 라우터가 "/products/:id" 경로로 매칭시켜준 id를 꺼냄. 예: /products/3 -> id = "3" (항상 문자열!)
+  // App.tsx에서 라우터가 "/products/:id" 경로로 매칭시켜준 id를 꺼냄. 예: /products/3 -> id = "3" (항상 문자열!)
   const { id } = useParams();
 
+  // 커스텀 훅 두 번 호출
+  // 독립된 isOpen상태가 생김
   const cart = useDisclosure(); // 장바구니 사이드바 열고 닫기
   const sizeGuide = useDisclosure(); // 사이즈가이드 사이드바 열고 닫기(완전히 별개 인스턴스)
   const { addItem } = useCart(); // CartContext에서 "장바구니에 담기" 함수만 꺼냄
@@ -30,6 +35,8 @@ export default function ProductDetailPage() {
   }, [product]);
 
   // 이 상품에 지정된 색상/사이즈가 있으면 그걸, 없으면 전체 옵션을 보여줌
+  // ?(옵셔널 체이닝)으로 product가 있을 때만 .colors에 접근하고 ??(널 병합)로
+  // 결과가 null / undefined면 기본 옵션 목록으로 대체함
   const colors = product?.colors ?? COLOR_OPTIONS;
   const sizes = product?.sizes ?? SIZE_OPTIONS;
 
@@ -44,6 +51,7 @@ export default function ProductDetailPage() {
   };
 
   // 폼 제출 이벤트의 타입(TS가 e안에 뭐가 들었는지 알도록)
+  // 가드절 두 개 = 상품 없으면 종료, 색상/사이즈 선택 안 했으면 알림 띄우고 종료
   const handleAddToCart = (e: FormEvent) => {
     e.preventDefault();
     if (!product) return; // 조기 종료: 상품 없으면
@@ -230,14 +238,18 @@ export default function ProductDetailPage() {
             isOpen={sizeGuide.isOpen}
             onClose={sizeGuide.close}
           />
-          <CartSidebar
-            isOpen={cart.isOpen}
-            onClose={cart.close}
-          />
+          <CartSidebar isOpen={cart.isOpen} onClose={cart.close} />
         </section>
       </main>
 
       {/* 비슷한 제품 / 후기 컷 : ID 배열 -> 실제 상품 객체 배열로 변환*/}
+      {/* product.similarProductIds: 숫자 ID 배열[3,7,12]*/}
+      {/* .map((id)=> PRODUCTS.find(...)): 각 ID를 실제 상품 객체로 바꿈 */}
+      {/* .find()는 못 찾으면 undefined를 돌려줌 */}
+      {/* Product | undefined[]로 상품이거나 undefined이 섞인 배열이 됨 */}
+      {/* .filter((p): p is NonNullable<typeof p> => p !== undefined)} = TS 문법*/}
+      {/* (p) => p !== undefined만 있어도 undefined는 걸러지는데 TS에선 깐깐하게봄 */}
+      {/* (p): p is NonNullable<typeof p> => 타입 서술어(type predicate) 특수 문법 */}
       <SimilarProducts
         title="비슷한 제품"
         products={product.similarProductIds

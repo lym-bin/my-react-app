@@ -1,21 +1,26 @@
 // src/ProductDetail/CartSidebar.tsx
 // state는 없이, CartContext에서 장바구니 내용을 꺼내와 보여주기만 하는 컴포넌트
+// CartContext 데이터 빌려옴 -> isOpen 값에 따라 CSS로 슬라이드 인/아웃 ->
+// 수량조절은 Context 함수 직접 호출 -> 결제 버튼은 닫기+이동 순서 실행
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom"; // 코드로 페이지 이동시키는 hook(버튼 클릭등 이벤트 안에서 씀)
 
+// controlled 컴포넌트
 interface CartSidebarProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
-  const { items, removeItem, updateQty, totalPrice } = useCart(); // CartContext에서 필요한 것만 꺼냄
+  // CartContext에서 필요한 것만 꺼냄(구조분해 할당)
+  const { items, removeItem, updateQty, totalPrice } = useCart();
   // useNavigate: 버튼 클릭 같은 이벤트 헨들러 안에서 코드로 페이지를 이동 시키는 HOOK
   // LINK가 클릭하면 이동하는 링크 라면 useNavigate()는 조건 판단 후 이동
   const navigate = useNavigate(); // 2. 네비게이트 훅 선언
 
   return (
     <aside
+      // 순간적으로 없애도 되는 것(배경 dimmed)은 조건부 렌더링, 움직이는 모습 자체(슬라이드 사이드바)는 조건부 스타일
       // translate-x로 슬라이드 인/아웃 : 열리면 제자리(0), 닫히면 화면 오른쪽 밖으로 (full)
       // transition-transform이 있어서 순간이동이 아니라 스스륵 미끄러지는 애니메이션이 됨
       className={`fixed top-0 right-0 z-sidebar flex h-screen w-[360px] flex-col border-l border-navy-700 bg-navy-900 shadow-[-5px_0_15px_rgba(0,0,0,0.4)] transition-transform duration-300 ${
@@ -86,7 +91,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                         type="button"
                         aria-label="수량 증가"
                         onClick={() => updateQty(item.id, item.qty + 1)} // 현재 수량 +1
-                        className="flex h-[20px] w-[20px] cursur-pointer items-center justify-center border border-navy-600 text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
+                        className="flex h-[20px] w-[20px] cursor-pointer items-center justify-center border border-navy-600 text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
                       >
                         +
                       </button>

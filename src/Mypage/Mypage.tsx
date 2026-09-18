@@ -1,6 +1,8 @@
 // src/Mypage/Mypage.tsx
 // 로그인 검사 후, Firestore에서 사용자의 주문내역을 조회해서 보여주고,
 // 최근 본 상품, 회원정보 수정도 같이 관리하는 마이 페이지
+// 로그인 확인(리다이렉트)-> Firestore에서 본인 주문만 쿼리해서 조회(언마운트 방어)
+// localStorage 기반 최근 본 상품 표시 -> 사이드 네비게이션바에서 스크롤 이동
 import useDisclosure from "../hooks/useDisclosure";
 import EditProfileModal from "./EditProfileModal";
 import { useEffect, useState, useRef } from "react";
@@ -21,6 +23,9 @@ interface OrderItem {
   imgSrc?: string;
 }
 
+// Firestore에 저장된 "주문 문서" 하나의 모양
+// id: Firestore 문서 자체의 고유 ID
+// orderId: OrderPage.tsx에서 직접 만든 ORD-.. 형식의 주문번호
 interface OrderData {
   id: string;
   orderId: string;
@@ -70,6 +75,10 @@ export default function MyPage() {
       return; // useEffect 콜백 안의 조기 종료 (훅 규칙이랑 무관, 그냥 함수 안 return)
     }
 
+    // 사용자 마이페이지 진입시 Firestore에 요청(fetchOrders 시작) ->응답이 오기도 전에 다른 페이지이동 ->
+    // 컴포넌트는 화면에서 이미 사라졌는데 조금 뒤 Firestore 응답이 뒤늦게 도착 -> setOrders(...) 호출
+    // 결론적으로 사라진 컴포넌트에 state를 넣으려는 시도라서 메모리 누수 원인이 됨
+    // isCancelled는 그걸 막는 깃발
     let isCancelled = false; // 컴포넌트가 사라지면 true로 바뀜 -> 기 뒤엔 setState 안 함
 
     async function fetchOrders() {
@@ -77,6 +86,7 @@ export default function MyPage() {
       try {
         // userId가 현재 로그인한 유저의 uid와 일치하는 문서 조회
         // Firestore 쿼리 만들기 : "orders" 컬렉션에서 userId가 내 uid랑 같은 문서만
+        // Firestore가 리턴하는 데이터는 TS 입장에서 원래 구체적인 타입을 모르기 때문에 필요함
         const q = query(
           collection(db, "orders"),
           where("userId", "==", user.uid), // SQL의 WHERE절(데이터 조회 수정할 떄 원하는 행 조회)이랑 같은 역할

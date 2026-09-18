@@ -1,6 +1,8 @@
 // src/pages/Main/MainPage.tsx
 // 메인 화면 섹션 컴포넌트들을 순서대로 조립하고,
-// 인트로 끝나면 GSAP으로 스크롤 리빌 애니메이션 거는 조립 파일
+// 인트로 끝나야 -> containerRef 범위 안에서 .gsap-reveal-section 요소들을
+// 전부 찾아서 -> 각각 스크롤로 85% 지점에 들어오면 한 번만 fade+슬라이드업
+// 언마운트/재실행 시 이전 애니메이션 정리(revert)
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap"; // 애니메이션 전문 라이브러리 (CSS transition 보다 복잡한 걸 코드로 제어)
 import { ScrollTrigger } from "gsap/ScrollTrigger"; // GSAP의 "스크롤 위치에 따라 애니메이션 발동 플러그인"
@@ -48,7 +50,7 @@ export default function MainPage() {
           },
         );
       });
-    }, containerRef); // gsap.context의 두 번째 인자: 이 ref 안에서만 셀렉터 검색
+    }, containerRef); // gsap.context의 두 번째 인자: 이 ref 안에서만(containerRef) 셀렉터 검색
 
     // cleanup: 컴포넌트 사라지거나 showIntro 바뀔 때, 여기서 만든 애니메이션/트리거들 싹 되돌림
     // (안 하면 이전 애니메이션들이 안 지워지고 중복 쌓임)

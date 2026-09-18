@@ -1,5 +1,8 @@
 // src/pages/Main/components/CustomerBanner.tsx
 // 고객/브랜드 소개 슬라이드
+// current state가 "지금 몇번째 슬라이드 인지를 기억" -> setInterval로 자동 증가
+// 마우스 올리면 일시정지 -> 화살표/점 클릭은 직접 인덱스 지정 ->
+// translateX로 슬라이드 띠 전체를 부드럽게 이동
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -8,7 +11,7 @@ interface CustomerSlide {
   img: string;
   title: string;
   desc: string;
-  reverse?: boolean;
+  reverse?: boolean; // 선택적 필드(reverse: true를줘서 텍스트 이미지 좌우 배치 반대로)
 }
 
 const SLIDES: CustomerSlide[] = [
@@ -38,10 +41,11 @@ export default function CustomerBanner() {
     if (isPaused) return;
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % SLIDES.length);
-    }, AUTOPLAY_MS);
+    }, AUTOPLAY_MS); // 5초마다 이 콜백을 반복 실행
     return () => clearInterval(timer);
   }, [isPaused]);
 
+  // 화살표/점 클릭
   const goTo = (index: number) => {
     setCurrent((index + SLIDES.length) % SLIDES.length);
   };
@@ -49,7 +53,7 @@ export default function CustomerBanner() {
   return (
     <section
       className="relative overflow-hidden bg-navy-900"
-      onMouseEnter={() => setIsPaused(true)}
+      onMouseEnter={() => setIsPaused(true)} // 미우스로 일시 정지
       onMouseLeave={() => setIsPaused(false)}
     >
       <div

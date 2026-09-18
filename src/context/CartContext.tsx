@@ -3,6 +3,7 @@
 // 장바구니 목록(items)를 들고 있고 addItem(담기), removeItem(삭제),updateQty(수량),clearCart(비우기)
 // 함수들을 만들어서 다른 화면들에 뿌려주는 역할
 // localStorage로 새로고침해도 유지 됨
+// 카페 주문 접수대 + 자동 장부 시스템
 import {
   createContext, // Context "상자"를 만드는 함수
   useContext, // 그 상자를 열어보는 함수
@@ -69,12 +70,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } catch {
       // 저장 실패해도 앱은 계속 동작하게 무시
     }
-  }, [items]);
+  }, [items]); // 의존성 배열: items가 바뀔 때마다 effect 재 실행
 
   // 장바구니에 상품 추가
+  // addItem: 주문 받는 직원
+  // Omit: 첫번째인자는 기존 타입, 두번째 인자는 제외할 새로운 타입을 만들어주는 내장 유틸리티
   const addItem = (item: Omit<CartItem, "id">) => {
     // 상품+옵션 조합 키
     const id = `${item.productId}-${item.color}-${item.size}`;
+    // setItems((prev)): 함수형 업데이트
     setItems((prev) => {
       const existing = prev.find((i) => i.id === id); // 이미 같은 옵션있는지 찾기
       if (existing) {
@@ -88,7 +92,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  // id로 항목 하나 삭제 (filter로 그 항목만 빼고 나머지 남김)
+  // id로 항목 하나 삭제 (filter로 조건을 통과 하는 것만 남기고 새 배열 생성)
   const removeItem = (id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
   };
@@ -104,6 +108,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clearCart = () => setItems([]);
 
   // 매 렌더링마다 Itmes 기준으로 다시 계산 ( 별도 state로 안 만들고 그때 그때 계산)
+  // items: 테이블에 올라와 있는 주문 목록.
+  // .reduce()로 배열 전체를 순회하면서 하나의 값으로 누적/축약
   const totalCount = items.reduce((sum, i) => sum + i.qty, 0);
   const totalPrice = items.reduce((sum, i) => sum + i.price * i.qty, 0);
 

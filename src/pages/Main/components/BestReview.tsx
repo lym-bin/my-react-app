@@ -1,5 +1,7 @@
 // src/pages/Main/components/BestReview.tsx
 // 베스트 리뷰 영역
+// 리뷰 카드 클릭 -> 그 리뷰 객체 자체를 state에 저장 ->
+// 모달에 그 객체 데이터를 그대로 표시 -> 배경클릭/ESC/닫기 버튼 모두 state를 null로 되돌려 닫기
 import { useEffect, useState } from "react";
 
 interface Review {
@@ -62,6 +64,8 @@ const reviews: Review[] = [
 ];
 
 export default function BestReview() {
+  // seletedReview가 null이면 -> "아무것도 선택 안함" = 모달 닫힘
+  // selectedReview가 특정 리뷰 객체면 -> "이 리뷰가 선택됨" = 동시에 모달이 열려있고, 보여줄 데이터도 정해진 상태
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   // EditProfileModal의 message state랑 같은 형태: "선택된 객체 하나 또는 null"
 

@@ -1,5 +1,7 @@
 // src/Mypage/EditProfileModal.tsx
 // 닉네임/비밀번호 수정 폼, Firebase 에러를 한글로 변환해서 보여줌
+// 모달 열릴 때마다 초기화 -> 가드절로 비밀번호 변겨 입력값 검증 ->
+// 바뀐 것만 선택적으로 API호출 -> 실패 시 Firebase 에러 코드 한글 번역에서 보여줌
 import { useEffect, useState, type FormEvent } from "react"; // FormEvent 없음
 import { useAuth } from "../context/AuthContext";
 
@@ -16,7 +18,7 @@ function mapAuthError(error: unknown): string {
   const code = (error as { code?: string })?.code ?? "";
   switch (code) {
     case "auth/wrong-password":
-    case "auth/invalid-credential": // 두 케이스가 같은 결과 (연속 case로 묶음, sortProducts에서도 봤던 패턴)
+    case "auth/invalid-credential": // 두 케이스가 같은 결과 (연속 case로 묶음, sortProducts 패턴)
       return "현재 비밀번호가 일치하지 않습니다.";
     case "auth/weak-password":
       return "새 비밀번호는 6자 이상이어야 합니다.";
@@ -41,6 +43,7 @@ export default function EditProfileModal({
   // 객체 모양 state: "성공/실패 여부와 "메시지 내용"을 한 덩어리로 관리
   // type 필드는 "success" | "error"를 둘 중 하나의 객체로 묶음(항상 같이 움직이니까)
   // | null: 아직 아무 메시지도 없을 땐 통째로 null
+  // 이 모달은 성공 메시지와, 에러메시지가 동시에 뜰 일이 없음
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;

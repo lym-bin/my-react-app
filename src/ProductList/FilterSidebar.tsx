@@ -48,7 +48,7 @@ export default function FilterSidebar({
             <h4 className="mb-[14px] text-[15px] font-bold text-cream">색상</h4>
             <div className="grid grid-cols-2 gap-[10px]">
               {COLOR_OPTIONS.map(({ value: val, label }) => {
-                const isChecked = selected.includes(val);
+                const isChecked = selected.includes(val); // 라디오는 같은 name을 가진 것들 끼리 딱 하나만 선택가능, 체크박스는 독립적으로 키고 끌수 있음
                 return (
                   <label key={val} className="cursor-pointer">
                     <input
@@ -81,7 +81,7 @@ export default function FilterSidebar({
             </h4>
             <div className="grid grid-cols-3 gap-[10px]">
               {SIZE_OPTIONS.map((size) => {
-                const val = size.toLowerCase();
+                const val = size.toLowerCase(); // value를 미리 소문자로 만들어둬야 비교 로직이 일관됨
                 const isChecked = selected.includes(val);
                 return (
                   <label key={size} className="cursor-pointer">

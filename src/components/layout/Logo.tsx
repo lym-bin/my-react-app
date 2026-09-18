@@ -27,8 +27,9 @@ export default function Logo({ size = "sm", className = "" }: LogoProps) {
       : "text-[6px] sm:text-[7px] md:text-[8px]";
 
   return (
-    // 바깥 span: 세로로 쌓기(원, 브랜ㄷ명, Paris) + 부모가 넘긴 className을 뒤에 이어 붙임
+    // 바깥 span: 세로로 쌓기(원, 브랜드명, Paris) + 부모가 넘긴 className을 뒤에 이어 붙임
     // 예: <Logo className="mb-[10px] />라고 부르면 -> "flex flex-col...가 됨
+    // Logo 컴포넌트 자체를 수정하지 않고도, 이 컴포넌트를 쓰는 쪽(부모) 위치나 여백같은 자유롭게 추가 할 수 있게 열어줌
     <span className={`flex flex-col items-center ${className}`}>
       <span
         className={`flex items-center justify-center rounded-full border border-cream/80 ${circle}`}

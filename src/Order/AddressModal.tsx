@@ -29,6 +29,8 @@ export default function AddressModal({
   onSelect,
   onAdd,
 }: AddressModalProps) {
+  // useState<SortOption> 처럼 타입을 문자열 리터럴 유니온("list" | "add")으로 좁혀둔 패턴
+  // (2개 상태)의 미니 상태 머신
   const [mode, setMode] = useState<"list" | "add">("list");
   const [title, setTitle] = useState(""); // 새 배송지 입력폼의 각 필드
   const [recipient, setRecipient] = useState("");
@@ -69,7 +71,7 @@ export default function AddressModal({
 
     const newAddress: Address = {
       id: `addr-${Date.now()}`, // 현재 시간 타임스탬프로 고유 id 생성
-      title,
+      title, // 단축 속성명(shorthand property)키 이름과 변수 이름이 완전히 같을 때, 한 번만 써도 자동으로 채워짐
       recipient,
       address,
       phone, // 단축 속성명(key와 변수명 같으면 값 생략 가능)
@@ -105,6 +107,7 @@ export default function AddressModal({
         {mode === "list" ? (
           <>
             <ul className="flex flex-col gap-[10px]">
+              {/* .map() 콜백 안에서 isSelected라는 중간 변수를 먼저 계산 그 아래에서 재사용*/}
               {addresses.map((addr) => {
                 const isSelected = addr.id === selectedId;
                 return (

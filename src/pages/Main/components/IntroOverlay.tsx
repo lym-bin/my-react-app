@@ -1,5 +1,8 @@
 // src/pages/Main/components/IntroOverlay.tsx
 // 첫 진입시 뜨는 풀 스크린 인트로
+// 마운트 시 한 번만 timeline 실행 -> 배경 즉시 표시 -> 텍스트 서서히 등장
+// 3초 유지-> 배경 페이드 아웃 -> 전부 끝나면 부모에게 onComplete로 알림
+// MainPage가 그 신호를 showIntro를 false로 바꿔 스크롤 애니메이션 단계로 넘어감
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 

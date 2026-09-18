@@ -1,6 +1,7 @@
 // src/ProductList/ProductListPage.tsx
 // URL 조건(카테고리/검색어) + 사용자가 고른 정렬, 필터를 조합해서
 // 조건에 맞는 상품만 걸러서 ProductGrid에 넘기는 페이지
+// 옷가게 정렬대 + 펄티서랍 + 문 앞 메모
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom"; // URL의 ?category=top 같은 쿼리스트링을 state처럼 다루는 hook
 import useDisclosure from "../hooks/useDisclosure";
@@ -8,6 +9,7 @@ import FilterSidebar from "../ProductList/FilterSidebar";
 import ProductGrid from "../ProductList/ProductGrid";
 import { PRODUCTS, type Product } from "./ProductsData";
 
+// as count가 없으면 TS는 이 배열을 그냥 string[](아무 문자열이나 담긴 배열)로 봄
 // as const: "이 배열의 값들을 문자열 리터럴 타입으로 고정" (그냥 string[])이 아니라 정확히 4개
 const sortOptions = [
   "신상품 순",
@@ -18,10 +20,12 @@ const sortOptions = [
 // sortOptions 배열에서 타입을 뽑아냄 -> "신상품 순" | "낮은 가격순" | "높은 가격순" | "인기 순"
 type SortOption = (typeof sortOptions)[number];
 
-// 상품 배열과 정렬 기준을 받아서 정렬된 새 배열을 리턴하는 순수 함수 (컴포넌트 밖)
-// 매개변수 타입을 string 대신 SortOption으로 명시
+// 이 함수가 컴포넌트 바깥에 있는 이유는 props나 state, 아무 컴포넌트 내부 값에도
+// 의존하지 않고 "상품 배열 + 정렬 기준"만 넣으면 항상 같은 결과가 나오는 순수 함수라서
+// 컴포넌트 안에 넣으면 렌더링마다 매번 새로 정의되는 낭비가 생기지만 바깥에 두면 한번만 정의되고 재사용 가능함
 function sortProducts(products: Product[], sort: SortOption): Product[] {
   const sorted = [...products]; // 원본 복사 ! .sort()는 원본을 직접 바꿔버려서 (mutate) 복사본을 만듦
+  // 복사본을 만드는 이유는 원본 PRODUCTS를 그대로 .sort() 해버리면 전역 데이터 자체가 영구적으로 바뀌어서
   switch (sort) {
     case "낮은 가격순":
       return sorted.sort((a, b) => a.price - b.price); // 오름차순 (음수면 a가 앞)
@@ -48,6 +52,8 @@ export default function ProductListPage() {
   const activeSearch = searchParams.get("search") ?? "";
 
   // 필터 체크박스 토글
+  // 함수형 업데이트로 세 갈래 분기 이미 있으면 뺴고, 3개 다 찼으면 경고만 띄우고
+  // return prev로 아무 변화 없음을 명시 없으면 추가
   const toggleFilter = (value: string) => {
     setSelectedFilters((prev) => {
       if (prev.includes(value)) {
@@ -62,6 +68,8 @@ export default function ProductListPage() {
   };
 
   // 필터링+정렬 결과를 계산. useMemo = "의존성이 안 바뀌면 재계산 안 하고 이전 결과 재사용" (성능 최적화)
+  // 펄티렁+정렬은 상품이 16개뿐이라 현재는 가벼운데 상품이 수백개 였다면 리렌더링마다
+  // 매번 이 필터링+정렬을 다시 돌리는건 낭비이므로 useMemo(계산함수, 의존성배열) 사용
   const filteredProducts = useMemo(() => {
     let result = PRODUCTS; // 전체에서 시작
 
@@ -91,6 +99,9 @@ export default function ProductListPage() {
   }, [activeCategory, activeSearch, selectedFilters, activeSort]); // 4개중 하나라도 바뀌면 다시 계산
 
   // 카테고리 필터 해제 : URL에서 category만 지움
+  // searchParams를 직접 수정 안 하고, const next = new URLSearchParams(searchParams)로
+  // 복사본을 새로 만든 다음 그 복사에서 .delete()하고 setSearchParams()로 통쨰로 교체
+  // 리액트는 state는 직접 변형(mutate)하지 않고 "새값으로 교체"하는게 원칙
   const clearCategory = () => {
     const next = new URLSearchParams(searchParams);
     next.delete("category");
@@ -104,6 +115,13 @@ export default function ProductListPage() {
     setSearchParams(next);
   };
 
+  // JSX .. {filterSidebar.isOpen && (...)} : 조건부 렌더링 dimmed 배경
+  // {(activeCategory || activeSearch) && (...)} : 카테고리나 검색어 둘중 하나라도 있으면 보여줌
+  // {sortOptions.map((option) => ...)} : 아까 만든 4개자리 배열을 순회해서 버튼 4개 생성
+  // <FilterSidebar isOpen={...} onClose={...} selected={...} onToggle={...} /> 와
+  // <ProductGrid products={filteredProducts} />  부모인 {ProductsListPage}가
+  // 상태와 계산을 전부 들고 있고, 자식들에게는 "보여줄 데이터", 이벤트 발생 시 부를 함수만
+  // props로 내려주는 패턴
   return (
     <main className="bg-navy-950 pb-[80px]">
       {/* 필터 사이드바 오픈 시 배경 Dimmed 효과 */}

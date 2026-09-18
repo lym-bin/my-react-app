@@ -1,10 +1,14 @@
 // src/OrderSuccess/OrderSuccessPage.tsx
 // OrderPage가 navigate로 전달한 주문정보를 받아 보여주는 결제완료 페이지
 // useLocation(): 현재 URL 정보 + navigate(path, { state })로 넘겨 받는 state를 읽는 훅
+// router state로 넘어온 주문 데이터를 안전하게 폴백 처리하며 읽기 ->
+// 결제수단/날짜를 사람이 읽기 좋은 형식으로 가공 ->
+// 새로고침 등으로 데이터가 사라진 경우까지 방어적으로 대체 문구 표시
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import type { CartItem } from "../context/CartContext";
 
+// Address 중복 import로 사용 TODO
 interface Address {
   id: string;
   title: string;
@@ -47,6 +51,7 @@ export default function OrderSuccessPage() {
 
   // 실제 저장된 주문 정보(OrderPage에서 넘겨준 값)을 그대로 씀.
   // 새로고침 등으로 state가 없을 때만 "확인 불가"로 표시
+  // createAt: new Data().toISOString() (컴퓨터가 읽기 좋은 형식)
   const orderId = state?.orderId ?? "확인 불가";
   const orderDate = state?.createdAt
     ? new Date(state.createdAt).toLocaleString("ko-KR", {

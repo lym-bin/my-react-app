@@ -5,13 +5,18 @@
 // 검색 모달 담당하는 파일
 // Header.tsx: 드롭다운, 검색창 을 state 관리 하면서
 // login 정보는 Context에서 빌려와서 보여주는 조합 컴포넌트 파일
-import { useEffect, useRef, useState } from "react";
+// 매장 안내 데스크(스스로 새 정보를 만들지 않음) 보여주기만
+// 왼쪽 카테고리: 진열대 안내판(눌러야 카테고리 목록이 펼쳐짐)
+// 가운데 로고: 매장 간판
+// 오른쪽 검색/장바구니/내정보 아이콘: 안내 데스크의 세 가지 서비스 버튼
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Link: <a> 대신 쓰는 라우터용 링크, useNavigate: 코드로 페이지를 이동 시키는함수
 import { CATEGORIES } from "../../ProductList/Categories"; // 카테고리 단일 소스
 import { useAuth } from "../../context/AuthContext"; // 로그인 정보 창구
 import { useCart } from "../../context/CartContext"; // 장바구니 정보 창구
 import Logo from "./Logo";
 import { Search, ShoppingCart, User } from "lucide-react"; // 루시드 아이콘 라이브러리
+import useDisclosure from "../../hooks/useDisclosure";
 
 // "전체보기"는 카테고리 파라미터 없이 /productsd로 이동.
 const CATEGORY_MENU = [
@@ -19,19 +24,27 @@ const CATEGORY_MENU = [
   ...CATEGORIES.map((c) => ({ id: c.id, label: c.label, category: c.id })), // 나머지는 CATEGORIES 그대로 펼침(스프레드)
 ];
 
+// useAuth와 useCart는 Header가 직접 관리하지 않음
+// Context 창구에서 필요한 값만 꺼내씀 Hedaer는 구독자인 셈
 export default function Header() {
   const navigate = useNavigate(); // 카테고리 클릭/검색 제출 시 페이지 이동용
   const { isLoggedIn } = useAuth(); // Context에서 로그인 여부만 꺼내 씀
   const { totalCount } = useCart(); // Context에서 장바구니 총 수량 만 꺼내씀
 
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false); // 카테고리 드롭다운
-  const [isSearchOpen, setIsSearchOpen] = useState(false); // 검색 모달 열림 여부
+  // useState로 열림/상태
+  const category = useDisclosure(); // 카테고리 드롭다운
+  const search = useDisclosure(); // 검색 모달 열림 여부
   const [searchValue, setSearchValue] = useState(""); // 검색창 입력 값
 
+  // useState는 TV 화면에 표시되는 채널 숫자 - 값이 바뀌면 화면(리렌더링)
+  // useRef는 TV본체를 직접 가리키는 리모컨
+  // 리모컨을 다른 걸로 바꿔 낀다고 해서 화면이 다시 그려지진 않음
   const categoryRef = useRef<HTMLLIElement>(null); // 카테고리 li요소를 직접 가리킬 참조
   const searchInputRef = useRef<HTMLInputElement>(null); // 검색 input 요소를 직접 가리킬 참조
 
   // 카테고리 드롭다운 - 바깥 클릭 시 닫기
+  // 매장 경비원 문서 전체에 어디든 클릭되면 나한테 알려줘 라는 리스너를 달아줌
+  // 클릭된 지점: e.target 카테고리 영역: categoryRef.current
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (
@@ -41,37 +54,34 @@ export default function Header() {
         // contains로 비교 카테고리 li에 사진이 제대로 있는지
         !categoryRef.current.contains(e.target as Node)
       ) {
-        setIsCategoryOpen(false);
+        category.close();
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, []); // 의존성 배열이 []인 이유: isCategoryOpen이 몇 번을 열렸다 닫혔다 해도
+  // 똑같은 로직이라 한 번만 등록해두고 계속 재사용 해도 됨
 
   // 검색 모달 - 열리면 인풋에 포커스, ESC로 닫기
+  // searchInputRef.current?.focus(); => 옵셔널 체이닝은 current가 null이 아닐 때만 .focus()를 호출 해라
   useEffect(() => {
-    if (isSearchOpen) {
+    if (search.isOpen) {
       // current는 useRef()가 만들어준 서랍: 리액트를 거치지 않고 DOM에 직접 손대야할때
       // input에 커서(포커스) 갖다놔
       searchInputRef.current?.focus();
     }
-    function handleEsc(e: KeyboardEvent) {
-      if (e.key === "Escape") setIsSearchOpen(false);
-    }
-    document.addEventListener("keydown", handleEsc);
-    return () => document.removeEventListener("keydown", handleEsc);
-  }, [isSearchOpen]); // isSearchOpen: 바뀔 때마다 재 실행(열릴 때 focus 다시 주려고)
+  }, [search.isOpen]); // isSearchOpen: 바뀔 때마다 재 실행(열릴 때 focus 다시 주려고)
 
-  function handleCategoryClick(category: string) {
-    setIsCategoryOpen(false); // 드롭다운 닫고
-    navigate(category ? `/products?category=${category}` : "/products"); // 해당 카테고리로 이듕
+  function handleCategoryClick(category_: string) {
+    category.close(); // 드롭다운 닫고
+    navigate(category_ ? `/products?category=${category_}` : "/products"); // 해당 카테고리로 이듕
   }
 
-  function handleSearchSubmit(e: React.FormEvent) {
+  function handleSearchSubmit(e: FormEvent) {
     e.preventDefault();
     const q = searchValue.trim(); // 앞뒤 공백 제거
     if (!q) return; // 빈 검색이면 종료
-    setIsSearchOpen(false);
+    search.close();
     setSearchValue("");
     navigate(`/products?search=${encodeURIComponent(q)}`); // URL에 안전하게 인코딩해서 이동
   }
@@ -87,8 +97,10 @@ export default function Header() {
             <button
               type="button"
               aria-label="카테고리 메뉴 열기"
-              aria-expanded={isCategoryOpen} // 스크린리더한테 "지금 열려있다/닫혀있다" 알려줌
-              onClick={() => setIsCategoryOpen((prev) => !prev)} // 클릭할 때마다 열림<->닫힘 토글
+              aria-expanded={category.isOpen} // 스크린리더한테 "지금 열려있다/닫혀있다" 알려줌
+              onClick={() =>
+                category.isOpen ? category.close() : category.open()
+              }
               className="flex cursor-pointer items-center justify-center transition hover:opacity-70"
             >
               <img
@@ -101,13 +113,14 @@ export default function Header() {
             </button>
 
             {/* isCategoryOpen이 true일 때만 드롭다운 자체가 렌더링용(조건부 렌더링)*/}
-            {isCategoryOpen && (
+            {category.isOpen && (
               <ul
                 role="menu" // 스크린 리더한테 "이건 메뉴다"라고 알려주는 접근성 속성
                 aria-label="카테고리 목록"
                 className="absolute top-[calc(100%+12px)] left-0 z-10 w-[160px] rounded-[4px] border border-navy-700 bg-navy-900 py-[8px] shadow-lg"
               >
-                {/*배열을 map으로 돌면서 각 항목마다 li하나씩 생성*/}
+                {/*배열을 key값을 주고 map으로 돌면서 각 항목마다 li하나씩 생성*/}
+                {/* key를 명명해야 맞게 매핑 됨 */}
                 {CATEGORY_MENU.map((item) => (
                   <li key={item.id} role="none">
                     {/* key: 리스트 렌더링 할 때 리액트가 각 항목을 구분하는 고유 식별자 */}
@@ -143,7 +156,7 @@ export default function Header() {
               <button
                 type="button"
                 aria-label="검색창 열기"
-                onClick={() => setIsSearchOpen(true)}
+                onClick={search.open}
                 className="flex items-center justify-center text-cream/90 transition hover:text-terracotta-400"
               >
                 <Search size={20} strokeWidth={1.5} />{" "}
@@ -184,11 +197,11 @@ export default function Header() {
         </nav>
       </div>
 
-      {/* 검색 모달 isSearchOpen이 모두 true일 때만 화면 전체를 덮는 오버레이 렌더링 */}
-      {isSearchOpen && (
+      {/* 검색 모달 search.isOpen 이 모두 true일 때만 화면 전체를 덮는 오버레이 렌더링 */}
+      {search.isOpen && (
         <div
           className="fixed inset-0 z-[1000] flex items-start justify-center bg-navy-950/70 px-[18px] pt-[120px]"
-          onClick={() => setIsSearchOpen(false)} // 어두운 배경(바깥) 클릭하면 닫기
+          onClick={search.close} // 어두운 배경(바깥) 클릭하면 닫기
         >
           <div
             className="w-full max-w-[520px] rounded-[6px] border border-navy-700 bg-navy-900 p-[24px] shadow-xl"
@@ -208,7 +221,7 @@ export default function Header() {
               <input
                 ref={searchInputRef} // 모달 열릴 떄 여기로 focus()줌
                 type="text"
-                value={searchValue} // controlled input: 같이 항상 state와 동기화됨
+                value={searchValue} // controlled input(제어 컴포넌트): 같이 항상 state와 동기화됨
                 onChange={(e) => setSearchValue(e.target.value)} // 타이핑할 때마다 state 갱신
                 placeholder="상품명, 브랜드로 검색해보세요"
                 className="w-full bg-transparent text-[14px] text-cream outline-none placeholder:text-cream/40"
@@ -216,7 +229,7 @@ export default function Header() {
               <button
                 type="button"
                 aria-label="검색창 닫기"
-                onClick={() => setIsSearchOpen(false)}
+                onClick={search.close}
                 className="text-[13px] text-cream/60 hover:text-cream"
               >
                 ✕
