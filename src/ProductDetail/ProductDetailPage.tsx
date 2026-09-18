@@ -3,6 +3,8 @@
 // 탈의실 카운터로 비유
 // 손님이 데스크에서 상품 하나를 골라 카운터로 가져와서 색상/사이즈를 고름
 // 담기 버튼을 누르면 장바구니 사이드바가 스르륵 열리는 흐름
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { useEffect, useState, type FormEvent } from "react";
 // useParams는 항상 문자열로 옴 -> Number(id)
 import { useParams } from "react-router-dom"; // URL 경로의 동적 부분(:id 같은)을 읽는 쪽
@@ -18,7 +20,8 @@ import { addRecentlyViewed } from "../ProductList/recentlyViewed";
 export default function ProductDetailPage() {
   // App.tsx에서 라우터가 "/products/:id" 경로로 매칭시켜준 id를 꺼냄. 예: /products/3 -> id = "3" (항상 문자열!)
   const { id } = useParams();
-
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   // 커스텀 훅 두 번 호출
   // 독립된 isOpen상태가 생김
   const cart = useDisclosure(); // 장바구니 사이드바 열고 닫기
@@ -55,6 +58,14 @@ export default function ProductDetailPage() {
   const handleAddToCart = (e: FormEvent) => {
     e.preventDefault();
     if (!product) return; // 조기 종료: 상품 없으면
+
+    // 비 로그인 가드절
+    if (!isLoggedIn) {
+      alert("로그인이 필요한 서비스입니다.");
+      navigate("/login");
+      return;
+    }
+
     if (!selectedColor || !selectedSize) {
       alert("색상과 사이즈를 선택해주세요.");
       return; // 종료: 선택 안 했으면 여기서 끝

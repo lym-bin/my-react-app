@@ -1,14 +1,7 @@
 // src/Order/AddressModal.tsx
 // 배송지 목록 선택 + 새 배송지 추가 모달
 import { useEffect, useState, type FormEvent } from "react";
-
-interface Address {
-  id: string;
-  title: string;
-  recipient: string;
-  address: string;
-  phone: string;
-}
+import { type Address } from "../types/address";
 
 // 상태+함수 전달(실제 배송지 목록은 부모(OrderPage)가 갖고 있음)
 interface AddressModalProps {

@@ -90,6 +90,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                       <button
                         type="button"
                         aria-label="수량 증가"
+                        disabled={item.qty >= 20}
                         onClick={() => updateQty(item.id, item.qty + 1)} // 현재 수량 +1
                         className="flex h-[20px] w-[20px] cursor-pointer items-center justify-center border border-navy-600 text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
                       >

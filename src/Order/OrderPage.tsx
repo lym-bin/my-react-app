@@ -8,15 +8,7 @@ import { useAuth } from "../context/AuthContext";
 import { collection, addDoc } from "firebase/firestore"; // Firestore(DB) 관련 함수들
 import { db } from "../firebase"; // firebase.ts에서 만든 Firestore 접속 통로
 import AddressModal from "./AddressModal";
-
-// 정적 데이터
-interface Address {
-  id: string;
-  title: string;
-  recipient: string;
-  address: string;
-  phone: string;
-}
+import { type Address } from "../types/address";
 
 // 배송지 기본값(localStorage에 저장된 게 없을 때 씀)
 const initialAddresses: Address[] = [

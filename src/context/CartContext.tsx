@@ -78,6 +78,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const addItem = (item: Omit<CartItem, "id">) => {
     // 상품+옵션 조합 키
     const id = `${item.productId}-${item.color}-${item.size}`;
+    // 이미지 경로 통일: "/"로 시작 안 하면 앞에 붙혀줌(SimilarProduts.tsx와 같음)
+    const imgSrc = item.imgSrc.startsWith("/")
+      ? item.imgSrc
+      : `/${item.imgSrc}`;
     // setItems((prev)): 함수형 업데이트
     setItems((prev) => {
       const existing = prev.find((i) => i.id === id); // 이미 같은 옵션있는지 찾기
@@ -88,7 +92,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         );
       }
       // 없으면: 새 항목으로 배열 끝에 추가
-      return [...prev, { ...item, id }];
+      return [...prev, { ...item, id, imgSrc }];
     });
   };
 
@@ -97,10 +101,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => prev.filter((i) => i.id !== id));
   };
 
+  const MAX_QTY = 20;
+
   // 수량 변경, 0 이하로는 못 내려가게 Math.max(1, qty)로 방어
   const updateQty = (id: string, qty: number) => {
     setItems((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, qty: Math.max(1, qty) } : i)),
+      prev.map((i) =>
+        i.id === id ? { ...i, qty: Math.min(MAX_QTY, Math.max(1, qty)) } : i,
+      ),
     );
   };
 

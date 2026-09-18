@@ -7,15 +7,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import type { CartItem } from "../context/CartContext";
-
-// Address 중복 import로 사용 TODO
-interface Address {
-  id: string;
-  title: string;
-  recipient: string;
-  address: string;
-  phone: string;
-}
+import { type Address } from "../types/address";
 
 interface OrderSuccessState {
   items: CartItem[];
