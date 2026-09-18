@@ -198,7 +198,7 @@ export default function OrderPage() {
                   <img
                     src={item.imgSrc}
                     alt={item.name}
-                    className="h-[90px] w-[90px] flex-shrink-0 bg-navy-800 object-cover sm:h-[150px] sm:w-[150px]"
+                    className="product-photo h-[90px] w-[90px] flex-shrink-0 bg-navy-800 object-cover sm:h-[150px] sm:w-[150px]"
                   />
                 ) : (
                   <div className="h-[90px] w-[90px] flex-shrink-0 bg-navy-800 sm:h-[150px] sm:w-[150px]"></div>

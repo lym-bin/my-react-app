@@ -63,7 +63,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                       src={item.imgSrc}
                       alt={item.name}
                       loading="lazy"
-                      className="h-full w-full object-cover"
+                      className="product-photo h-full w-full object-cover"
                     />
                   </div>
                   <div className="flex flex-1 flex-col gap-[4px]">

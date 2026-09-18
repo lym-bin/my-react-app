@@ -64,7 +64,7 @@ export default function ProductList() {
                     <img
                       src={product.imgSrc}
                       alt={product.name}
-                      className="block h-full w-full object-cover transition-transform duration-500 ease-in-out hover:scale-110"
+                      className="product-photo block h-full w-full object-cover transition-transform duration-500 ease-in-out hover:scale-110"
                     /> // group 없이 그냥 img 자체에 hover: 검 ( 부모가 아니라 이미지 자신이 hover 대상)
                   )}
                 </div>

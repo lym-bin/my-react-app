@@ -133,7 +133,7 @@ export default function OrderSuccessPage() {
                       <img
                         src={item.imgSrc}
                         alt={item.name}
-                        className="h-full w-full object-cover"
+                        className="product-photo h-full w-full object-cover"
                       />
                     )}
                   </div>

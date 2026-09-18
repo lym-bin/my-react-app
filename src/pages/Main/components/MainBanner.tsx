@@ -128,6 +128,16 @@ export default function MainBanner() {
         OBJET
       </span>
 
+      {/* 텍스트 뒤 은은한 테라코타 글로우*/}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[5]"
+        style={{
+          background:
+            "radial-gradient(55% 45% at 25% 45%, rgba(193,80,46,0.16), transparent 70%)",
+        }}
+      />
+
       {/* 텍스트 영역: 이미지 위에 오버레이 (데스크톱) / 단독 표시 (모바일) */}
       <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col items-center gap-[20px] overflow-hidden px-[20px] py-[50px] text-center md:min-h-[640px] md:items-start md:justify-center md:px-[80px] md:py-0 md:text-left">
         <div className="overflow-hidden">
@@ -136,14 +146,12 @@ export default function MainBanner() {
           </span>
         </div>
 
-        <h2 className="font-serif text-[1.9rem] font-light italic leading-[1.1] tracking-tight text-cream sm:text-[2.2rem] md:text-[3.4rem]">
+        <h2 className="font-serif text-[1.9rem] font-light leading-[1.1] tracking-tight text-cream sm:text-[2.2rem] md:text-[3.4rem]">
           <div className="overflow-hidden pb-1">
-            <span className="gsap-title-line inline-block">/ Minimalist</span>
+            <span className="gsap-title-line inline-block">정교함의</span>
           </div>
           <div className="overflow-hidden pb-1">
-            <span className="gsap-title-line inline-block font-normal not-italic">
-              COLLECTION
-            </span>
+            <span className="gsap-title-line inline-block">여백</span>
           </div>
         </h2>
 
@@ -164,6 +172,14 @@ export default function MainBanner() {
             </Link>
           </div>
         </div>
+      </div>
+      {/* 스크롤 유도 (데스크톱 전용)*/}
+      <div
+        aria-hidden="true"
+        className="gsap-title-line pointer-events-none absolute inset-x-0 bottom-[10px] z-10 mx-auto hidden w-fit flex-col items-center gap-[10px] text-[10px] font-light tracking-[0.28em] text-cream/40 uppercase md:flex"
+      >
+        <span className="h-[30px] w-px animate-pulse bg-gradient-to-b from-terracotta-400 to-transparent" />
+        Scroll
       </div>
     </section>
   );

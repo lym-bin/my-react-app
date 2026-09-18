@@ -42,7 +42,7 @@ export default function SimilarProducts({
                 }
                 alt={product.name}
                 loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+                className="product-photo h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
               />
             </div>
             <span className="mt-[10px] block text-center text-[14px] font-normal text-cream/70">

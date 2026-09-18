@@ -119,7 +119,7 @@ export default function ProductDetailPage() {
               <img
                 src={`/${product.images?.[0] || product.imgSrc}`}
                 alt={`${product.name} 상품 대표 이미지`}
-                className="mt-[20px] h-[280px] w-full bg-navy-800 object-cover sm:h-[400px]"
+                className="product-photo mt-[20px] h-[280px] w-full bg-navy-800 object-cover sm:h-[400px]"
               />
             ) : (
               // 이미지가 아에 없으면 빈 색상 박스만 (레이아웃 안 무너지게)
@@ -133,7 +133,7 @@ export default function ProductDetailPage() {
               <img
                 src={`/${product.images[1]}`}
                 alt={`${product.name}모델 이미지`}
-                className="mt-[20px] h-[280px] w-full bg-navy-800 object-cover object-top sm:h-[400px]"
+                className="product-photo mt-[20px] h-[280px] w-full bg-navy-800 object-cover object-top sm:h-[400px]"
               />
             </div>
           )}

@@ -38,7 +38,7 @@ export default function ProductCard({
             alt={isLarge ? `${name} 큰 제품 이미지` : `${name} 제품 이미지`}
             loading="lazy"
             style={imgPosition ? { objectPosition: imgPosition } : undefined}
-            className={`h-full w-full transition-transform duration-500 ease-in-out group-hover:scale-105 ${
+            className={`product-photo h-full w-full transition-transform duration-500 ease-in-out group-hover:scale-105 ${
               imgFit === "contain" ? "object-contain" : "object-cover"
             }`}
           />
