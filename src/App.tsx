@@ -18,16 +18,19 @@ import OrderPage from "./Order/OrderPage";
 import ProductDetailPage from "./ProductDetail/ProductDetailPage";
 import MyPage from "./Mypage/Mypage";
 import ProductListPage from "./ProductList/ProductListPage";
+import StoryPage from "./pages/Story/StoryPage";
 
 function AppLayout() {
   // 지금 주소가 뭔지 알려주는 센서같은 느낌
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
+  const isStoryPage = location.pathname === "/story";
+  const hideChrome = isLoginPage || isStoryPage;
 
   return (
     <div className="flex min-h-screen flex-col">
-      {/* 로그인 페이지가 아닐 때만 헤더 노출 */}
-      {!isLoginPage && <Header />}
+      {/* 로그인/스토리 페이지가 아닐 때만 헤더 노출 */}
+      {!hideChrome && <Header />}
 
       <main className="flex-1">
         <PageTransition>
@@ -39,13 +42,14 @@ function AppLayout() {
             <Route path="/order" element={<OrderPage />} />
             <Route path="/ordersuccess" element={<OrderSuccessPage />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/story" element={<StoryPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </PageTransition>
       </main>
 
-      {/* 로그인 페이지가 아닐 때만 푸터 노출 */}
-      {!isLoginPage && <Footer />}
+      {/* 로그인/스토리 페이지가 아닐 때만 푸터 노출 */}
+      {!hideChrome && <Footer />}
     </div>
   );
 }
