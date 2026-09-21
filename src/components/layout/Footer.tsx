@@ -10,6 +10,7 @@ const ftNav = [
   { id: 2, label: "AGREE MENT" },
   { id: 3, label: "PRIVACY POLICY" },
   { id: 4, label: "GUIDE" },
+  { id: 5, label: "브랜드 스토리", to: "/story" },
 ];
 
 export default function Footer() {
@@ -59,14 +60,22 @@ export default function Footer() {
             {/* ftNav가 map으로 배열 4개를 돌면서 각각 li 하나씩 생성*/}
             {ftNav.map((item) => (
               <li className="mb-[7px]" key={item.id}>
-                <button
-                  type="button"
-                  onClick={handleComingSoon} // 4개 버튼 전부 같은 함수 재사용
-                  className="text-[12px] text-cream/70 transition-colors hover:text-terracotta-400"
-                >
-                  {item.label}{" "}
-                  {/* item.label을 화면에 출력: "COMPANY", "AGREE MENT" 등 */}
-                </button>
+                {item.to ? (
+                  <Link
+                    to={item.to}
+                    className="text-[12px] text-cream/70 transition-colors hover:text-terracotta-400"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleComingSoon}
+                    className="text-[12px] text-cream/70 transition-colors hover:text-terracotta-400"
+                  >
+                    {item.label}
+                  </button>
+                )}
               </li>
             ))}
           </ul>
