@@ -248,6 +248,7 @@ export default function ProductDetailPage() {
           <SizeGuideSidebar
             isOpen={sizeGuide.isOpen}
             onClose={sizeGuide.close}
+            category={product.category}
           />
           <CartSidebar isOpen={cart.isOpen} onClose={cart.close} />
         </section>
