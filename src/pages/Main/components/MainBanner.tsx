@@ -97,8 +97,8 @@ export default function MainBanner() {
       {/* 배경 이미지: 데스크톱 전용, 섹션 전체(위아래양옆)를 여백 없이 꽉 채움 */}
       <Link
         ref={imageLinkRef}
-        to="/products"
-        aria-label="미니멀리스트 컬렉션 룸 뷰 상품 리스트로 이동하기"
+        to="/story"
+        aria-label="브랜드 스토리 페이지로 이동하기"
         className="group absolute inset-0 hidden md:block"
       >
         <img
