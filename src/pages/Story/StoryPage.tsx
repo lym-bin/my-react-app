@@ -7,6 +7,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const PIN_IMAGES = [
+  { src: "/images/daily-canvas-model.jpg", alt: "Objet & B 에디토리얼 무드" },
+  { src: "/images/classic-suede-loafers.jpg", alt: "정교한 디테일 클로즈업" },
+];
+// 캡션 인덱스(0,1,2,) -> 이 캡션일 때 보여줄 이미지 인덱스
+const PIN_IMAGE_FOR_CAPTION = [0, 0, 1];
+
 const PIN_CAPTIONS = [
   {
     num: "01",
@@ -26,11 +33,36 @@ const PIN_CAPTIONS = [
 ];
 
 const LOOKS = [
-  { id: 1, num: "01", title: "오버사이즈 셋업" },
-  { id: 2, num: "02", title: "슬림 데님" },
-  { id: 3, num: "03", title: "미니멀 니트" },
-  { id: 4, num: "04", title: "테일러드 코트" },
-  { id: 5, num: "05", title: "레더 스니커즈" },
+  {
+    id: 1,
+    num: "01",
+    title: "오버사이즈 셋업",
+    img: "/images/premium-cotton-oversized-white-tshirt-model.jpg",
+  },
+  {
+    id: 2,
+    num: "02",
+    title: "슬림 데님",
+    img: "/images/casual-cotton-denim-pants.jpg",
+  },
+  {
+    id: 3,
+    num: "03",
+    title: "미니멀 니트",
+    img: "/images/relaxed-fit-knit-pullover.jpg",
+  },
+  {
+    id: 4,
+    num: "04",
+    title: "테일러드 코트",
+    img: "/images/chesterfield-coat.png",
+  },
+  {
+    id: 5,
+    num: "05",
+    title: "레더 스니커즈",
+    img: "/images/minimal-leather-sneakers.png",
+  },
 ];
 
 export default function StoryPage() {
@@ -64,10 +96,13 @@ export default function StoryPage() {
         )
         .to(".story-hero-cue", { opacity: 1, y: 0, duration: 0.6 }, "-=0.3");
 
-      // 2. 핀 스크롤: 이미지는 고정, 카피만 스크롤 진행률에 맞춰 전환
+      // 2. 핀 스크롤: 이미지는 고정, 캡션+이미지 둘 다 스크롤 진행률에 맞춰 전환
       const captions = gsap.utils.toArray<HTMLElement>(".story-pin-caption");
+      const images = gsap.utils.toArray<HTMLElement>(".story-pin-image");
       gsap.set(captions, { opacity: 0 });
+      gsap.set(images, { opacity: 0 });
       if (captions[0]) gsap.set(captions[0], { opacity: 1 });
+      if (images[0]) gsap.set(images[0], { opacity: 1 });
 
       ScrollTrigger.create({
         trigger: pinRef.current,
@@ -84,6 +119,14 @@ export default function StoryPage() {
             gsap.to(cap, {
               opacity: i === idx ? 1 : 0,
               duration: 0.3,
+              overwrite: true,
+            });
+          });
+          const imgIdx = PIN_IMAGE_FOR_CAPTION[idx];
+          images.forEach((img, i) => {
+            gsap.to(img, {
+              opacity: i === imgIdx ? 1 : 0,
+              duration: 0.5,
               overwrite: true,
             });
           });
@@ -164,9 +207,17 @@ export default function StoryPage() {
         ref={pinRef}
         className="flex min-h-screen flex-col items-center gap-[40px] border-t border-navy-800 px-[20px] py-[80px] md:flex-row md:justify-center md:gap-[6vw] md:py-0"
       >
-        <div className="relative aspect-[3/4] w-full max-w-[420px] overflow-hidden rounded-[2px] bg-gradient-to-br from-navy-700 via-navy-900 to-navy-950">
-          <span className="absolute bottom-[16px] left-[16px] rounded-full border border-cream/25 bg-navy-950/55 px-[10px] py-[5px] text-[10.5px] tracking-[0.2em] text-cream">
-            LOOK 01
+        <div className="relative aspect-[3/4] w-full max-w-[420px] overflow-hidden rounded-[2px] bg-navy-900">
+          {PIN_IMAGES.map((img) => (
+            <img
+              key={img.src}
+              src={img.src}
+              alt={img.alt}
+              className="story-pin-image product-photo absolute inset-0 h-full w-full object-cover"
+            />
+          ))}
+          <span className="absolute bottom-[16px] left-[16px] rounded-full border border-cream/25 bg-navy-950/55 px-[10px] py-[15px] text-[10.5px] tracking-[0.2em] text-cream">
+            EDITORIAL
           </span>
         </div>
         <div className="relative min-h-[180px] w-full max-w-[380px] text-center md:text-left">
@@ -204,12 +255,18 @@ export default function StoryPage() {
             {LOOKS.map((look) => (
               <div
                 key={look.id}
-                className="relative flex aspect-[3/4] w-[min(72vw,360px)] flex-shrink-0 flex-col justify-end rounded-[2px] border border-navy-700 bg-gradient-to-br from-navy-700 to-navy-950 p-[20px]"
+                className="relative aspect-[3/4] w-[min(72vw,360px)] flex-shrink-0 overflow-hidden rounded-[2px] border border-navy-700"
               >
-                <span className="absolute top-[18px] left-[20px] font-serif text-[13px] italic text-cream/55">
+                <img
+                  src={look.img}
+                  alt={look.title}
+                  className="product-photo absolute inset-0 h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/10 to-transparent" />
+                <span className="absolute top-[18px] left-[20px] font-serif text-[13px] italic text-cream/70">
                   {look.num}
                 </span>
-                <h3 className="font-serif text-[1.3rem] italic">
+                <h3 className="absolute bottom-[20px] left-[20px] z-10 font-serif text-[1.3rem] italic text-cream">
                   {look.title}
                 </h3>
               </div>
