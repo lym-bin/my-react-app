@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Layers, PenTool, BadgeCheck, Clock } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,36 +33,36 @@ const PIN_CAPTIONS = [
   },
 ];
 
-const LOOKS = [
+// 상품 캐러셀 대신 브랜드 가치/제작 방식 소개 (브랜드 소개 페이지에 상품 쇼케이스는 안 맞아서 교체)
+// 핀 스크롤 섹션이 이미 실루엣/컬러/디테일을 다루기 때문에, 겹치지 않게 소재·제작·검수·철학으로 구성
+const VALUES = [
   {
     id: 1,
     num: "01",
-    title: "오버사이즈 셋업",
-    img: "/images/premium-cotton-oversized-white-tshirt-model.jpg",
+    icon: Layers,
+    title: "원단은 밀도부터",
+    desc: "같은 두께라도 짜임이 다르면 핏이 다릅니다.",
   },
   {
     id: 2,
     num: "02",
-    title: "슬림 데님",
-    img: "/images/casual-cotton-denim-pants.jpg",
+    icon: PenTool,
+    title: "샘플만 다섯 번",
+    desc: "만족할 때까지 다시 그리는 패턴.",
   },
   {
     id: 3,
     num: "03",
-    title: "미니멀 니트",
-    img: "/images/relaxed-fit-knit-pullover.jpg",
+    icon: BadgeCheck,
+    title: "손으로 한 번 더",
+    desc: "출고 전 모든 제품을 직접 확인합니다.",
   },
   {
     id: 4,
     num: "04",
-    title: "테일러드 코트",
-    img: "/images/chesterfield-coat.png",
-  },
-  {
-    id: 5,
-    num: "05",
-    title: "레더 스니커즈",
-    img: "/images/minimal-leather-sneakers.png",
+    icon: Clock,
+    title: "유행이 아닌 태도",
+    desc: "계절이 지나도 변하지 않는 디자인.",
   },
 ];
 
@@ -185,7 +186,7 @@ export default function StoryPage() {
           <p className="story-hero-item story-hero-eyebrow mb-[16px] text-[11px] font-light uppercase tracking-[0.32em] text-cream/45">
             Objet & B Editorial
           </p>
-          <h1 className="story-hero-item story-hero-title mb-[22px] font-serif text-[2.6rem] leading-[1.1] sm:text-[3.4rem] md:text-[4.4rem]">
+          <h1 className="story-hero-item story-hero-title mb-[22px] text-[2.6rem] leading-[1.1] font-bold sm:text-[3.4rem] md:text-[4.4rem]">
             정교함의
             <br />
             여백
@@ -223,13 +224,13 @@ export default function StoryPage() {
         <div className="relative min-h-[180px] w-full max-w-[380px] text-center md:text-left">
           {PIN_CAPTIONS.map((c) => (
             <div key={c.num} className="story-pin-caption absolute inset-0">
-              <span className="mb-[10px] block font-serif text-[13px] text-terracotta-400">
+              <span className="mb-[10px] block text-[12px] text-terracotta-400">
                 {c.num}
               </span>
-              <h2 className="mb-[14px] font-serif text-[1.8rem] leading-[1.2] sm:text-[2.1rem]">
+              <h2 className="mb-[14px] text-[1.6rem] leading-[1.2] font-bold sm:text-[1.9rem]">
                 {c.title}
               </h2>
-              <p className="mx-auto max-w-[320px] text-[14px] leading-[1.75] text-cream/65 md:mx-0">
+              <p className="mx-auto max-w-[320px] text-[14px] leading-[1.75] text-cream/65 break-keep md:mx-0">
                 {c.desc}
               </p>
             </div>
@@ -237,38 +238,41 @@ export default function StoryPage() {
         </div>
       </section>
 
-      {/* 3. 가로 스크롤 */}
+      {/* 3. 가로 스크롤: 브랜드 가치/제작 방식 */}
       <section
         ref={horizontalRef}
         className="flex min-h-screen flex-col justify-center gap-[32px] overflow-hidden border-t border-navy-800 bg-navy-900 py-[60px]"
       >
         <div className="text-center">
           <p className="mb-[8px] text-[11px] uppercase tracking-[0.3em] text-cream/45">
-            SS26 Collection
+            Objet & B Craft
           </p>
-          <h2 className="font-serif text-[1.9rem] sm:text-[2.3rem]">
-            다섯 개의 룩
+          <h2 className="text-[1.9rem] font-bold sm:text-[2.3rem]">
+            우리가 만드는 방식
           </h2>
         </div>
         <div className="overflow-hidden">
           <div ref={trackRef} className="flex gap-[22px] px-[20px]">
-            {LOOKS.map((look) => (
+            {VALUES.map((value) => (
               <div
-                key={look.id}
-                className="relative aspect-[3/4] w-[min(72vw,360px)] flex-shrink-0 overflow-hidden rounded-[2px] border border-navy-700"
+                key={value.id}
+                className="w-[min(78vw,320px)] flex-shrink-0 rounded-[2px] border border-navy-700 bg-navy-950 px-[28px] py-[44px] text-center"
               >
-                <img
-                  src={look.img}
-                  alt={look.title}
-                  className="product-photo absolute inset-0 h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/10 to-transparent" />
-                <span className="absolute top-[18px] left-[20px] font-serif text-[13px] text-cream/70">
-                  {look.num}
+                <span className="mb-[18px] block text-[12px] tracking-[0.2em] text-cream/40">
+                  {value.num}
                 </span>
-                <h3 className="absolute bottom-[20px] left-[20px] z-10 font-serif text-[1.3rem] text-cream">
-                  {look.title}
+                <value.icon
+                  size={30}
+                  strokeWidth={1.3}
+                  className="mx-auto mb-[20px] text-terracotta-400"
+                  aria-hidden="true"
+                />
+                <h3 className="mb-[10px] text-[1.15rem] font-bold text-cream">
+                  {value.title}
                 </h3>
+                <p className="mx-auto max-w-[220px] text-[13px] leading-[1.7] text-cream/65 break-keep">
+                  {value.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -283,7 +287,7 @@ export default function StoryPage() {
         <p className="story-cta-item mb-[10px] text-[11px] uppercase tracking-[0.3em] text-cream/45">
           Objet & B
         </p>
-        <h2 className="story-cta-item mb-[36px] font-serif text-[2rem] leading-[1.25] sm:text-[2.6rem]">
+        <h2 className="story-cta-item mb-[36px] text-[2rem] leading-[1.25] font-bold sm:text-[2.6rem]">
           이번 시즌,
           <br />
           오브제처럼 곁에 두세요.
