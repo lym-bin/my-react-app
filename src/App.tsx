@@ -6,8 +6,9 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import PageTransition from "./pages/Main/components/PageTransition";
-import { AuthProvider } from "./context/AuthContext";
-import { CartProvider } from "./context/CartContext";
+import { useEffect, useRef } from "react";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import { CartProvider, useCart } from "./context/CartContext";
 import NotFoundPage from "./NotFound/NotFoundPage";
 
 // 각 페이지 컴포넌트 임포트
@@ -19,6 +20,24 @@ import ProductDetailPage from "./ProductDetail/ProductDetailPage";
 import MyPage from "./Mypage/Mypage";
 import ProductListPage from "./ProductList/ProductListPage";
 import StoryPage from "./pages/Story/StoryPage";
+
+// 로그인 -> 로그아웃으로 바뀌는 "그 순간"에만 장바구니를 비움
+// (최초 로딩 시 비로그인 게스트의 장바구니까지 지워버리지 않기 위해 전환 시점만 감지)
+function CartAuthSync() {
+  const { isLoggedIn, isLoading } = useAuth();
+  const { clearCart } = useCart();
+  const wasLoggedIn = useRef(isLoggedIn);
+
+  useEffect(() => {
+    if (isLoading) return; // Firebase가 로그인 상태 확인 중이면 판단 보류
+    if (wasLoggedIn.current && !isLoggedIn) {
+      clearCart(); // 로그인 -> 로그아웃 전환된 순간에만 실행
+    }
+    wasLoggedIn.current = isLoggedIn;
+  }, [isLoggedIn, isLoading, clearCart]);
+
+  return null; // 화면에 그릴 게 없는 순수 로직 컴포넌트
+}
 
 function AppLayout() {
   // 지금 주소가 뭔지 알려주는 센서같은 느낌
@@ -61,6 +80,7 @@ export default function App() {
       <CartProvider>
         {/* 라우팅 기능을 쓸 수있게*/}
         <BrowserRouter>
+          <CartAuthSync />
           <AppLayout />
         </BrowserRouter>
       </CartProvider>

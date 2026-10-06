@@ -97,8 +97,8 @@ export default function MainBanner() {
       {/* 배경 이미지: 데스크톱 전용, 섹션 전체(위아래양옆)를 여백 없이 꽉 채움 */}
       <Link
         ref={imageLinkRef}
-        to="/story"
-        aria-label="브랜드 스토리 페이지로 이동하기"
+        to="/products"
+        aria-label="상품 목록으로 이동하기"
         className="group absolute inset-0 hidden md:block"
       >
         <img
@@ -107,16 +107,15 @@ export default function MainBanner() {
           alt="Minimalist Collection Room View"
           className="banner-image absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
         />
-        {/* 왼쪽 텍스트 가독성을 위한 그라데이션 오버레이 */}
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-950/90 via-navy-950/50 to-navy-950/10" />
-
+        {/* 상/하단에만 은은한 음영 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-navy-950/90 via-navy-950/50 to-navy-950/10" />
         {/* 커서를 따라다니는 VIEW 라벨 */}
         <div
           ref={viewBadgeRef}
           aria-hidden="true"
           className="pointer-events-none absolute top-0 left-0 flex h-[64px] w-[64px] -translate-x-1/2 -translate-y-1/2 scale-75 items-center justify-center rounded-full bg-terracotta-500 text-[11px] font-bold tracking-[0.15em] text-navy-950 uppercase opacity-0"
         >
-          View
+          Shop
         </div>
       </Link>
 
@@ -128,35 +127,16 @@ export default function MainBanner() {
         OBJET
       </span>
 
-      {/* 텍스트 뒤 은은한 테라코타 글로우*/}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[5]"
-        style={{
-          background:
-            "radial-gradient(55% 45% at 25% 45%, rgba(193,80,46,0.16), transparent 70%)",
-        }}
-      />
-
-      {/* 텍스트 영역: 이미지 위에 오버레이 (데스크톱) / 단독 표시 (모바일) */}
-      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col items-center gap-[20px] overflow-hidden px-[20px] py-[50px] text-center md:min-h-[640px] md:items-start md:justify-center md:px-[80px] md:py-0 md:text-left">
+      {/* 텍스트 영역: 모바일 전용 (데스크톱은 배경 이미지 자체에 메시지가 있어서 생략) */}
+      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col items-center gap-[20px] overflow-hidden px-[20px] py-[50px] text-center md:hidden">
         <div className="overflow-hidden">
           <span className="gsap-title-line inline-block text-[12px] font-light tracking-[0.3em] text-cream/50 uppercase">
             Objet & B Editorial
           </span>
         </div>
 
-        <h2 className="font-serif text-[1.9rem] font-light leading-[1.1] tracking-tight text-cream sm:text-[2.2rem] md:text-[3.4rem]">
-          <div className="overflow-hidden pb-1">
-            <span className="gsap-title-line inline-block">정교함의</span>
-          </div>
-          <div className="overflow-hidden pb-1">
-            <span className="gsap-title-line inline-block">여백</span>
-          </div>
-        </h2>
-
         <div className="overflow-hidden">
-          <p className="gsap-title-line mx-auto max-w-[340px] text-[0.95rem] leading-[1.6] font-light tracking-wide text-cream/70 [word-break:keep-all] md:mx-0">
+          <p className="gsap-title-line mx-auto max-w-[300px] text-[0.95rem] leading-[1.6] font-light tracking-wide text-cream/70 [word-break:keep-all] md:mx-0">
             Objet & B가 제안하는 미니멀 컬렉션. 절제된 실루엣과 정교한 디테일로
             완성한, 오브제처럼 오래 곁에 두고 싶은 옷을 만나보세요.
           </p>
