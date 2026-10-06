@@ -14,11 +14,6 @@ const ftNav = [
 ];
 
 export default function Footer() {
-  // 클릭하면 그냥 alert만 띄우는 함수, 아직 실체 페이지가 없는 링크들에 임시로 붙여줌
-  const handleComingSoon = () => {
-    alert("아직 준비 중인 페이지 입니다.");
-  };
-
   return (
     <footer className="w-full border-t border-navy-700 bg-navy-950 px-[20px] py-[40px] md:px-[50px]">
       <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-[32px] text-center md:flex-row md:items-center md:justify-between md:gap-0 md:text-left">
@@ -70,8 +65,8 @@ export default function Footer() {
                 ) : (
                   <button
                     type="button"
-                    onClick={handleComingSoon}
-                    className="text-[12px] text-cream/70 transition-colors hover:text-terracotta-400"
+                    disabled
+                    className="cursor-not-allowed text-[12px] text-cream/30"
                   >
                     {item.label}
                   </button>

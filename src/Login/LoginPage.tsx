@@ -48,11 +48,6 @@ export default function LoginPage() {
     }
   };
 
-  // TODO: 아이디/비밀번호 찾기 페이지 경로
-  const handleComingSoon = () => {
-    alert("아직 준비중인 페이지입니다.");
-  };
-
   // 가드절로 이메일 미입력을 먼저 걸러내고, AuthContex의 resetPassword를 호출
   // error(실패용), info(성공 안내용) -> 에러가 아닌 메시지 전용 state
   const handlePasswordReset = async () => {
@@ -144,8 +139,8 @@ export default function LoginPage() {
             <div className="flex gap-[8px]">
               <button
                 type="button"
-                onClick={handleComingSoon}
-                className="hover:text-terracotta-400 hover:underline"
+                disabled
+                className="cursor-not-allowed text-cream/30"
               >
                 아이디 찾기
               </button>

@@ -115,10 +115,6 @@ export default function MyPage() {
     };
   }, [isLoading, isLoggedIn, user, navigate]);
 
-  const handleComingSoon = () => {
-    alert("아직 준비 중인 페이지입니다.");
-  };
-
   const handleLogout = async () => {
     await logout();
     navigate("/login");
@@ -155,11 +151,11 @@ export default function MyPage() {
               <li key={b.id}>
                 <button
                   type="button"
-                  onClick={handleComingSoon}
-                  className="flex w-full items-center justify-center gap-[8px] text-cream/80 transition-colors hover:text-terracotta-400"
+                  disabled
+                  className="flex w-full cursor-not-allowed items-center justify-center gap-[8px] text-cream/30"
                 >
                   <span className="text-[14px]">{b.label} &gt;</span>
-                  <strong className="text-[14px] font-bold text-cream">
+                  <strong className="text-[14px] font-bold">
                     {b.value}
                   </strong>
                 </button>
@@ -253,27 +249,40 @@ export default function MyPage() {
         <div className="flex flex-col gap-[30px]">
           <nav>
             <ul className="flex flex-col gap-[16px] p-0">
-              {mainNav.map((item) => (
-                <li key={item}>
-                  <button
-                    type="button"
-                    onClick={
-                      item === "주문 내역"
-                        ? () =>
-                            window.scrollTo({ top: 300, behavior: "smooth" })
-                        : item === "최근 본 상품" // ref가 가리키는 그 요소가 보이는 위치로
+              {mainNav.map((item) => {
+                // "주문 내역"/"최근 본 상품"만 실제로 동작, 나머지는 아직 없는 페이지라 비활성화
+                const isActive =
+                  item === "주문 내역" || item === "최근 본 상품";
+                return (
+                  <li key={item}>
+                    <button
+                      type="button"
+                      disabled={!isActive}
+                      onClick={
+                        item === "주문 내역"
                           ? () =>
-                              recentlyViewedRef.current?.scrollIntoView({
+                              window.scrollTo({
+                                top: 300,
                                 behavior: "smooth",
                               })
-                          : handleComingSoon // ㄴ머지는 다 "준비중" 알림
-                    }
-                    className="text-[14px] text-cream/80 hover:text-terracotta-400 hover:underline"
-                  >
-                    {item}
-                  </button>
-                </li>
-              ))}
+                          : item === "최근 본 상품" // ref가 가리키는 그 요소가 보이는 위치로
+                            ? () =>
+                                recentlyViewedRef.current?.scrollIntoView({
+                                  behavior: "smooth",
+                                })
+                            : undefined
+                      }
+                      className={
+                        isActive
+                          ? "text-[14px] text-cream/80 hover:text-terracotta-400 hover:underline"
+                          : "cursor-not-allowed text-[14px] text-cream/30"
+                      }
+                    >
+                      {item}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 
@@ -283,8 +292,8 @@ export default function MyPage() {
                 <li key={item}>
                   <button
                     type="button"
-                    onClick={handleComingSoon}
-                    className="text-[14px] text-cream/80 hover:text-terracotta-400 hover:underline"
+                    disabled
+                    className="cursor-not-allowed text-[14px] text-cream/30"
                   >
                     {item}
                   </button>
