@@ -3,6 +3,8 @@
 // current state가 "지금 몇번째 슬라이드 인지를 기억" -> setInterval로 자동 증가
 // 마우스 올리면 일시정지 -> 화살표/점 클릭은 직접 인덱스 지정 ->
 // translateX로 슬라이드 띠 전체를 부드럽게 이동
+// 1번 슬라이드는 img가 없음 -> 텍스트 전용 레이아웃으로 렌더링
+// (원래 1번 사진(Model_1.jpg)에 타 브랜드 로고(YSL)가 찍혀있는 게 발견돼서 사진만 빼고 텍스트는 유지)
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
@@ -13,25 +15,22 @@ gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
 interface CustomerSlide {
   id: number;
-  img: string;
+  img?: string; // 없으면 텍스트 전용 슬라이드
   title: string;
   desc: string;
-  reverse?: boolean; // 선택적 필드(reverse: true를줘서 텍스트 이미지 좌우 배치 반대로)
 }
 
 const SLIDES: CustomerSlide[] = [
   {
     id: 1,
-    img: "/images/Model_1.jpg",
-    title: "Quiet Luxury, Modern Heritage",
-    desc: "과장되지 않은 우아함, 당신의 일상을 위한 프리미엄.",
+    title: "Fewer, Better Pieces",
+    desc: "많은 옷보다, 좋은 옷. 오래 입을 몇 벌이면 충분합니다.",
   },
   {
     id: 2,
     img: "/images/model_2.jpg",
-    title: "Thoughtfully Made",
-    desc: "오래도록 머무는 옷, 그 이상의 가치.",
-    reverse: true,
+    title: "The Sweater You'll Reach For",
+    desc: "여러 벌보다 한 벌. 질리지 않는 니트.",
   },
 ];
 
@@ -83,7 +82,6 @@ export default function CustomerBanner() {
 
     lines.forEach((el, i) => {
       // 원문을 data-full-text에 한 번 저장해두고, 그 다음부턴 거기서만 읽음
-      // (타이핑 도중 textContent가 잘려있을 때 다시 읽어버리는 사고 방지)
       const fullText = el.dataset.fullText ?? el.textContent ?? "";
       el.dataset.fullText = fullText;
 
@@ -92,7 +90,7 @@ export default function CustomerBanner() {
         el,
         {
           text: fullText,
-          duration: Math.max(0.6, fullText.length * 0.035),
+          duration: Math.max(0.9, fullText.length * 0.065),
           ease: "none",
         },
         i === 0 ? 0 : "-=0.2",
@@ -115,51 +113,75 @@ export default function CustomerBanner() {
         className="flex transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${current * 100}%)` }}
       >
-        {SLIDES.map((slide) => (
-          <div
-            key={slide.id}
-            className="w-full flex-shrink-0 py-[36px] sm:py-[50px]"
-          >
+        {SLIDES.map((slide) =>
+          slide.img ? (
+            // ===== 이미지 + 텍스트 슬라이드 =====
             <div
-              className={`mx-auto flex max-w-[1200px] flex-col items-center gap-[24px] px-[20px] md:flex-row md:items-center md:justify-between md:gap-0 ${
-                slide.reverse ? "md:flex-row-reverse" : "md:flex-row"
-              }`}
+              key={slide.id}
+              className="w-full flex-shrink-0 py-[36px] sm:py-[50px]"
             >
-              {/* 텍스트 컨텐츠 영역 */}
-              <div className="flex w-full flex-col items-center gap-[14px] text-center md:w-1/2 md:items-start md:gap-[20px] md:text-left">
+              <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-[24px] px-[20px] md:flex-row md:items-center md:justify-between md:gap-0">
+                <div className="flex w-full flex-col items-center gap-[14px] text-center md:w-1/2 md:items-start md:gap-[20px] md:text-left">
+                  <h2
+                    className="customer-banner-line min-h-[58px] text-[1.5rem] font-bold leading-[1.2] text-cream sm:min-h-[78px] sm:text-[2rem]"
+                    data-slide={slide.id}
+                  >
+                    {slide.title}
+                  </h2>
+                  <p
+                    className="customer-banner-line min-h-[44px] max-w-[300px] text-[0.85rem] leading-[1.6] text-cream/70 break-keep sm:min-h-[46px] sm:text-[0.9rem]"
+                    data-slide={slide.id}
+                  >
+                    {slide.desc}
+                  </p>
+                </div>
+
+                <div className="flex w-full justify-center md:w-1/2">
+                  <Link
+                    to="/story"
+                    className="group relative block overflow-hidden rounded-lg"
+                  >
+                    <img
+                      src={slide.img}
+                      alt={slide.title}
+                      className="w-full max-w-[400px] object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    />
+                    <span className="absolute bottom-[14px] left-[14px] flex items-center gap-[6px] rounded-full border border-cream/25 bg-navy-950/60 px-[12px] py-[6px] text-[11px] tracking-[0.12em] text-cream uppercase backdrop-blur-sm transition-colors group-hover:border-terracotta-400 group-hover:text-terracotta-400">
+                      브랜드 스토리 보기 →
+                    </span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ) : (
+            // ===== 텍스트 전용 슬라이드 (사진 없음) =====
+            <div
+              key={slide.id}
+              className="flex h-full w-full flex-shrink-0 items-center justify-center py-[60px] sm:py-[80px]"
+            >
+              <Link
+                to="/story"
+                className="group mx-auto flex max-w-[640px] flex-col items-center gap-[18px] px-[20px] text-center"
+              >
                 <h2
-                  className="customer-banner-line min-h-[58px] text-[1.5rem] font-bold leading-[1.2] text-cream sm:min-h-[78px] sm:text-[2rem]"
+                  className="customer-banner-line min-h-[44px] text-[1.8rem] font-bold leading-[1.2] text-cream sm:min-h-[58px] sm:text-[2.4rem]"
                   data-slide={slide.id}
                 >
                   {slide.title}
                 </h2>
                 <p
-                  className="customer-banner-line min-h-[44px] max-w-[300px] text-[0.85rem] leading-[1.6] text-cream/70 break-keep sm:min-h-[46px] sm:text-[0.9rem]"
+                  className="customer-banner-line min-h-[50px] max-w-[380px] text-[0.9rem] leading-[1.7] text-cream/70 break-keep sm:text-[1rem]"
                   data-slide={slide.id}
                 >
                   {slide.desc}
                 </p>
-              </div>
-
-              {/* 이미지 영역 */}
-              <div className="flex w-full justify-center md:w-1/2">
-                <Link
-                  to="/story"
-                  className="group relative block overflow-hidden rounded-lg"
-                >
-                  <img
-                    src={slide.img}
-                    alt={slide.title}
-                    className="w-full max-w-[400px] object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                  />
-                  <span className="absolute bottom-[14px] left-[14px] flex items-center gap-[6px] rounded-full border border-cream/25 bg-navy-950/60 px-[12px] py-[6px] text-[11px] tracking-[0.12em] text-cream uppercase backdrop-blur-sm transition-colors group-hover:border-terracotta-400 group-hover:text-terracotta-400">
-                    브랜드 스토리 보기 →
-                  </span>
-                </Link>
-              </div>
+                <span className="mt-[6px] inline-flex items-center gap-[6px] rounded-full border border-cream/25 px-[14px] py-[7px] text-[11px] tracking-[0.12em] text-cream/70 uppercase transition-colors group-hover:border-terracotta-400 group-hover:text-terracotta-400">
+                  브랜드 스토리 보기 →
+                </span>
+              </Link>
             </div>
-          </div>
-        ))}
+          ),
+        )}
       </div>
 
       {/* 좌우 화살표 */}
