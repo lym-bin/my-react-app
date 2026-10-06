@@ -3,9 +3,10 @@
 // 마운트 시 타이틀 줄들을 STAGGER로 순차 등장 -> 배경 이미지에 스크롤 연동 패럴렉스 설정
 // 별도 effect로 마우스 움직이에 반응하는 뱃지 추적 -> 언마운트시 각각 정리
 import { Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ChevronDown } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -88,6 +89,17 @@ export default function MainBanner() {
     };
   }, []);
 
+  // 스크롤 유도 UI 숨김 여부 (일정 이상 스크롤하면 숨김)
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    function handleScroll() {
+      setScrolled(window.scrollY > 80);
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <section
       ref={bannerRef}
@@ -156,10 +168,16 @@ export default function MainBanner() {
       {/* 스크롤 유도 (데스크톱 전용)*/}
       <div
         aria-hidden="true"
-        className="gsap-title-line pointer-events-none absolute inset-x-0 bottom-[10px] z-10 mx-auto hidden w-fit flex-col items-center gap-[10px] text-[10px] font-light tracking-[0.28em] text-cream/40 uppercase md:flex"
+        className={`pointer-events-none absolute inset-x-0 bottom-[20px] z-10 mx-auto hidden w-fit flex-col items-center gap-[8px] text-[14px] font-light tracking-[0.28em] text-cream/70 uppercase transition-opacity duration-300 md:flex ${
+          scrolled ? "opacity-0" : "opacity-100"
+        }`}
       >
-        <span className="h-[30px] w-px animate-pulse bg-gradient-to-b from-terracotta-400 to-transparent" />
         Scroll
+        <ChevronDown
+          size={26}
+          strokeWidth={1.8}
+          className="animate-bounce text-terracotta-400"
+        />
       </div>
     </section>
   );
