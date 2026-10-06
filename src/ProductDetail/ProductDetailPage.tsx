@@ -147,7 +147,7 @@ export default function ProductDetailPage() {
                 {product.name}
               </h1>
               <div className="mb-[20px] border-b border-navy-700 pb-[20px] text-[18px] font-semibold text-cream">
-                $ {product.price.toLocaleString()}
+                {product.price.toLocaleString()}원
               </div>
             </div>
 

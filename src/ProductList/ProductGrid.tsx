@@ -53,7 +53,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
             imgPosition={product.imgPosition}
             imgFit={product.imgFit}
             name={product.name}
-            price={`${product.price.toLocaleString()} $`} // 숫자 천단위 콤마: 48000 -> "48,000"
+            price={`${product.price.toLocaleString()}원`} // 숫자 천단위 콤마: 48000 -> "48,000"
           />
         ))}
       </ul>

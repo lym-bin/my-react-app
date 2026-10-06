@@ -56,17 +56,22 @@ export default function ProductList() {
             >
               <Link
                 to={`/products/${product.id}`}
-                className="block text-center text-inherit"
+                className="group block text-center text-inherit"
               >
                 {/* 이미지 영역 */}
-                <div className="mb-[20px] aspect-[16/9] w-full overflow-hidden bg-navy-700">
+                <div className="relative mb-[20px] aspect-[16/9] w-full overflow-hidden bg-navy-800">
                   {product.imgSrc && ( // 이미지 없으면 아예 안 그림 (ProductCard처럼 기본값 방식이 아니라, 조건부 렌더링 방식)
                     <img
                       src={product.imgSrc}
                       alt={product.name}
-                      className="product-photo block h-full w-full object-cover transition-transform duration-500 ease-in-out hover:scale-110"
-                    /> // group 없이 그냥 img 자체에 hover: 검 ( 부모가 아니라 이미지 자신이 hover 대상)
+                      className="product-photo block h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+                    />
                   )}
+                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <span className="border border-cream/50 bg-navy-950/70 px-[18px] py-[9px] text-[11px] tracking-[0.2em] text-cream uppercase">
+                      자세히 보기
+                    </span>
+                  </div>
                 </div>
 
                 {/* 텍스트 정보 */}
@@ -76,7 +81,7 @@ export default function ProductList() {
                   </em>{" "}
                   {/* <em>: 원래 "강조"용 시맨틱 태그인데 여기선 이탤릭 스타일 목적으로 씀 */}
                   <strong className="text-[13px] font-bold text-terracotta-400">
-                    $ {product.price.toLocaleString()}
+                    {product.price.toLocaleString()}원
                   </strong>
                 </div>
               </Link>

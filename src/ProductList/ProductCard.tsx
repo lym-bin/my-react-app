@@ -22,7 +22,7 @@ export default function ProductCard({
   imgPosition,
   imgFit = "cover",
   name = "제품명 : *****", // 데이터 누락 가드
-  price = "$ ***",
+  price = "***원",
 }: ProductCardProps) {
   return (
     // isLarge : 크리드 칸 차지
@@ -32,7 +32,7 @@ export default function ProductCard({
     <li className={`w-full ${isLarge ? "col-span-2" : ""}`}>
       <Link to={href} className="group block">
         {/* 이미지 영역: overflow-hidden 및 내부 이미지 스타일 보완 */}
-        <div className="mb-[20px] aspect-[3/4] w-full overflow-hidden bg-navy-800">
+        <div className="relative mb-[20px] aspect-[3/4] w-full overflow-hidden bg-navy-800">
           <img
             src={imgSrc}
             alt={isLarge ? `${name} 큰 제품 이미지` : `${name} 제품 이미지`}
@@ -42,6 +42,11 @@ export default function ProductCard({
               imgFit === "contain" ? "object-contain" : "object-cover"
             }`}
           />
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <span className="border border-cream/50 bg-navy-950/70 px-[18px] py-[9px] text-[11px] tracking-[0.2em] text-cream uppercase">
+              자세히 보기
+            </span>
+          </div>
         </div>
 
         {/* 상품 정보 영역 */}
