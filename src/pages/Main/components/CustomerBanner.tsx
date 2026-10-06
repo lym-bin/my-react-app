@@ -72,7 +72,7 @@ export default function CustomerBanner() {
             >
               {/* 텍스트 컨텐츠 영역 */}
               <div className="flex w-full flex-col items-center gap-[14px] text-center md:w-1/2 md:items-start md:gap-[20px] md:text-left">
-                <h2 className="text-[1.5rem] font-bold italic leading-[1.2] text-cream sm:text-[2rem]">
+                <h2 className="text-[1.5rem] font-bold leading-[1.2] text-cream sm:text-[2rem]">
                   {slide.title}
                 </h2>
                 <p className="max-w-[300px] text-[0.85rem] leading-[1.6] text-cream/70 sm:text-[0.9rem]">

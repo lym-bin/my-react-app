@@ -83,7 +83,7 @@ export default function BestReview() {
     <section className="bg-navy-950 px-[20px] py-[50px]">
       <div className="mx-auto max-w-[1200px]">
         {/* 반응형 3단계: 모바일 1열 -> SM 2열 -> lg(데스크톱) 4열*/}
-        <h2 className="mb-[30px] text-center text-[2rem] font-bold italic leading-[1.2] text-cream">
+        <h2 className="mb-[30px] text-center text-[2rem] font-bold leading-[1.2] text-cream">
           Best Review
         </h2>
 

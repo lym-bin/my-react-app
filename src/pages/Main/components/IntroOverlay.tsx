@@ -70,7 +70,7 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
         </span>
 
         {/* 메인 브랜드 타이틀 (이탈릭 세리프 무드) */}
-        <h1 className="font-serif text-[2.2rem] font-light italic tracking-tight text-cream sm:text-[2.8rem] md:text-[5rem]">
+        <h1 className="font-serif text-[2.2rem] font-light tracking-tight text-cream sm:text-[2.8rem] md:text-[5rem]">
           OBJET & B
         </h1>
 

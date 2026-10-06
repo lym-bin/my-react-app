@@ -185,7 +185,7 @@ export default function StoryPage() {
           <p className="story-hero-item story-hero-eyebrow mb-[16px] text-[11px] font-light uppercase tracking-[0.32em] text-cream/45">
             Objet & B Editorial
           </p>
-          <h1 className="story-hero-item story-hero-title mb-[22px] font-serif text-[2.6rem] italic leading-[1.1] sm:text-[3.4rem] md:text-[4.4rem]">
+          <h1 className="story-hero-item story-hero-title mb-[22px] font-serif text-[2.6rem] leading-[1.1] sm:text-[3.4rem] md:text-[4.4rem]">
             정교함의
             <br />
             여백
@@ -223,10 +223,10 @@ export default function StoryPage() {
         <div className="relative min-h-[180px] w-full max-w-[380px] text-center md:text-left">
           {PIN_CAPTIONS.map((c) => (
             <div key={c.num} className="story-pin-caption absolute inset-0">
-              <span className="mb-[10px] block font-serif text-[13px] italic text-terracotta-400">
+              <span className="mb-[10px] block font-serif text-[13px] text-terracotta-400">
                 {c.num}
               </span>
-              <h2 className="mb-[14px] font-serif text-[1.8rem] italic leading-[1.2] sm:text-[2.1rem]">
+              <h2 className="mb-[14px] font-serif text-[1.8rem] leading-[1.2] sm:text-[2.1rem]">
                 {c.title}
               </h2>
               <p className="mx-auto max-w-[320px] text-[14px] leading-[1.75] text-cream/65 md:mx-0">
@@ -246,7 +246,7 @@ export default function StoryPage() {
           <p className="mb-[8px] text-[11px] uppercase tracking-[0.3em] text-cream/45">
             SS26 Collection
           </p>
-          <h2 className="font-serif text-[1.9rem] italic sm:text-[2.3rem]">
+          <h2 className="font-serif text-[1.9rem] sm:text-[2.3rem]">
             다섯 개의 룩
           </h2>
         </div>
@@ -263,10 +263,10 @@ export default function StoryPage() {
                   className="product-photo absolute inset-0 h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/10 to-transparent" />
-                <span className="absolute top-[18px] left-[20px] font-serif text-[13px] italic text-cream/70">
+                <span className="absolute top-[18px] left-[20px] font-serif text-[13px] text-cream/70">
                   {look.num}
                 </span>
-                <h3 className="absolute bottom-[20px] left-[20px] z-10 font-serif text-[1.3rem] italic text-cream">
+                <h3 className="absolute bottom-[20px] left-[20px] z-10 font-serif text-[1.3rem] text-cream">
                   {look.title}
                 </h3>
               </div>
@@ -283,7 +283,7 @@ export default function StoryPage() {
         <p className="story-cta-item mb-[10px] text-[11px] uppercase tracking-[0.3em] text-cream/45">
           Objet & B
         </p>
-        <h2 className="story-cta-item mb-[36px] font-serif text-[2rem] italic leading-[1.25] sm:text-[2.6rem]">
+        <h2 className="story-cta-item mb-[36px] font-serif text-[2rem] leading-[1.25] sm:text-[2.6rem]">
           이번 시즌,
           <br />
           오브제처럼 곁에 두세요.

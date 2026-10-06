@@ -35,7 +35,7 @@ export default function Logo({ size = "sm", className = "" }: LogoProps) {
         className={`flex items-center justify-center rounded-full border border-cream/80 ${circle}`}
       >
         {/* 원형 테두리: 너비=높이+rounded-full 조합으로 완벽한 원 모양이 됨*/}
-        <span className={`font-serif leading-none text-cream italic ${letter}`}>
+        <span className={`font-serif leading-none text-cream ${letter}`}>
           B
         </span>
       </span>

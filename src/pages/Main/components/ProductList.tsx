@@ -41,7 +41,7 @@ export default function ProductList() {
           <span className="mb-[8px] block text-[11px] font-light tracking-[0.3em] text-cream/40 uppercase">
             Objet & B Selection
           </span>
-          <h2 className="font-serif text-[1.8rem] font-light italic text-cream sm:text-[2.2rem]">
+          <h2 className="font-serif text-[1.8rem] font-light text-cream sm:text-[2.2rem]">
             New Arrivals
           </h2>
         </div>
@@ -59,7 +59,7 @@ export default function ProductList() {
                 className="block text-center text-inherit"
               >
                 {/* 이미지 영역 */}
-                <div className="mb-[20px] aspect-[3/4] w-full overflow-hidden bg-navy-800">
+                <div className="mb-[20px] aspect-[16/9] w-full overflow-hidden bg-navy-700">
                   {product.imgSrc && ( // 이미지 없으면 아예 안 그림 (ProductCard처럼 기본값 방식이 아니라, 조건부 렌더링 방식)
                     <img
                       src={product.imgSrc}
