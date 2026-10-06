@@ -180,18 +180,27 @@ export default function CustomerBanner() {
         ›
       </button>
 
-      {/* 하단 점 인디케이터 */}
-      <div className="absolute bottom-[14px] left-1/2 flex -translate-x-1/2 gap-[8px]">
+      {/* 하단 진행바 인디케이터 */}
+      <div className="absolute bottom-[14px] left-1/2 flex -translate-x-1/2 gap-[6px]">
         {SLIDES.map((slide, i) => (
           <button
             key={slide.id}
             type="button"
             aria-label={`${i + 1}번 슬라이드로 이동`}
             onClick={() => goTo(i)}
-            className={`h-[8px] w-[8px] cursor-pointer rounded-full transition-colors ${
-              i === current ? "bg-terracotta-500" : "bg-cream/30"
-            }`}
-          />
+            className="h-[3px] w-[36px] cursor-pointer overflow-hidden rounded-full bg-cream/25"
+          >
+            {i === current && (
+              <div
+                key={current} // current가 바뀔 때마다 새로 마운트돼서 0%부터 다시 채워짐
+                className="h-full bg-terracotta-500"
+                style={{
+                  animation: `customer-banner-fill ${AUTOPLAY_MS}ms linear forwards`,
+                  animationPlayState: isPaused ? "paused" : "running",
+                }}
+              />
+            )}
+          </button>
         ))}
       </div>
     </section>

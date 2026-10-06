@@ -63,7 +63,14 @@
 .product-photo {
   filter: brightness(0.92) contrast(1.08) saturate(0.9) sepia(0.08);
 }
-
+@keyframes customer-banner-fill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
 body {
   background-color: var(--color-navy-950);
 }
