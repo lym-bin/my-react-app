@@ -3,8 +3,13 @@
 // current state가 "지금 몇번째 슬라이드 인지를 기억" -> setInterval로 자동 증가
 // 마우스 올리면 일시정지 -> 화살표/점 클릭은 직접 인덱스 지정 ->
 // translateX로 슬라이드 띠 전체를 부드럽게 이동
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { TextPlugin } from "gsap/TextPlugin";
+
+gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
 interface CustomerSlide {
   id: number;
@@ -18,14 +23,14 @@ const SLIDES: CustomerSlide[] = [
   {
     id: 1,
     img: "/images/Model_1.jpg",
-    title: "Minimalist & Sophisticated",
-    desc: "Elevate your everyday, redefined by design. Timeless pieces for modern life.",
+    title: "Quiet Luxury, Modern Heritage",
+    desc: "과장되지 않은 우아함, 당신의 일상을 위한 프리미엄.",
   },
   {
     id: 2,
     img: "/images/model_2.jpg",
-    title: "Crafted to Last",
-    desc: "Quiet luxury in every stitch and seam — objects made to be lived with.",
+    title: "Thoughtfully Made",
+    desc: "오래도록 머무는 옷, 그 이상의 가치.",
     reverse: true,
   },
 ];
@@ -50,8 +55,58 @@ export default function CustomerBanner() {
     setCurrent((index + SLIDES.length) % SLIDES.length);
   };
 
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [hasEntered, setHasEntered] = useState(false);
+
+  // 섹션이 스크롤해서 처음 보이는 순간을 한 번만 감지
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top 80%",
+        once: true,
+        onEnter: () => setHasEntered(true),
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  // 처음 보인 이후로는, 슬라이드가 바뀔 때마다 그 슬라이드의 제목/설명이 한 글자씩 타이핑됨
+  useEffect(() => {
+    if (!hasEntered) return;
+
+    const activeId = SLIDES[current]!.id;
+    const lines = gsap.utils.toArray<HTMLElement>(
+      `.customer-banner-line[data-slide="${activeId}"]`,
+    );
+    const tl = gsap.timeline();
+
+    lines.forEach((el, i) => {
+      // 원문을 data-full-text에 한 번 저장해두고, 그 다음부턴 거기서만 읽음
+      // (타이핑 도중 textContent가 잘려있을 때 다시 읽어버리는 사고 방지)
+      const fullText = el.dataset.fullText ?? el.textContent ?? "";
+      el.dataset.fullText = fullText;
+
+      gsap.set(el, { text: "" });
+      tl.to(
+        el,
+        {
+          text: fullText,
+          duration: Math.max(0.6, fullText.length * 0.035),
+          ease: "none",
+        },
+        i === 0 ? 0 : "-=0.2",
+      );
+    });
+
+    return () => {
+      tl.kill();
+    };
+  }, [current, hasEntered]);
+
   return (
     <section
+      ref={sectionRef}
       className="relative overflow-hidden bg-navy-900"
       onMouseEnter={() => setIsPaused(true)} // 미우스로 일시 정지
       onMouseLeave={() => setIsPaused(false)}
@@ -72,10 +127,16 @@ export default function CustomerBanner() {
             >
               {/* 텍스트 컨텐츠 영역 */}
               <div className="flex w-full flex-col items-center gap-[14px] text-center md:w-1/2 md:items-start md:gap-[20px] md:text-left">
-                <h2 className="text-[1.5rem] font-bold leading-[1.2] text-cream sm:text-[2rem]">
+                <h2
+                  className="customer-banner-line min-h-[58px] text-[1.5rem] font-bold leading-[1.2] text-cream sm:min-h-[78px] sm:text-[2rem]"
+                  data-slide={slide.id}
+                >
                   {slide.title}
                 </h2>
-                <p className="max-w-[300px] text-[0.85rem] leading-[1.6] text-cream/70 sm:text-[0.9rem]">
+                <p
+                  className="customer-banner-line min-h-[44px] max-w-[300px] text-[0.85rem] leading-[1.6] text-cream/70 sm:min-h-[46px] sm:text-[0.9rem]"
+                  data-slide={slide.id}
+                >
                   {slide.desc}
                 </p>
               </div>
