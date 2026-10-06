@@ -71,126 +71,131 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="mx-auto my-[90px] w-full max-w-[500px] rounded-[12px] border border-navy-700 bg-navy-900 px-[35px] py-[45px] shadow-sm">
-      <Link
-        to="/"
-        className="mb-[40px] flex justify-center"
-        aria-label="홈으로 이동"
-      >
-        <Logo size="lg" />
-      </Link>
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-[20px] py-[60px]">
+      {/* 풀블리드 배경 사진*/}
+      <img
+        src="/images/model_2.jpg"
+        alt="로그인 이미지"
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover object-[center_26%]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-navy-950/60 via-navy-950/75 to-navy-950/90" />
 
-      <form onSubmit={handleSubmit} className="flex flex-col">
-        {/* 회원가입 모드일 때만 닉네임 입력창 표시 */}
-        {mode === "signup" && (
+      {/* 반투명 폼 카드*/}
+      <div className="relative z-10 w-full max-w-[420px] rounded-[12px] border border-cream/15 bg-navy-900/55 px-[35px] py-[45px] shadow-xl backdrop-blur-md">
+        <Link
+          to="/"
+          className="mb-[40px] flex justify-center"
+          aria-label="홈으로 이동"
+        >
+          <Logo size="lg" />
+        </Link>
+
+        <form onSubmit={handleSubmit} className="flex flex-col">
+          {/* 회원가입 모드일 때만 닉네임 입력창 표시 */}
+          {mode === "signup" && (
+            <input
+              type="text"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              placeholder="닉네임을 입력해 주세요."
+              required
+              className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-[14px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+            />
+          )}
           <input
-            type="text"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            placeholder="닉네임을 입력해 주세요."
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="이메일을 입력해 주세요."
             required
             className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-[14px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
           />
-        )}
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="이메일을 입력해 주세요."
-          required
-          className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-[14px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
-        />
 
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="비밀번호를 입력해 주세요."
-          required
-          minLength={6}
-          className="mb-[16px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-[14px] text-cream placeholder:text-cream/40 outline-none focus:border-terracotta-400"
-        />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="비밀번호를 입력해 주세요."
+            required
+            minLength={6}
+            className="mb-[16px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-[14px] text-cream placeholder:text-cream/40 outline-none focus:border-terracotta-400"
+          />
 
-        {/* error/info 각각 있을 때만 표시, 동시에 둘 다 올 수도 있는 구조(서로 배타적이지 않음)*/}
-        {error && <p className="mb-[16px] text-[13px] text-danger">{error}</p>}
-        {info && (
-          <p className="mb-[16px] text-[13px] text-terracotta-400">{info}</p>
-        )}
+          {/* error/info 각각 있을 때만 표시, 동시에 둘 다 올 수도 있는 구조(서로 배타적이지 않음)*/}
+          {error && (
+            <p className="mb-[16px] text-[13px] text-danger">{error}</p>
+          )}
+          {info && (
+            <p className="mb-[16px] text-[13px] text-terracotta-400">{info}</p>
+          )}
 
-        <div className="mb-[20px] flex items-center justify-between text-[13px] text-cream/60">
-          <div className="flex items-center gap-[6px]">
-            {/* checked/onChange 없는 체크박스: 브라우저가 알아서 체크 상태 관리(uncontrolled)*/}
-            {/* 이 값을 읽어서 쓰는 로직이 없어서 "자동로그인" 기능 자체는 아직 안 붙음*/}
-            <input
-              type="checkbox"
-              id="keep"
-              className="accent-terracotta-500"
-            />
-            <label htmlFor="keep">자동로그인</label>
+          <div className="mb-[20px] flex items-center justify-between text-[13px] text-cream/60">
+            <div className="flex items-center gap-[6px]">
+              {/* checked/onChange 없는 체크박스: 브라우저가 알아서 체크 상태 관리(uncontrolled)*/}
+              {/* 이 값을 읽어서 쓰는 로직이 없어서 "자동로그인" 기능 자체는 아직 안 붙음*/}
+              <input
+                type="checkbox"
+                id="keep"
+                className="accent-terracotta-500"
+              />
+              <label htmlFor="keep">자동로그인</label>
+            </div>
+            <div className="flex gap-[8px]">
+              <button
+                type="button"
+                onClick={handleComingSoon}
+                className="hover:text-terracotta-400 hover:underline"
+              >
+                아이디 찾기
+              </button>
+              <span>|</span>
+              <button
+                type="button"
+                onClick={handlePasswordReset}
+                className="hover:text-terracotta-400 hover:underline"
+              >
+                비밀번호 찾기
+              </button>
+            </div>
           </div>
-          <div className="flex gap-[8px]">
-            <button
-              type="button"
-              onClick={handleComingSoon}
-              className="hover:text-terracotta-400 hover:underline"
-            >
-              아이디 찾기
-            </button>
-            <span>|</span>
-            <button
-              type="button"
-              onClick={handlePasswordReset}
-              className="hover:text-terracotta-400 hover:underline"
-            >
-              비밀번호 찾기
-            </button>
-          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="mb-[20px] w-full cursor-pointer rounded-[8px] bg-terracotta-500 py-[14px] text-[14px] font-bold text-navy-950 shadow-[0_10px_30px_-8px_rgba(193,80,46,0.65)] transition-all duration-200 hover:-translate-y-[2px] hover:bg-terracotta-600 hover:shadow-[0_14px_34px_-6px_rgba(193,80,46,0.75)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+          >
+            {isSubmitting
+              ? "처리중..."
+              : mode === "signup"
+                ? "회원가입"
+                : "로그인"}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              // 함수형 업데이트로 login <-> signup toggle
+              setMode((prev) => (prev === "login" ? "signup" : "login"));
+              setError(""); // 모드 바뀌면 이전 에러 지움
+            }}
+            className="mb-[20px] w-full cursor-pointer text-[13px] text-cream/60 hover:text-terracotta-400"
+          >
+            {mode === "signup"
+              ? "이미 계정이 있으신가요? 로그인"
+              : "계정이 없으신가요? 회원가입"}
+          </button>
+        </form>
+
+        <div className="mt-[20px] border-t border-navy-700/50 pt-[20px] text-center">
+          <Link
+            to="/products"
+            className="text-[13px] text-cream/60 transition-colors hover:text-terracotta-400 hover:underline"
+          >
+            회원가입 없이 둘러보기 →
+          </Link>
         </div>
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="mb-[20px] w-full cursor-pointer rounded-[8px] bg-terracotta-500 py-[13px] text-[14px] font-medium text-navy-950 transition-colors hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {isSubmitting
-            ? "처리중..."
-            : mode === "signup"
-              ? "회원가입"
-              : "로그인"}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            // 함수형 업데이트로 login <-> signup toggle
-            setMode((prev) => (prev === "login" ? "signup" : "login"));
-            setError(""); // 모드 바뀌면 이전 에러 지움
-          }}
-          className="mb-[20px] w-full cursor-pointer text-[13px] text-cream/60 hover:text-terracotta-400"
-        >
-          {mode === "signup"
-            ? "이미 계정이 있으신가요? 로그인"
-            : "계정이 없으신가요? 회원가입"}
-        </button>
-      </form>
-
-      <section className="flex flex-col gap-[10px] border-t border-navy-700 pt-[20px]">
-        <button
-          type="button"
-          className="flex items-center justify-center rounded-[8px] bg-naver py-[12px] text-[14px] font-medium text-white"
-          // handleComingSoon : alert("아직 준비중인 페이지 입니다")
-          onClick={handleComingSoon}
-        >
-          네이버 로그인
-        </button>
-        <button
-          type="button"
-          className="flex items-center justify-center rounded-[8px] bg-kakao py-[12px] text-[14px] font-medium text-[#3c1e1e]"
-          onClick={handleComingSoon}
-        >
-          카카오 로그인
-        </button>
-      </section>
+      </div>
     </main>
   );
 }
