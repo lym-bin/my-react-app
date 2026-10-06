@@ -15,7 +15,6 @@ import { CATEGORIES } from "../../ProductList/Categories"; // 카테고리 단�
 import { useAuth } from "../../context/AuthContext"; // 로그인 정보 창구
 import { useCart } from "../../context/CartContext"; // 장바구니 정보 창구
 import Logo from "./Logo";
-import { Search, ShoppingCart, User } from "lucide-react"; // 루시드 아이콘 라이브러리
 import useDisclosure from "../../hooks/useDisclosure";
 
 // "전체보기"는 카테고리 파라미터 없이 /productsd로 이동.
@@ -151,29 +150,25 @@ export default function Header() {
 
         {/* 우측 네비 */}
         <nav className="flex justify-end" aria-label="상단 유틸리티 메뉴">
-          <ul className="flex items-center gap-[16px] sm:gap-[30px]">
+          <ul className="flex items-center gap-[20px] text-[11px] tracking-[0.05em] text-cream/90 sm:gap-[30px] sm:text-[12px]">
             <li>
               <button
                 type="button"
-                aria-label="검색창 열기"
                 onClick={search.open}
-                className="flex items-center justify-center text-cream/90 transition hover:text-terracotta-400"
+                className="cursor-pointer transition hover:text-terracotta-400"
               >
-                <Search size={20} strokeWidth={1.5} />{" "}
-                {/* lucide-react: 아이콘 컴포넌트*/}
+                검색
               </button>
             </li>
             <li>
               <Link
                 to="/order"
-                // 백틱 템플릿 리터럴로 상황별 다른 문구를 스크린리더에게 제공
-                aria-label={`장바구니${totalCount > 0 ? ` (${totalCount}개)` : ""}`}
-                className="relative flex items-center justify-center text-cream/90 transition hover:text-terracotta-400"
+                className="inline-flex items-center gap-[4px] transition hover:text-terracotta-400"
               >
-                <ShoppingCart size={20} strokeWidth={1.5} />
+                장바구니
                 {/* totalCount가 0보다 클 때만 빨간 뱃지 렌더링*/}
                 {totalCount > 0 && (
-                  <span className="absolute -top-[6px] -right-[8px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-terracotta-500 px-[3px] text-[10px] font-bold text-navy-950">
+                  <span className="flex h-[14px] min-w-[14px] items-center justify-center rounded-full bg-terracotta-500 px-[3px] text-[9px] font-bold text-navy-950">
                     {totalCount}
                   </span>
                 )}
@@ -183,14 +178,9 @@ export default function Header() {
               <Link
                 // 삼항연산자로 로그인 여부에 따라 목적지가 마이페이지 or 로그인페이지로 갈림
                 to={isLoggedIn ? "/mypage" : "/login"}
-                aria-label={isLoggedIn ? "마이페이지" : "로그인"}
-                className="relative flex items-center justify-center text-cream/90 transition hover:text-terracotta-400"
+                className="transition hover:text-terracotta-400"
               >
-                <User size={20} strokeWidth={1.5} />
-                {/* 로그인 상태일 때 작은 점으로 표시 */}
-                {isLoggedIn && (
-                  <span className="absolute -top-[2px] -right-[2px] h-[8px] w-[8px] rounded-full bg-terracotta-500" />
-                )}
+                {isLoggedIn ? "마이페이지" : "로그인"}
               </Link>
             </li>
           </ul>
@@ -211,13 +201,6 @@ export default function Header() {
               onSubmit={handleSearchSubmit}
               className="flex items-center gap-[10px] border-b border-navy-600 pb-[10px]"
             >
-              <Search
-                size={18}
-                strokeWidth={1.5}
-                className="text-cream/60"
-                aria-hidden="true" // 장식용 아이콘이라 스크린리더는 무시하게 함
-              />
-
               <input
                 ref={searchInputRef} // 모달 열릴 떄 여기로 focus()줌
                 type="text"
