@@ -273,6 +273,7 @@ export default function ProductDetailPage() {
         products={product.reviewProductIds
           ?.map((id) => PRODUCTS.find((p) => p.id === id))
           .filter((p): p is NonNullable<typeof p> => p !== undefined)}
+        useReviewImage
       />
     </div>
   );

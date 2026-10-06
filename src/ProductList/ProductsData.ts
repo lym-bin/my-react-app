@@ -14,6 +14,7 @@ export interface Product {
   category: CategoryId; // 위에서 import한 타입 -> 오탈자 방지 ("tops같은 오탈자 방지")
   imgSrc: string; // 목록 썸네일용 대표 이미지
   images?: string[]; // ? = 선택, 상세페이지용 추가 이미지들 (대표컷/모델컷)
+  reviewImgSrc?: string; // ? = 선택, "후기 컷" 전용 착용샷 (없으면 imgSrc로 폴백)
   isLarge?: boolean; // ? 그리드에서 2칸 차지할지
   similarProductIds?: number[]; // 비슷한 제품들의 ID배열 추가
   reviewProductIds?: number[]; // 후기 컷용 ID 배열 추가

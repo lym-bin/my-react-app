@@ -9,12 +9,14 @@ import { PRODUCTS, type Product } from "../ProductList/ProductsData";
 interface SimilarProductsProps {
   title?: string;
   products?: Product[];
+  useReviewImage?: boolean; // true면 reviewImgSrc 우선 사용 ("후기 컷" 전용, 없으면 imgSrc로 폴백)
 }
 
 // export로 SimilarProducts 외부 활용
 export default function SimilarProducts({
   title = "비슷한 상품",
   products = PRODUCTS.slice(1, 3), // props 안 넘어오면 기본으로 2~3번 상품 보여줌
+  useReviewImage = false,
 }: SimilarProductsProps) {
   return (
     <section className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[20px] pt-[80px] pb-[40px]">
@@ -33,13 +35,15 @@ export default function SimilarProducts({
           >
             <div className="overflow-hidden bg-navy-800 h-[400px]">
               <img
+                // "후기 컷"이면 reviewImgSrc 우선, 없으면(아직 안 찍은 상품) imgSrc로 폴백
                 // imgSrc가 이미 "/" 로 시작하면 그대로, 아니면 앞에 "/" 붙혀서 절대 경로 통일
                 // startWith("/"): 문자열이 "/"로 시작하는지 확인하는 boolean 메서드
-                src={
-                  product.imgSrc.startsWith("/")
-                    ? product.imgSrc
-                    : `/${product.imgSrc}`
-                }
+                src={(() => {
+                  const raw =
+                    (useReviewImage && product.reviewImgSrc) ||
+                    product.imgSrc;
+                  return raw.startsWith("/") ? raw : `/${raw}`;
+                })()}
                 alt={product.name}
                 loading="lazy"
                 className="product-photo h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
