@@ -45,7 +45,7 @@ export default function ProductCard({
         </div>
 
         {/* 상품 정보 영역 */}
-        <div className="flex justify-between text-[14px]">
+        <div className="flex justify-between text-[13px]">
           <strong className="font-medium text-cream">{name}</strong>
           <span className="font-semibold text-terracotta-400">{price}</span>
         </div>

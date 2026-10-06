@@ -71,11 +71,11 @@ export default function ProductList() {
 
                 {/* 텍스트 정보 */}
                 <div className="flex flex-col gap-[4px]">
-                  <em className="text-[15px] text-[15px] font-medium text-cream">
+                  <em className="text-[13px] font-medium text-cream">
                     {product.name}
                   </em>{" "}
                   {/* <em>: 원래 "강조"용 시맨틱 태그인데 여기선 이탤릭 스타일 목적으로 씀 */}
-                  <strong className="text-[15px] font-bold text-terracotta-400">
+                  <strong className="text-[13px] font-bold text-terracotta-400">
                     $ {product.price.toLocaleString()}
                   </strong>
                 </div>

@@ -43,11 +43,16 @@
   --color-terracotta-500: #c1502e;
   --color-terracotta-600: #9c3f24;
 
-  --font-sans: "Noto Sans KR", sans-serif;
+  --font-sans: "Lato", "Noto Sans KR", sans-serif;
   /* font-serif 유틸리티도 세리프 대신 Noto Sans로 통일 (헤드라인 전부 고딕으로) */
   --font-serif: "Noto Sans KR", sans-serif;
-
-  /* max-w-* 유틸리티는 v4에서 --container-* 네임스페이스로 생성 */
+  --font-serif: "Cormorant Garamond", serif;
+  --font-serif: "Montserrat", sans-serif;
+  --font-serif: "Syne", sans-serif;
+  --font-serif: "Bodoni Moda", serif;
+  --font-serif: "Tenor Sans", sans-serif;
+  /* max-w-* 유틸리티는 v4에서 --container-* 네임스페이스
+  로 생성 */
   --container-content: 1200px;
   --container-narrow: 800px;
   --container-wide: 1400px;

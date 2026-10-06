@@ -26,10 +26,10 @@ export default function FilterSidebar({
     >
       {/* 헤더 영역 */}
       <header className="flex items-center justify-between border-b border-navy-700 p-[24px]">
-        <h3 className="m-0 text-[18px] font-bold text-cream">Filter</h3>
+        <h3 className="m-0 text-[16px] font-bold text-cream">Filter</h3>
         <button
           type="button"
-          className="cursor-pointer border-none bg-transparent text-[14px] font-semibold text-cream/70 hover:text-cream"
+          className="cursor-pointer border-none bg-transparent text-[13px] font-semibold text-cream/70 hover:text-cream"
           onClick={onClose}
           aria-label="필터 닫기"
         >
@@ -45,7 +45,7 @@ export default function FilterSidebar({
         >
           {/* 색상 섹션 */}
           <section>
-            <h4 className="mb-[14px] text-[15px] font-bold text-cream">색상</h4>
+            <h4 className="mb-[14px] text-[14px] font-bold text-cream">색상</h4>
             <div className="grid grid-cols-2 gap-[10px]">
               {COLOR_OPTIONS.map(({ value: val, label }) => {
                 const isChecked = selected.includes(val); // 라디오는 같은 name을 가진 것들 끼리 딱 하나만 선택가능, 체크박스는 독립적으로 키고 끌수 있음
@@ -76,7 +76,7 @@ export default function FilterSidebar({
 
           {/* 사이즈 섹션 */}
           <section>
-            <h4 className="mb-[14px] text-[15px] font-bold text-cream">
+            <h4 className="mb-[14px] text-[14px] font-bold text-cream">
               사이즈
             </h4>
             <div className="grid grid-cols-3 gap-[10px]">

@@ -137,7 +137,7 @@ export default function ProductListPage() {
       <section className="mx-auto my-[40px] w-full max-w-[1200px] px-[20px]">
         {/* 카테고리 또는 검색어가 있을 때만 "활성 필터 태그 줄을 표시*/}
         {(activeCategory || activeSearch) && ( // 둘 중 하나라도 값 있으면 truthy
-          <div className="mb-[16px] flex flex-wrap items-center gap-[8px] text-[13px]">
+          <div className="mb-[16px] flex flex-wrap items-center gap-[8px] text-[12px]">
             {/* 카테고리 태그: 있을 때만, 클릭하면 clearCategory로 URL에서 category제거*/}
             {activeCategory && (
               <button
@@ -163,7 +163,7 @@ export default function ProductListPage() {
 
         {/* 상단 정렬 및 필터 버튼 영역 */}
         <div className="flex items-center justify-between border-b border-navy-700 pb-[20px]">
-          <div className="text-[14px] font-medium text-cream/80">
+          <div className="text-[13px] font-medium text-cream/80">
             {/* {" "} = JSX에서 "여기 공백 한칸" 명시 (JSX는 줄바꿈 공백을 무시해서 수동으로 넣음) */}
             TOTAL{" "}
             <span className="font-bold text-cream">
@@ -185,7 +185,7 @@ export default function ProductListPage() {
                     // 템플릿 리터럴(백틱) 안에서 삼항연산자로 클래스 분기
                     // 현재 정렬 기준이면 -> 강조 스타일, 아니면 -> 흐린 스타일
                     // activeSort option이 true면 강조, false면 text-cream으로 흐리게
-                    className={`cursor-pointer text-[14px] transition-colors ${
+                    className={`cursor-pointer text-[13px] transition-colors ${
                       activeSort === option
                         ? "font-bold text-terracotta-400 underline underline-offset-4"
                         : "text-cream/50 hover:text-cream"
@@ -202,7 +202,7 @@ export default function ProductListPage() {
             {/* 필터 사이드바 토글 버튼 */}
             <button
               type="button"
-              className="cursor-pointer border border-terracotta-500 bg-transparent px-[16px] py-[8px] text-cream text-[13px] font-medium transition-colors hover:border-terracotta-500 hover:bg-terracotta-500 hover:text-navy-950"
+              className="cursor-pointer border border-terracotta-500 bg-transparent px-[16px] py-[8px] text-cream text-[12px] font-medium transition-colors hover:border-terracotta-500 hover:bg-terracotta-500 hover:text-navy-950"
               aria-haspopup="true" // 접근성: 이 버튼이 팝업(사이드바)를 연다.
               aria-expanded={filterSidebar.isOpen} // 접근성: 지금 열려있는지 여부
               onClick={filterSidebar.open} // 클릭 -> 사이드바 열기 (useDisclosure의 open)

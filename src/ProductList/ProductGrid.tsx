@@ -30,7 +30,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
   // 아래 코드는 실행 안 됨
   if (products.length === 0) {
     return (
-      <section className="mx-auto w-full max-w-[1200px] px-[20px] py-[80px] text-center text-[14px] bg-navy-950 text-cream/60">
+      <section className="mx-auto w-full max-w-[1200px] px-[20px] py-[80px] text-center text-[13px] bg-navy-950 text-cream/60">
         조건에 맞는 상품이 없습니다.
       </section>
     );
@@ -66,7 +66,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
             // v = "현재 최신 visibleCount", 여기에 6을 더함
             // 왜(v) => 를 쓰냐: 이전 값을 기준으로 계산할 때 안전
             onClick={() => setVisibleCount((v) => v + PAGE_SIZE)}
-            className="cursor-pointer border border-terracotta-500 bg-transparent px-[40px] py-[12px] text-[14px] font-medium transition-colors text-terracotta-500 hover:bg-terracotta-500 hover:text-navy-950"
+            className="cursor-pointer border border-terracotta-500 bg-transparent px-[40px] py-[12px] text-[13px] font-medium transition-colors text-terracotta-500 hover:bg-terracotta-500 hover:text-navy-950"
           >
             더보기
           </button>

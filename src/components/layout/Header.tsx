@@ -128,7 +128,7 @@ export default function Header() {
                       type="button"
                       role="menuitem"
                       onClick={() => handleCategoryClick(item.category)} // 클릭하면 그 카테고리로 이동
-                      className="block w-full px-[16px] py-[8px] text-left text-[13px] text-cream transition hover:bg-navy-800 hover:text-terracotta-400"
+                      className="block w-full px-[16px] py-[8px] text-left text-[12px] text-cream transition hover:bg-navy-800 hover:text-terracotta-400"
                     >
                       {item.label}
                       {/* "전체보기", "상의" 등 화면에 보일 텍스트 */}
@@ -224,13 +224,13 @@ export default function Header() {
                 value={searchValue} // controlled input(제어 컴포넌트): 같이 항상 state와 동기화됨
                 onChange={(e) => setSearchValue(e.target.value)} // 타이핑할 때마다 state 갱신
                 placeholder="상품명, 브랜드로 검색해보세요"
-                className="w-full bg-transparent text-[14px] text-cream outline-none placeholder:text-cream/40"
+                className="w-full bg-transparent text-[13px] text-cream outline-none placeholder:text-cream/40"
               />
               <button
                 type="button"
                 aria-label="검색창 닫기"
                 onClick={search.close}
-                className="text-[13px] text-cream/60 hover:text-cream"
+                className="text-[12px] text-cream/60 hover:text-cream"
               >
                 ✕
               </button>
