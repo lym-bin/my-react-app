@@ -9,22 +9,23 @@ import { Layers, PenTool, BadgeCheck, Clock } from "lucide-react";
 gsap.registerPlugin(ScrollTrigger);
 
 const PIN_IMAGES = [
-  { src: "/images/daily-canvas-model.jpg", alt: "Objet & B 에디토리얼 무드" },
-  { src: "/images/classic-suede-loafers.jpg", alt: "정교한 디테일 클로즈업" },
+  { src: "/images/model_2.jpg", alt: "오버사이즈 실루엣" },
+  { src: "/images/card_1.svg", alt: "미니멀 컬러 팔레트" },
+  { src: "/images/suede-penny-loafers.jpg", alt: "정교한 디테일 클로즈업" },
 ];
-// 캡션 인덱스(0,1,2,) -> 이 캡션일 때 보여줄 이미지 인덱스
-const PIN_IMAGE_FOR_CAPTION = [0, 0, 1];
+// 캡션 인덱스(0,1,2,) -> 이 캡션일 때 보여줄 이미지 인덱스 (이제 1:1 매칭)
+const PIN_IMAGE_FOR_CAPTION = [0, 1, 2];
 
 const PIN_CAPTIONS = [
   {
     num: "01",
     title: "오버사이즈 실루엣",
-    desc: "몸을 편안하게 감싸는 여유, 그 안에서 완성되는 절제.",
+    desc: "어깨선을 내리고 품을 넉넉하게. 그래도 늘어져 보이지 않게 기장을 맞췄습니다.",
   },
   {
     num: "02",
     title: "미니멀 컬러 팔레트",
-    desc: "톤온톤으로 쌓아 올리는 차분한 균형.",
+    desc: "베이지, 차콜, 네이비. 세 가지 톤 안에서만 조합합니다.",
   },
   {
     num: "03",
@@ -40,29 +41,29 @@ const VALUES = [
     id: 1,
     num: "01",
     icon: Layers,
-    title: "원단은 밀도부터",
-    desc: "같은 두께라도 짜임이 다르면 핏이 다릅니다.",
+    title: "밀도부터 봅니다",
+    desc: "짜임이 다르면 같은 두께도 핏이 달라집니다.",
   },
   {
     id: 2,
     num: "02",
     icon: PenTool,
-    title: "샘플만 다섯 번",
-    desc: "만족할 때까지 다시 그리는 패턴.",
+    title: "다섯 번을 다시 그립니다",
+    desc: "어깨선 각도 하나까지 맞을 때까지.",
   },
   {
     id: 3,
     num: "03",
     icon: BadgeCheck,
-    title: "손으로 한 번 더",
-    desc: "출고 전 모든 제품을 직접 확인합니다.",
+    title: "마지막은 사람 손",
+    desc: "기계가 아니라 손으로, 출고 전 한 번 더 봅니다.",
   },
   {
     id: 4,
     num: "04",
     icon: Clock,
-    title: "유행이 아닌 태도",
-    desc: "계절이 지나도 변하지 않는 디자인.",
+    title: "유행은 쫓지 않습니다",
+    desc: "그래서 계절이 지나도 그대로 입을 수 있습니다.",
   },
 ];
 
@@ -192,9 +193,9 @@ export default function StoryPage() {
             여백
           </h1>
           <p className="story-hero-item story-hero-sub mx-auto mb-[40px] max-w-[420px] text-[15px] leading-[1.75] text-cream/68">
-            절제된 실루엣과 정교한 디테일로 완성한
+            오버사이즈 실루엣과 미니멀 컬러,
             <br />
-            이번 시즌의 태도를 소개합니다.
+            정교한 마감. 이 세 가지로 요약됩니다.
           </p>
           <div className="story-hero-item story-hero-cue inline-flex flex-col items-center gap-[10px] text-[10.5px] uppercase tracking-[0.28em] text-cream/45">
             <span className="h-[34px] w-px bg-gradient-to-b from-terracotta-400 to-transparent" />
@@ -252,7 +253,10 @@ export default function StoryPage() {
           </h2>
         </div>
         <div className="overflow-hidden">
-          <div ref={trackRef} className="flex gap-[22px] px-[20px]">
+          <div
+            ref={trackRef}
+            className="flex justify-center gap-[22px] px-[20px]"
+          >
             {VALUES.map((value) => (
               <div
                 key={value.id}
@@ -288,9 +292,9 @@ export default function StoryPage() {
           Objet & B
         </p>
         <h2 className="story-cta-item mb-[36px] text-[2rem] leading-[1.25] font-bold sm:text-[2.6rem]">
-          이번 시즌,
+          오브제처럼,
           <br />
-          오브제처럼 곁에 두세요.
+          오래 곁에.
         </h2>
         <Link
           to="/products"
