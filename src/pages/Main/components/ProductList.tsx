@@ -74,13 +74,12 @@ export default function ProductList() {
                   </div>
                 </div>
 
-                {/* 텍스트 정보 */}
-                <div className="flex flex-col gap-[4px]">
-                  <em className="text-[13px] font-medium text-cream">
+                {/* 텍스트 정보: 상품명 왼쪽 / 가격 오른쪽 (aviemuah.com 참고, 큰 이미지 비례상 12px로 조정) */}
+                <div className="flex items-baseline justify-between gap-[8px] text-left">
+                  <em className="text-[12px] font-bold text-cream not-italic">
                     {product.name}
-                  </em>{" "}
-                  {/* <em>: 원래 "강조"용 시맨틱 태그인데 여기선 이탤릭 스타일 목적으로 씀 */}
-                  <strong className="text-[13px] font-bold text-terracotta-400">
+                  </em>
+                  <strong className="text-[12px] font-bold text-terracotta-400">
                     {product.price.toLocaleString()}원
                   </strong>
                 </div>
