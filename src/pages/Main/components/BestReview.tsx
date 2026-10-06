@@ -1,193 +1,87 @@
 // src/pages/Main/components/BestReview.tsx
-// 베스트 리뷰 영역
-// 리뷰 카드 클릭 -> 그 리뷰 객체 자체를 state에 저장 ->
-// 모달에 그 객체 데이터를 그대로 표시 -> 배경클릭/ESC/닫기 버튼 모두 state를 null로 되돌려 닫기
-import { useEffect, useState } from "react";
+// 브랜드 커뮤니티 섹션 (라이프스타일 사진 그리드)
 
-interface Review {
+interface FeedPhoto {
   id: number;
   img: string;
-  productName: string;
-  color: string;
-  size: string;
-  usualSize: string;
-  body: string;
-  author: string;
-  date: string;
+  alt: string;
+  tag: string; // 호버 시 "@태그"로 표시
 }
 
-const reviews: Review[] = [
+const FEED_PHOTOS: FeedPhoto[] = [
   {
     id: 1,
     img: "/images/card_1.svg",
-    productName: "Objet & B [Men] Shoes",
-    color: "White & Blue",
-    size: "265",
-    usualSize: "270",
-    body: "절제된 실루엣과 착화감이 정말 만족스럽습니다. 오브제처럼 예쁩니다.",
-    author: "abcdefg123123",
-    date: "2026.01.08",
+    alt: "Objet & B 데일리룩",
+    tag: "베이직 시그니처 화이트 셔츠",
   },
   {
     id: 2,
     img: "/images/card_2.svg",
-    productName: "Objet & B Slim Denim Pants",
-    color: "Dark Blue",
-    size: "M",
-    usualSize: "M (30)",
-    body: "워싱감이 과하지 않고 핏이 슬림해서 데일리로 자주 입어요. 컬러도 진하고 고급스럽습니다.",
-    author: "hijklnop123",
-    date: "2026.02.14",
+    alt: "Objet & B 스트리트 무드",
+    tag: "릴랙스드 핏 니트 풀오버",
   },
   {
     id: 3,
     img: "/images/card_3.svg",
-    productName: "Objet & B Minimal White Sneakers",
-    color: "White",
-    size: "270",
-    usualSize: "270",
-    body: "어디에나 잘 어울리는 화이트라 매일 신어도 안 질려요. 쿠션감도 생각보다 좋습니다.",
-    author: "sssdd123",
-    date: "2026.03.02",
+    alt: "Objet & B 캐주얼 룩",
+    tag: "미니멀 가죽 레더 스니커즈",
   },
   {
     id: 4,
     img: "/images/card_4.svg",
-    productName: "Objet & B Classic Black Derby",
-    color: "Black",
-    size: "275",
-    usualSize: "275",
-    body: "무광 블랙이라 캐주얼부터 세미포멀까지 다 잘 받쳐줘요. 내구성도 튼튼한 편입니다.",
-    author: "ddzsd22",
-    date: "2026.03.19",
+    alt: "Objet & B 시티 무드",
+    tag: "모던 싱글 체스터필드 코트",
+  },
+  {
+    id: 5,
+    img: "/images/daily-canvas-model.jpg",
+    alt: "Objet & B 데일리 스냅",
+    tag: "데일리 캔버스 슬립온",
+  },
+  {
+    id: 6,
+    img: "/images/premium-cotton-oversized-white-tshirt-model.jpg",
+    alt: "Objet & B 오버사이즈 룩",
+    tag: "프리미엄 코튼 오버사이즈 화이트 티셔츠",
   },
 ];
 
 export default function BestReview() {
-  // seletedReview가 null이면 -> "아무것도 선택 안함" = 모달 닫힘
-  // selectedReview가 특정 리뷰 객체면 -> "이 리뷰가 선택됨" = 동시에 모달이 열려있고, 보여줄 데이터도 정해진 상태
-  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
-  // EditProfileModal의 message state랑 같은 형태: "선택된 객체 하나 또는 null"
-
-  // ESC 키로 모달 닫기 (다른 모달들과 동작 통일)
-  useEffect(() => {
-    if (!selectedReview) return; // 모달 안 열려있으면 리스너 등록 자체를 안 함
-    function handleEsc(e: KeyboardEvent) {
-      if (e.key === "Escape") setSelectedReview(null);
-    }
-    document.addEventListener("keydown", handleEsc);
-    return () => document.removeEventListener("keydown", handleEsc);
-  }, [selectedReview]); // AddressModal의 ESC 훅이랑 완전히 같은 구조
-
   return (
-    <section className="bg-navy-950 px-[20px] py-[50px]">
+    <section className="bg-navy-950 px-[20px] py-[60px]">
       <div className="mx-auto max-w-[1200px]">
-        {/* 반응형 3단계: 모바일 1열 -> SM 2열 -> lg(데스크톱) 4열*/}
-        <h2 className="mb-[30px] text-center text-[2rem] font-bold leading-[1.2] text-cream">
-          Best Review
-        </h2>
+        <div className="mb-[30px] text-center">
+          <span className="mb-[8px] block text-[11px] font-light tracking-[0.3em] text-cream/40 uppercase">
+            Objet & B Community
+          </span>
+          <h2 className="text-[1.8rem] font-bold text-cream sm:text-[2.2rem]">
+            @objetandb <span className="text-cream/40">· Instagram</span>
+          </h2>
+        </div>
 
-        {/* 그리드 레이아웃 (모바일 1열 -> 태블릿 2열 -> 데스크톱 4열) */}
-        <div className="grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:grid-cols-4">
-          {reviews.map((r) => (
-            <article
-              key={r.id}
-              className="flex flex-col rounded-[4px] border-t-2 border-terracotta-500 bg-navy-800 p-[14px] transition-transform duration-300 ease-in-out hover:-translate-y-[10px]"
+        {/* 3열 고정 그리드 */}
+        <div className="grid grid-cols-3 gap-[4px] sm:gap-[8px]">
+          {FEED_PHOTOS.map((photo) => (
+            <div
+              key={photo.id}
+              className="group relative aspect-square overflow-hidden bg-navy-800"
             >
-              {/* <article> : 리뷰 카드 하나하나가 "독립적으로 의미있는 콘텐츠 단위라 시맨틱하게 article 사용*/}
-              {/* hover: -translate-y-[10px]: 마우스 올리면 카드가 10px 위로 살짝 떠오름(translate로 이동, 큭 변화 없음)*/}
-              {/* 카드 전체가 클릭 가능한 버튼(li 안에 a 였던 ProductCard와 달리, 여긴 모달을 열기만*/}
-              <button
-                type="button"
-                onClick={() => setSelectedReview(r)}
-                aria-label={`${r.productName} 리뷰 상세 보기`}
-                className="flex cursor-pointer flex-col text-left"
-              >
-                <div className="mb-[15px] h-[250px] w-full overflow-hidden bg-navy-700">
-                  <img
-                    src={r.img}
-                    alt={r.productName}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-[10px] px-[4px]">
-                  <h3 className="text-[1rem] font-semibold text-cream">
-                    {r.productName}
-                  </h3>
-
-                  <div className="flex flex-col text-[0.85rem] text-cream/60">
-                    <span>색상 : {r.color}</span>
-                    <span>사이즈 : {r.size}</span>
-                    <span>평소 사이즈 : {r.usualSize}</span>
-                  </div>
-
-                  {/* line-clamp-2: 텍스트가 길어도 2줄까지만 보이고 나머지는 ...으로 잘림*/}
-                  <p className="line-clamp-2 text-[0.9rem] leading-[1.4] text-cream/80 [word-break:keep-all]">
-                    {r.body}
-                  </p>
-
-                  <div className="mt-[5px] flex justify-between text-[0.8rem] text-cream/40">
-                    <span>{r.author}</span>
-                    <span>{r.date}</span>
-                  </div>
-                </div>
-              </button>
-            </article>
+              <img
+                src={photo.img}
+                alt={photo.alt}
+                className="product-photo h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+              />
+              {/* 호버 시 "@상품명" 라벨만 살짝 - 이미지 전체는 어둡게 안 깔고 라벨 자체에만 배경 */}
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-[10px] text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <span className="border border-cream/50 bg-navy-950/70 px-[12px] py-[7px] text-[11px] tracking-[0.05em] text-cream">
+                  @{photo.tag}
+                </span>
+              </div>
+            </div>
           ))}
         </div>
       </div>
-
-      {/* 팝업 모달 나머지 구조는 AddressModal/SizeGuideSidebar와 동일 */}
-      {selectedReview && (
-        <div
-          className="fixed inset-0 z-sidebar flex items-center justify-center bg-navy-950/70 p-[20px]"
-          onClick={() => setSelectedReview(null)}
-        >
-          <div
-            className="relative w-full max-w-[600px] rounded-lg border border-navy-700 bg-navy-900 p-6 text-cream shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* selectedReview.xxx로 클릭한 리뷰의 전체 내용을 크게 다시 보여줌*/}
-            <button
-              type="button"
-              onClick={() => setSelectedReview(null)}
-              aria-label="리뷰 상세 닫기"
-              className="absolute top-4 right-4 cursor-pointer text-lg text-cream/60 hover:text-cream"
-            >
-              ✕
-            </button>
-
-            <h3 className="mb-4 border-b border-navy-800 pb-3 text-xl font-bold">
-              리뷰 상세 내용
-            </h3>
-
-            <div className="flex flex-col gap-4 md:flex-row">
-              <img
-                src={selectedReview.img}
-                alt={selectedReview.productName}
-                className="h-[200px] w-full rounded bg-navy-800 object-cover md:w-[200px]"
-              />
-              <div className="flex flex-1 flex-col gap-2">
-                <h4 className="text-lg font-semibold">
-                  {selectedReview.productName}
-                </h4>
-                <p className="text-sm text-cream/60">
-                  색상: {selectedReview.color} | 사이즈: {selectedReview.size}{" "}
-                  (평소: {selectedReview.usualSize})
-                </p>
-                <p className="mt-2 rounded bg-navy-800 p-3 text-sm text-cream/90">
-                  {selectedReview.body}
-                </p>
-                <div className="mt-auto flex justify-between border-t border-navy-800 pt-2 text-xs text-cream/40">
-                  <span>작성자: {selectedReview.author}</span>
-                  <span>{selectedReview.date}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }
