@@ -17,7 +17,7 @@ const BENEFITS = [
   {
     id: 3,
     icon: RefreshCw,
-    label: "이지 리턴",
+    label: "무료 반품",
   },
   {
     id: 4,
@@ -29,14 +29,28 @@ const BENEFITS = [
 export default function QuickNav() {
   return (
     <section className="border-t border-b border-navy-700 bg-navy-950">
-      <div className="mx-auto max-w-[1200px] px-[16px] py-[16px]">
-        <ul className="flex flex-wrap justify-center gap-x-[32px] gap-y-[10px] text-[0.8rem] tracking-[0.05em] text-cream/50 sm:gap-x-[40px]">
+      <div className="mx-auto max-w-[1200px] px-[16px] py-[24px]">
+        <ul className="grid grid-cols-2 gap-y-[20px] sm:grid-cols-4 sm:gap-y-0">
           {/* icon을 IconComponent 등 대문자로 시작하는 변수명으로 받음 */}
-          {BENEFITS.map(({ id, icon: IconComponent, label }) => (
-            <li key={id} className="flex items-center gap-[8px]">
+          {BENEFITS.map(({ id, icon: IconComponent, label }, index) => (
+            <li
+              key={id}
+              className={`flex flex-col items-center gap-[8px] px-[12px] text-center ${
+                index !== BENEFITS.length - 1
+                  ? "sm:border-r sm:border-navy-700"
+                  : ""
+              }`}
+            >
               {/* 대문자 컴포넌트 변수로 렌더링 */}
-              <IconComponent size={16} strokeWidth={1.5} aria-hidden="true" />
-              <span>{label}</span>
+              <IconComponent
+                size={16}
+                strokeWidth={1.5}
+                className="text-terracotta-400"
+                aria-hidden="true"
+              />
+              <span className="text-[12px] tracking-[0.05em] text-cream/70">
+                {label}
+              </span>
             </li>
           ))}
         </ul>
