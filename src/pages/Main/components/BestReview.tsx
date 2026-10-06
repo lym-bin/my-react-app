@@ -35,15 +35,15 @@ const FEED_PHOTOS: FeedPhoto[] = [
   },
   {
     id: 5,
-    img: "/images/daily-canvas-model.jpg",
-    alt: "Objet & B 데일리 스냅",
-    tag: "데일리 캔버스 슬립온",
+    img: "/images/community-portrait.jpg",
+    alt: "Objet & B 데일리 무드",
+    tag: "데일리 무드",
   },
   {
     id: 6,
-    img: "/images/premium-cotton-oversized-white-tshirt-model.jpg",
-    alt: "Objet & B 오버사이즈 룩",
-    tag: "프리미엄 코튼 오버사이즈 화이트 티셔츠",
+    img: "/images/community-street-snap.jpg",
+    alt: "Objet & B 시티 워크",
+    tag: "시티 워크",
   },
 ];
 
