@@ -134,7 +134,7 @@ export default function CustomerBanner() {
                   {slide.title}
                 </h2>
                 <p
-                  className="customer-banner-line min-h-[44px] max-w-[300px] text-[0.85rem] leading-[1.6] text-cream/70 sm:min-h-[46px] sm:text-[0.9rem]"
+                  className="customer-banner-line min-h-[44px] max-w-[300px] text-[0.85rem] leading-[1.6] text-cream/70 break-keep sm:min-h-[46px] sm:text-[0.9rem]"
                   data-slide={slide.id}
                 >
                   {slide.desc}
