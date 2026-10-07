@@ -148,9 +148,8 @@ export default function MainBanner() {
         </div>
 
         <div className="overflow-hidden">
-          <p className="gsap-title-line mx-auto max-w-[300px] text-[0.95rem] leading-[1.6] font-light tracking-wide text-cream/70 [word-break:keep-all] md:mx-0">
-            Objet & B가 제안하는 미니멀 컬렉션. 절제된 실루엣과 정교한 디테일로
-            완성한, 오브제처럼 오래 곁에 두고 싶은 옷을 만나보세요.
+          <p className="gsap-title-line mx-auto max-w-[300px] text-[0.95rem] leading-[1.6] break-keep font-light tracking-wide text-cream/70 [word-break:keep-all] md:mx-0">
+            유행이 아니라 오래 입을 옷을 만듭니다. 기본에 충실한 미니멀 컬렉션.
           </p>
         </div>
 

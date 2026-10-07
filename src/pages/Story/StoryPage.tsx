@@ -255,7 +255,7 @@ export default function StoryPage() {
         <div className="overflow-hidden">
           <div
             ref={trackRef}
-            className="flex justify-center gap-[22px] px-[20px]"
+            className="flex justify-start gap-[22px] px-[20px] min-[1400px]:justify-center"
           >
             {VALUES.map((value) => (
               <div
