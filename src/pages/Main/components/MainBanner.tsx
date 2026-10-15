@@ -1,7 +1,7 @@
 // src/pages/Main/componets/MainBanner.tsx
 // 상단 큰 배너
 // 마운트 시 타이틀 줄들을 STAGGER로 순차 등장 -> 배경 이미지에 스크롤 연동 패럴렉스 설정
-// 별도 effect로 마우스 움직이에 반응하는 뱃지 추적 -> 언마운트시 각각 정리
+// 별도 effect로 스크롤 위치를 감지해 "Scroll" 안내 숨김 -> 언마운트 시 정리
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
@@ -14,8 +14,6 @@ gsap.registerPlugin(ScrollTrigger);
 export default function MainBanner() {
   const bannerRef = useRef<HTMLDivElement>(null); // 섹션 전체 (scrollTrigger 범위+trigger)
   const imgRef = useRef<HTMLImageElement>(null); // 이미지 (로드 완료 감지용)
-  const imageLinkRef = useRef<HTMLAnchorElement>(null); // Link(마우스 이벤트 리스너 달 대상)
-  const viewBadgeRef = useRef<HTMLDivElement>(null); // VIEW 뱃지(직접 움직일 대상)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -54,41 +52,6 @@ export default function MainBanner() {
     return () => ctx.revert();
   }, []);
 
-  // 3. 커서를 따라다니는 "VIEW" 라벨 (데스크톱 전용, GSAP quickTo로 부드럽게 추적)
-  useEffect(() => {
-    const link = imageLinkRef.current;
-    const badge = viewBadgeRef.current;
-    if (!link || !badge) return;
-
-    // 커서를 따라다니느 VIEW 뱃지
-    const xTo = gsap.quickTo(badge, "x", { duration: 0.35, ease: "power3" });
-    const yTo = gsap.quickTo(badge, "y", { duration: 0.35, ease: "power3" });
-
-    function handleMove(e: MouseEvent) {
-      const rect = link!.getBoundingClientRect();
-      xTo(e.clientX - rect.left);
-      yTo(e.clientY - rect.top);
-    }
-
-    function handleEnter() {
-      gsap.to(badge, { opacity: 1, scale: 1, duration: 0.25 });
-    }
-
-    function handleLeave() {
-      gsap.to(badge, { opacity: 0, scale: 0.7, duration: 0.25 });
-    }
-
-    link.addEventListener("mousemove", handleMove);
-    link.addEventListener("mouseenter", handleEnter);
-    link.addEventListener("mouseleave", handleLeave);
-
-    return () => {
-      link.removeEventListener("mousemove", handleMove);
-      link.removeEventListener("mouseenter", handleEnter);
-      link.removeEventListener("mouseleave", handleLeave);
-    };
-  }, []);
-
   // 스크롤 유도 UI 숨김 여부 (일정 이상 스크롤하면 숨김)
   const [scrolled, setScrolled] = useState(false);
 
@@ -108,7 +71,6 @@ export default function MainBanner() {
     >
       {/* 배경 이미지: 데스크톱 전용, 섹션 전체(위아래양옆)를 여백 없이 꽉 채움 */}
       <Link
-        ref={imageLinkRef}
         to="/products"
         aria-label="상품 목록으로 이동하기"
         className="group absolute inset-0 hidden md:block"
@@ -121,14 +83,6 @@ export default function MainBanner() {
         />
         {/* 상/하단에만 은은한 음영 */}
         <div className="absolute inset-0 bg-gradient-to-b from-navy-950/90 via-navy-950/50 to-navy-950/10" />
-        {/* 커서를 따라다니는 VIEW 라벨 */}
-        <div
-          ref={viewBadgeRef}
-          aria-hidden="true"
-          className="pointer-events-none absolute top-0 left-0 flex h-[64px] w-[64px] -translate-x-1/2 -translate-y-1/2 scale-75 items-center justify-center rounded-full bg-terracotta-500 text-[11px] font-bold tracking-[0.15em] text-navy-950 uppercase opacity-0"
-        >
-          Shop
-        </div>
       </Link>
 
       {/* 모바일 전용 배경 워터마크 (이미지가 없을 때 장식용) */}
