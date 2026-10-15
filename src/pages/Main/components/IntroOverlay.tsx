@@ -88,13 +88,16 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-navy-950 text-cream"
     >
       {/* 히어로 모델 사진: 화면 높이에 맞춰 가운데 세움 ( 꽉 채우지 않아 큰 화면에서도 선명*/}
-      <img
-        ref={imgRef}
-        src="/images/intro-hero-front.webp"
-        alt=""
-        aria-hidden="true"
-        className="absolute top-0 left-1/2 h-full w-auto max-w-none -translate-x-1/2"
-      />
+      {/* 가운데 정렬은 감싸는 div(flex)가 애니메이션은 img(GSAP)가 각각 담당*/}
+      <div className="absolute inset-0 flex justify-center">
+        <img
+          ref={imgRef}
+          src="/images/intro-hero-front.webp"
+          alt=""
+          aria-hidden="true"
+          className="h-full w-auto max-w-none shrink-0"
+        />
+      </div>
       {/* 글자 뒤쪽만 옅게 어둡게: 사진 색은 살리고 글자는 읽히게 */}
       <div
         aria-hidden="true"
