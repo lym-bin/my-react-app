@@ -1,7 +1,7 @@
 // src/pages/Main/components/IntroOverlay.tsx
 // 첫 진입시 뜨는 풀 스크린 인트로
 // 마운트 시 한 번만 timeline 실행
-// -> 히어로 모델 얼굴이 짧게 플래시처럼 밝아졌다가 은은한 배경으로 가라앉고
+// -> 히어로 모델 사진이 컬러 그대로 떠오르고, 글자 뒤쪽만 옅게 어두워지며
 // -> 그 위로 텍스트(에디토리얼 태그 -> 브랜드 타이틀 -> 서브카피)가 순서대로 등장
 // -> 잠시 유지 -> 전체 페이드아웃 -> 부모에게 onComplete로 알림
 // MainPage가 그 신호를 showIntro를 false로 바꿔 스크롤 애니메이션 단계로 넘어감
@@ -27,24 +27,29 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
 
       tl.set(introRef.current, { opacity: 1 })
         .set(imgRef.current, { opacity: 0, scale: 1.08 })
+        .set(".intro-scrim", { opacity: 0 })
         .set(".intro-line", { opacity: 0, y: 20 })
 
-        // 1단계: 모델 얼굴이 짧게 밝게 플래시
+        // 1단계: 모델 사진이 원래 톤 그대로 떠오름
         .to(imgRef.current, {
-          opacity: 0.85,
+          opacity: 1,
           scale: 1.02,
           duration: 0.65,
           ease: "power2.out",
         })
-        // 2단계: 은은한 배경 톤으로 가라앉음
+        // 2단계: 살짝 줌아웃 하며 자리 잡음 (어둡게 가라앉히지 않음)
         .to(imgRef.current, {
-          opacity: 0.22,
           scale: 1,
           duration: 1.15,
           ease: "power2.inOut",
         })
-
-        // 3단계: 텍스트가 순서대로 떠오름 (모델이 가라앉는 타이밍과 겹치게 절대 시간으로 배치)
+        // 글자가 나오기 직전, 글자 뒤쪽만 옅게 어두워짐
+        .to(
+          ".intro-scrim",
+          { opacity: 1, duration: 0.8, ease: "power2.out" },
+          0.75,
+        )
+        // 3단계: 텍스트가 순서대로 떠오름 (모델이 자리 잡는 타이밍과 겹치게 절대 시간으로 배치)
         .to(
           ".intro-eyebrow",
           { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
@@ -82,13 +87,18 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
       ref={introRef}
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-navy-950 text-cream"
     >
-      {/* 히어로 모델 얼굴 플래시 (배경) */}
+      {/* 히어로 모델 사진: 화면 높이에 맞춰 가운데 세움 ( 꽉 채우지 않아 큰 화면에서도 선명*/}
       <img
         ref={imgRef}
-        src="/images/intro-hero-face.jpg"
+        src="/images/intro-hero-front.webp"
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
+        className="absolute top-0 left-1/2 h-full w-auto max-w-none -translate-x-1/2"
+      />
+      {/* 글자 뒤쪽만 옅게 어둡게: 사진 색은 살리고 글자는 읽히게 */}
+      <div
+        aria-hidden="true"
+        className="intro-scrim pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(6,9,15,0.6)_0%,rgba(6,9,15,0.2)_55%,transparent_80%)]"
       />
 
       <div
@@ -96,7 +106,7 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
         className="relative z-10 flex flex-col items-center px-[20px] text-center"
       >
         {/* 상단 에디토리얼 태그 */}
-        <span className="intro-line intro-eyebrow mb-[16px] text-[10px] font-light tracking-[0.25em] text-cream/40 uppercase sm:text-[12px] sm:tracking-[0.4em]">
+        <span className="intro-line intro-eyebrow mb-[16px] text-[10px] font-light tracking-[0.25em] text-cream/70 uppercase sm:text-[12px] sm:tracking-[0.4em]">
           Objet & B Editorial Opening
         </span>
 
@@ -108,7 +118,7 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
           OBJET & B
         </h1>
 
-        <p className="intro-line intro-sub mt-[16px] text-[12px] font-light tracking-[0.15em] text-cream/60 sm:text-[13px] sm:tracking-[0.2em] md:text-[15px]">
+        <p className="intro-line intro-sub mt-[16px] text-[12px] font-light tracking-[0.15em] text-cream/85 sm:text-[13px] sm:tracking-[0.2em] md:text-[15px]">
           Quiet luxury in every stitch and seam
         </p>
       </div>
