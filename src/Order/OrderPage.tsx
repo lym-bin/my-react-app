@@ -94,7 +94,7 @@ export default function OrderPage() {
   // 로딩 중일 때는 로딩바 표시
   if (isLoading) {
     return (
-      <main className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[20px] py-[80px] text-center text-cream/60">
+      <main className="mx-auto w-full max-w-content bg-navy-950 px-[20px] py-[80px] text-center text-cream/60">
         로딩 중...
       </main>
     );
@@ -145,12 +145,12 @@ export default function OrderPage() {
 
   if (items.length === 0) {
     return (
-      <main className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[20px] py-[80px] text-center text-cream/60">
+      <main className="mx-auto w-full max-w-content bg-navy-950 px-[20px] py-[80px] text-center text-cream/60">
         <p className="mb-[20px]">장바구니가 비어 있습니다.</p>
         <button
           type="button"
           onClick={() => navigate("/products")}
-          className="cursor-pointer border border-terracotta-500 bg-transparent px-[24px] py-[10px] text-[14px] text-terracotta-500 transition-colors hover:bg-terracotta-500 hover:text-navy-950"
+          className="cursor-pointer border border-terracotta-500 bg-transparent px-[24px] py-[10px] text-14 text-terracotta-500 transition-colors hover:bg-terracotta-500 hover:text-navy-950"
         >
           쇼핑하러 가기
         </button>
@@ -159,14 +159,14 @@ export default function OrderPage() {
   }
 
   return (
-    <main className="relative mx-auto flex w-full max-w-[1200px] flex-col gap-[30px] bg-navy-950 px-[16px] py-[30px] sm:px-[20px] md:flex-row md:gap-[40px] md:py-[40px]">
+    <main className="relative mx-auto flex w-full max-w-content flex-col gap-[30px] bg-navy-950 px-[16px] py-[30px] sm:px-[20px] md:flex-row md:gap-[40px] md:py-[40px]">
       <div className="flex flex-1 flex-col gap-[40px]">
         {/* 배송 정보 */}
         <section className="border-b border-navy-700 pb-[30px]">
           <h2 className="mb-[20px] text-cream">배송 정보</h2>
           <div className="mb-[10px] flex flex-wrap items-center gap-[12px] sm:gap-[20px]">
             <strong className="text-cream">{nickname ?? "회원"}</strong>
-            <span className="rounded-[4px] bg-navy-800 px-[4px] py-[2px] text-[14px] text-cream/70">
+            <span className="rounded-[4px] bg-navy-800 px-[4px] py-[2px] text-14 text-cream/70">
               {currentAddress.title}
             </span>
             <button
@@ -205,7 +205,7 @@ export default function OrderPage() {
                 )}
                 <div className="flex flex-col gap-[8px] sm:gap-[10px]">
                   <h3 className="text-cream">{item.name}</h3>
-                  <div className="flex flex-wrap items-center gap-[6px] text-[13px] text-cream/60 sm:text-[14px]">
+                  <div className="flex flex-wrap items-center gap-[6px] text-13 text-cream/60 sm:text-14">
                     <span>색상: {item.color}</span>
                     <span className="text-navy-600">|</span>
                     {/* 구분선 역할하는 텍스트 파이프*/}
@@ -267,10 +267,10 @@ export default function OrderPage() {
               <strong className="text-cream">무료 배송</strong>
             </li>
             <li className="mt-[10px] flex items-end justify-between border-t border-dashed border-navy-600 pt-[16px]">
-              <span className="text-[16px] font-bold text-cream">
+              <span className="text-16 font-bold text-cream">
                 총 결제 금액
               </span>
-              <strong className="text-[24px] font-bold text-terracotta-400 sm:text-[24px]">
+              <strong className="text-24 font-bold text-terracotta-400 sm:text-24">
                 {totalPrice.toLocaleString()}원
               </strong>
             </li>
@@ -280,7 +280,7 @@ export default function OrderPage() {
         <button
           type="button"
           disabled={isSubmitting}
-          className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-[16px] font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-16 font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={handleSubmitOrder}
         >
           {/* inSubmitting이면 "처리 중..." 버튼 텍스트로. 아니면 실제 결제 금액 표시*/}

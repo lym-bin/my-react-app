@@ -184,7 +184,7 @@ export default function StoryPage() {
           }}
         />
         <div className="relative z-10 max-w-[640px]">
-          <p className="story-hero-item story-hero-eyebrow mb-[16px] text-[11px] font-light uppercase tracking-[0.32em] text-cream/45">
+          <p className="story-hero-item story-hero-eyebrow mb-[16px] text-11 font-light uppercase tracking-[0.32em] text-cream/45">
             Objet & B Editorial
           </p>
           <h1 className="story-hero-item story-hero-title mb-[22px] text-[2.6rem] leading-[1.1] font-bold sm:text-[3.4rem] md:text-[4.4rem]">
@@ -192,12 +192,12 @@ export default function StoryPage() {
             <br />
             여백
           </h1>
-          <p className="story-hero-item story-hero-sub mx-auto mb-[40px] max-w-[420px] text-[15px] leading-[1.75] text-cream/68">
+          <p className="story-hero-item story-hero-sub mx-auto mb-[40px] max-w-[420px] text-15 leading-[1.75] text-cream/68">
             오버사이즈 실루엣과 미니멀 컬러,
             <br />
             정교한 마감. 이 세 가지로 요약됩니다.
           </p>
-          <div className="story-hero-item story-hero-cue inline-flex flex-col items-center gap-[10px] text-[10.5px] uppercase tracking-[0.28em] text-cream/45">
+          <div className="story-hero-item story-hero-cue inline-flex flex-col items-center gap-[10px] text-[0.65625rem] uppercase tracking-[0.28em] text-cream/45">
             <span className="h-[34px] w-px bg-gradient-to-b from-terracotta-400 to-transparent" />
             Scroll
           </div>
@@ -218,20 +218,20 @@ export default function StoryPage() {
               className="story-pin-image product-photo absolute inset-0 h-full w-full object-cover"
             />
           ))}
-          <span className="absolute bottom-[16px] left-[16px] rounded-full border border-cream/25 bg-navy-950/55 px-[10px] py-[15px] text-[10.5px] tracking-[0.2em] text-cream">
+          <span className="absolute bottom-[16px] left-[16px] rounded-full border border-cream/25 bg-navy-950/55 px-[10px] py-[15px] text-[0.65625rem] tracking-[0.2em] text-cream">
             EDITORIAL
           </span>
         </div>
         <div className="relative min-h-[180px] w-full max-w-[380px] text-center md:text-left">
           {PIN_CAPTIONS.map((c) => (
             <div key={c.num} className="story-pin-caption absolute inset-0">
-              <span className="mb-[10px] block text-[12px] text-terracotta-400">
+              <span className="mb-[10px] block text-12 text-terracotta-400">
                 {c.num}
               </span>
               <h2 className="mb-[14px] text-[1.6rem] leading-[1.2] font-bold sm:text-[1.9rem]">
                 {c.title}
               </h2>
-              <p className="mx-auto max-w-[320px] text-[14px] leading-[1.75] text-cream/65 break-keep md:mx-0">
+              <p className="mx-auto max-w-[320px] text-14 leading-[1.75] text-cream/65 break-keep md:mx-0">
                 {c.desc}
               </p>
             </div>
@@ -245,7 +245,7 @@ export default function StoryPage() {
         className="flex min-h-screen flex-col justify-center gap-[32px] overflow-hidden border-t border-navy-800 bg-navy-900 py-[60px]"
       >
         <div className="text-center">
-          <p className="mb-[8px] text-[11px] uppercase tracking-[0.3em] text-cream/45">
+          <p className="mb-[8px] text-11 uppercase tracking-[0.3em] text-cream/45">
             Objet & B Craft
           </p>
           <h2 className="text-[1.9rem] font-bold sm:text-[2.3rem]">
@@ -262,7 +262,7 @@ export default function StoryPage() {
                 key={value.id}
                 className="w-[min(78vw,320px)] flex-shrink-0 rounded-[2px] border border-navy-700 bg-navy-950 px-[28px] py-[44px] text-center"
               >
-                <span className="mb-[18px] block text-[12px] tracking-[0.2em] text-cream/40">
+                <span className="mb-[18px] block text-12 tracking-[0.2em] text-cream/40">
                   {value.num}
                 </span>
                 <value.icon
@@ -274,7 +274,7 @@ export default function StoryPage() {
                 <h3 className="mb-[10px] text-[1.15rem] font-bold text-cream">
                   {value.title}
                 </h3>
-                <p className="mx-auto max-w-[220px] text-[13px] leading-[1.7] text-cream/65 break-keep">
+                <p className="mx-auto max-w-[220px] text-13 leading-[1.7] text-cream/65 break-keep">
                   {value.desc}
                 </p>
               </div>
@@ -288,7 +288,7 @@ export default function StoryPage() {
         ref={ctaRef}
         className="flex min-h-screen flex-col items-center justify-center border-t border-navy-800 px-[20px] text-center"
       >
-        <p className="story-cta-item mb-[10px] text-[11px] uppercase tracking-[0.3em] text-cream/45">
+        <p className="story-cta-item mb-[10px] text-11 uppercase tracking-[0.3em] text-cream/45">
           Objet & B
         </p>
         <h2 className="story-cta-item mb-[36px] text-[2rem] leading-[1.25] font-bold sm:text-[2.6rem]">
@@ -298,7 +298,7 @@ export default function StoryPage() {
         </h2>
         <Link
           to="/products"
-          className="story-cta-item inline-flex items-center gap-[8px] border border-terracotta-500 px-[30px] py-[15px] text-[13px] uppercase tracking-[0.16em] text-terracotta-400 transition-colors hover:bg-terracotta-500 hover:text-navy-950"
+          className="story-cta-item inline-flex items-center gap-[8px] border border-terracotta-500 px-[30px] py-[15px] text-13 uppercase tracking-[0.16em] text-terracotta-400 transition-colors hover:bg-terracotta-500 hover:text-navy-950"
         >
           컬렉션 보기 →
         </Link>

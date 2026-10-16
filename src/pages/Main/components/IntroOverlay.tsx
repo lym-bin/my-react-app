@@ -109,7 +109,7 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
         className="relative z-10 flex flex-col items-center px-[20px] text-center"
       >
         {/* 상단 에디토리얼 태그 */}
-        <span className="intro-line intro-eyebrow mb-[16px] text-[10px] font-light tracking-[0.25em] text-cream/70 uppercase sm:text-[12px] sm:tracking-[0.4em]">
+        <span className="intro-line intro-eyebrow mb-[16px] text-10 font-light tracking-[0.25em] text-cream/70 uppercase sm:text-12 sm:tracking-[0.4em]">
           Objet & B Editorial Opening
         </span>
 
@@ -121,7 +121,7 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
           OBJET & B
         </h1>
 
-        <p className="intro-line intro-sub mt-[16px] text-[12px] font-light tracking-[0.15em] text-cream/85 sm:text-[13px] sm:tracking-[0.2em] md:text-[15px]">
+        <p className="intro-line intro-sub mt-[16px] text-12 font-light tracking-[0.15em] text-cream/85 sm:text-13 sm:tracking-[0.2em] md:text-15">
           Quiet luxury in every stitch and seam
         </p>
       </div>

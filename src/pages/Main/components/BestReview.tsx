@@ -50,9 +50,9 @@ const FEED_PHOTOS: FeedPhoto[] = [
 export default function BestReview() {
   return (
     <section className="bg-navy-950 px-[20px] py-[60px]">
-      <div className="mx-auto max-w-[1200px]">
+      <div className="mx-auto max-w-content">
         <div className="mb-[30px] text-center">
-          <span className="mb-[8px] block text-[11px] font-light tracking-[0.3em] text-cream/40 uppercase">
+          <span className="mb-[8px] block text-11 font-light tracking-[0.3em] text-cream/40 uppercase">
             Objet & B Community
           </span>
           <h2 className="text-[1.8rem] font-bold text-cream sm:text-[2.2rem]">
@@ -74,7 +74,7 @@ export default function BestReview() {
               />
               {/* 호버 시 "@상품명" 라벨만 살짝 - 이미지 전체는 어둡게 안 깔고 라벨 자체에만 배경 */}
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-[10px] text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <span className="border border-cream/50 bg-navy-950/70 px-[12px] py-[7px] text-[11px] tracking-[0.05em] text-cream">
+                <span className="border border-cream/50 bg-navy-950/70 px-[12px] py-[7px] text-11 tracking-[0.05em] text-cream">
                   @{photo.tag}
                 </span>
               </div>

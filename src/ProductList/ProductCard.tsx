@@ -43,14 +43,14 @@ export default function ProductCard({
             }`}
           />
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            <span className="border border-cream/50 bg-navy-950/70 px-[18px] py-[9px] text-[11px] tracking-[0.2em] text-cream uppercase">
+            <span className="border border-cream/50 bg-navy-950/70 px-[18px] py-[9px] text-11 tracking-[0.2em] text-cream uppercase">
               자세히 보기
             </span>
           </div>
         </div>
 
         {/* 상품 정보 영역 */}
-        <div className="flex justify-between text-[13px]">
+        <div className="flex justify-between text-13">
           <strong className="font-medium text-cream">{name}</strong>
           <span className="font-semibold text-terracotta-400">{price}</span>
         </div>

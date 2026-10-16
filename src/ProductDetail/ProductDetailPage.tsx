@@ -92,7 +92,7 @@ export default function ProductDetailPage() {
   // 상품 못 찾았으면(잘못된 id 등) 안내 문구만 보여주고 끝
   if (!product) {
     return (
-      <main className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[40px] py-[80px] text-center text-cream/60">
+      <main className="mx-auto w-full max-w-content bg-navy-950 px-[40px] py-[80px] text-center text-cream/60">
         상품을 찾을 수 없습니다.
       </main>
     );
@@ -111,7 +111,7 @@ export default function ProductDetailPage() {
         />
       )}
 
-      <main className="mx-auto flex w-full max-w-[1200px] flex-col justify-between gap-[30px] px-[20px] py-[30px] md:flex-row md:gap-[40px] md:px-[40px] md:py-[40px]">
+      <main className="mx-auto flex w-full max-w-content flex-col justify-between gap-[30px] px-[20px] py-[30px] md:flex-row md:gap-[40px] md:px-[40px] md:py-[40px]">
         <section className="w-full md:w-[400px]">
           {/* 첫 번째 이미지 (상품 대표 이미지) images[0]이 있으면 그거, 없으면 imgSrc, 그것도 없으면 빈 박스 */}
           <div>
@@ -143,16 +143,16 @@ export default function ProductDetailPage() {
           {/* 제출(submit) 시 handleAddtoCart 실행*/}
           <form onSubmit={handleAddToCart}>
             <div>
-              <h1 className="mb-[20px] text-[24px] font-normal text-cream">
+              <h1 className="mb-[20px] text-24 font-normal text-cream">
                 {product.name}
               </h1>
-              <div className="mb-[20px] border-b border-navy-700 pb-[20px] text-[18px] font-semibold text-cream">
+              <div className="mb-[20px] border-b border-navy-700 pb-[20px] text-18 font-semibold text-cream">
                 {product.price.toLocaleString()}원
               </div>
             </div>
 
             <div className="mb-[20px]">
-              <strong className="mb-[10px] block text-[18px] text-cream">
+              <strong className="mb-[10px] block text-18 text-cream">
                 색상 :{" "}
               </strong>
               <div className="flex flex-wrap gap-[20px]">
@@ -169,7 +169,7 @@ export default function ProductDetailPage() {
                       onChange={() => setSelectedColor(c.value)} // 선택 바뀌면 state 갱신
                     />
                     <span
-                      className={`inline-block cursor-pointer border px-[16px] py-[8px] text-[13px] transition-all duration-200 ease-in-out ${
+                      className={`inline-block cursor-pointer border px-[16px] py-[8px] text-13 transition-all duration-200 ease-in-out ${
                         selectedColor === c.value
                           ? "border-terracotta-500 bg-terracotta-500 text-navy-950"
                           : "border-navy-600 text-cream/80"
@@ -184,7 +184,7 @@ export default function ProductDetailPage() {
 
             {/* 사이즈도 색상이랑 완전히 똑같은 구조 (input hidden + span 스타일*/}
             <div className="mb-[20px]">
-              <strong className="mb-[10px] block text-[18px] text-cream">
+              <strong className="mb-[10px] block text-18 text-cream">
                 사이즈 :{" "}
               </strong>
               <div className="flex flex-wrap gap-[20px]">
@@ -199,7 +199,7 @@ export default function ProductDetailPage() {
                       onChange={() => setSelectedSize(size)}
                     />
                     <span
-                      className={`inline-block cursor-pointer border px-[16px] py-[8px] text-[13px] transition-all duration-200 ease-in-out ${
+                      className={`inline-block cursor-pointer border px-[16px] py-[8px] text-13 transition-all duration-200 ease-in-out ${
                         selectedSize === size
                           ? "border-terracotta-500 bg-terracotta-500 text-navy-950"
                           : "border-navy-600 text-cream/80"
@@ -215,7 +215,7 @@ export default function ProductDetailPage() {
             <div className="my-[15px] mb-[25px]">
               <button
                 type="button"
-                className="cursor-pointer border-none bg-transparent p-0 text-[12px] text-cream/60 underline hover:text-terracotta-400"
+                className="cursor-pointer border-none bg-transparent p-0 text-12 text-cream/60 underline hover:text-terracotta-400"
                 aria-expanded={sizeGuide.isOpen}
                 onClick={openSizeGuide}
               >
@@ -227,7 +227,7 @@ export default function ProductDetailPage() {
               {/* type="submit" -> 이 버튼 누르면 <form>의 onSubmit(handleAddToCart) 실행*/}
               <button
                 type="submit"
-                className="w-full cursor-pointer border border-terracotta-500 bg-terracotta-500 py-[15px] text-[15px] font-medium text-navy-950 transition-colors duration-200 hover:bg-terracotta-600"
+                className="w-full cursor-pointer border border-terracotta-500 bg-terracotta-500 py-[15px] text-15 font-medium text-navy-950 transition-colors duration-200 hover:bg-terracotta-600"
                 aria-expanded={cart.isOpen}
               >
                 장바구니 담기
@@ -235,7 +235,7 @@ export default function ProductDetailPage() {
             </div>
 
             <div>
-              <p className="mt-[20px] text-left text-[13px] font-light leading-[1.6] text-cream/60">
+              <p className="mt-[20px] text-left text-13 font-light leading-[1.6] text-cream/60">
                 {product.description ??
                   "풍부한 질감이 느껴지는 소재로 완성한 미니멀 실루엣. 톤온톤 디테일과 정교한 마감으로 시간이 지날수록 깊은 매력을 더합니다."}
               </p>

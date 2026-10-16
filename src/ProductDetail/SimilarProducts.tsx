@@ -19,8 +19,8 @@ export default function SimilarProducts({
   useReviewImage = false,
 }: SimilarProductsProps) {
   return (
-    <section className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[20px] pt-[80px] pb-[40px]">
-      <h2 className="mb-[20px] text-center text-[16px] font-semibold text-cream">
+    <section className="mx-auto w-full max-w-content bg-navy-950 px-[20px] pt-[80px] pb-[40px]">
+      <h2 className="mb-[20px] text-center text-16 font-semibold text-cream">
         {title}
       </h2>
       <div className="grid grid-cols-2 gap-[20px]">
@@ -49,7 +49,7 @@ export default function SimilarProducts({
                 className="product-photo h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
               />
             </div>
-            <span className="mt-[10px] block text-center text-[13px] font-normal text-cream/70">
+            <span className="mt-[10px] block text-center text-13 font-normal text-cream/70">
               {product.name}
             </span>
           </Link>

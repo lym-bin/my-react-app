@@ -42,10 +42,10 @@ export default function ProductList({ introDone }: ProductListProps) {
 
   return (
     <section ref={sectionRef} className="bg-navy-950">
-      <div className="mx-auto mb-[50px] max-w-[1200px] px-[16px] py-[40px] sm:py-[40px]">
+      <div className="mx-auto mb-[50px] max-w-content px-[16px] py-[40px] sm:py-[40px]">
         {/* 섹션 헤드라인 */}
         <div className="mb-[30px] text-center">
-          <span className="mb-[8px] block text-[11px] font-light tracking-[0.3em] text-cream/40 uppercase">
+          <span className="mb-[8px] block text-11 font-light tracking-[0.3em] text-cream/40 uppercase">
             Objet & B Selection
           </span>
           <h2 className="font-serif text-[1.8rem] font-light text-cream sm:text-[2.2rem]">
@@ -75,7 +75,7 @@ export default function ProductList({ introDone }: ProductListProps) {
                     />
                   )}
                   <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <span className="border border-cream/50 bg-navy-950/70 px-[18px] py-[9px] text-[11px] tracking-[0.2em] text-cream uppercase">
+                    <span className="border border-cream/50 bg-navy-950/70 px-[18px] py-[9px] text-11 tracking-[0.2em] text-cream uppercase">
                       자세히 보기
                     </span>
                   </div>
@@ -83,10 +83,10 @@ export default function ProductList({ introDone }: ProductListProps) {
 
                 {/* 텍스트 정보: 상품명 왼쪽 / 가격 오른쪽 (aviemuah.com 참고, 큰 이미지 비례상 12px로 조정) */}
                 <div className="flex items-baseline justify-between gap-[8px] text-left">
-                  <em className="text-[12px] font-bold text-cream not-italic">
+                  <em className="text-12 font-bold text-cream not-italic">
                     {product.name}
                   </em>
-                  <strong className="text-[12px] font-bold text-terracotta-400">
+                  <strong className="text-12 font-bold text-terracotta-400">
                     {product.price.toLocaleString()}원
                   </strong>
                 </div>

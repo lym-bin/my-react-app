@@ -30,13 +30,13 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
     >
       {/* 장바구니 사이드바 헤더 */}
       <header className="flex items-center justify-between border-b border-navy-700 p-[24px]">
-        <h3 className="m-0 text-[18px] font-bold text-cream">
+        <h3 className="m-0 text-18 font-bold text-cream">
           {/* 아이템 있으면 "Cart (3)" 처럼 개수 표시, 없으면 그냥 "Cart"*/}
           Cart{items.length > 0 ? ` (${items.length})` : ""}
         </h3>
         <button
           type="button"
-          className="cursor-pointer border-none bg-transparent text-[14px] font-semibold text-cream/70 hover:text-cream"
+          className="cursor-pointer border-none bg-transparent text-14 font-semibold text-cream/70 hover:text-cream"
           aria-label="장바구니 닫기"
           onClick={onClose}
         >
@@ -48,7 +48,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
         <div className="flex-1 overflow-y-auto p-[24px]">
           {/* 비었으면 안내 문구, 있으면 목록 (삼항연산자로 두 UI 통째로 스위칭) */}
           {items.length === 0 ? (
-            <p className="text-[14px] text-cream/50">
+            <p className="text-14 text-cream/50">
               장바구니가 비어 있습니다.
             </p>
           ) : (
@@ -67,13 +67,13 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                     />
                   </div>
                   <div className="flex flex-1 flex-col gap-[4px]">
-                    <strong className="text-[15px] text-cream">
+                    <strong className="text-15 text-cream">
                       {item.name}
                     </strong>
-                    <span className="text-[13px] text-cream/60">
+                    <span className="text-13 text-cream/60">
                       색상: {item.color} / 사이즈: {item.size}
                     </span>
-                    <div className="flex items-center gap-[8px] text-[13px] text-cream/60">
+                    <div className="flex items-center gap-[8px] text-13 text-cream/60">
                       <span>수량:</span>
                       <button
                         type="button"
@@ -100,13 +100,13 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
 
                     <div className="mt-[2px] flex items-center justify-between">
                       {/* 개별 항목 소계 = 단가 x 수량 */}
-                      <span className="text-[14px] font-semibold text-terracotta-400">
+                      <span className="text-14 font-semibold text-terracotta-400">
                         ₩ {(item.price * item.qty).toLocaleString()}
                       </span>
                       <button
                         type="button"
                         onClick={() => removeItem(item.id)}
-                        className="text-[12px] text-cream/40 underline hover:text-terracotta-400"
+                        className="text-12 text-cream/40 underline hover:text-terracotta-400"
                       >
                         삭제
                       </button>
@@ -120,10 +120,10 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
 
         {/* 하단 푸터 고정 영역 */}
         <footer className="border-t border-navy-700 bg-navy-900 p-[24px]">
-          <div className="mb-[14px] flex items-center justify-between text-[14px] text-cream/80">
+          <div className="mb-[14px] flex items-center justify-between text-14 text-cream/80">
             <span>총 상품 금액</span>
             {/* CartContext가 이미 계산해둔 총액 수량 바뀌면 바로바로 최신 값반영(reduce)*/}
-            <strong className="text-[16px] text-cream">
+            <strong className="text-16 text-cream">
               ₩ {totalPrice.toLocaleString()}
             </strong>
           </div>
@@ -135,7 +135,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                 onClose(); // 3. 사이드바 닫기
                 navigate("/order"); // 4. 주문/결제 페이지로 이동(/order 경로로 이동)
               }}
-              className="w-full cursor-pointer bg-terracotta-500 py-[15px] text-[14px] font-bold text-navy-950 transition-colors hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-40"
+              className="w-full cursor-pointer bg-terracotta-500 py-[15px] text-14 font-bold text-navy-950 transition-colors hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-40"
             >
               결제하기
             </button>
@@ -143,7 +143,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
           <div className="mt-[12px] flex items-center justify-center">
             <button
               type="button"
-              className="w-full cursor-pointer border border-navy-600 bg-transparent py-[15px] text-[14px] font-bold text-cream transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
+              className="w-full cursor-pointer border border-navy-600 bg-transparent py-[15px] text-14 font-bold text-cream transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
               onClick={onClose}
             >
               닫기

@@ -101,9 +101,9 @@ export default function MainBanner() {
       </span>
 
       {/* 텍스트 영역: 모바일 전용 (데스크톱은 배경 이미지 자체에 메시지가 있어서 생략) */}
-      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col items-center gap-[20px] overflow-hidden px-[20px] py-[50px] text-center md:hidden">
+      <div className="relative z-10 mx-auto flex w-full max-w-wide flex-col items-center gap-[20px] overflow-hidden px-[20px] py-[50px] text-center md:hidden">
         <div className="overflow-hidden">
-          <span className="gsap-title-line inline-block text-[12px] font-light tracking-[0.3em] text-cream/50 uppercase">
+          <span className="gsap-title-line inline-block text-12 font-light tracking-[0.3em] text-cream/50 uppercase">
             Objet & B Editorial
           </span>
         </div>
@@ -118,7 +118,7 @@ export default function MainBanner() {
           <div className="gsap-title-line">
             <Link
               to="/products"
-              className="md:hidden group relative inline-flex items-center justify-center border border-cream/30 bg-transparent px-[32px] py-[13px] text-[13px] tracking-[0.2em] text-cream uppercase transition-all duration-300 hover:border-cream hover:bg-cream hover:text-navy-950"
+              className="md:hidden group relative inline-flex items-center justify-center border border-cream/30 bg-transparent px-[32px] py-[13px] text-13 tracking-[0.2em] text-cream uppercase transition-all duration-300 hover:border-cream hover:bg-cream hover:text-navy-950"
             >
               <span>SHOP NOW</span>
             </Link>

@@ -87,10 +87,10 @@ export default function SizeGuideSidebar({
     >
       {/* 헤더 영역 */}
       <header className="flex items-center justify-between border-b border-navy-700 p-[24px]">
-        <h3 className="m-0 text-[18px] font-bold text-cream">{guide.title}</h3>
+        <h3 className="m-0 text-18 font-bold text-cream">{guide.title}</h3>
         <button
           type="button"
-          className="cursor-pointer border-none bg-transparent text-[14px] text-cream/70 hover:text-cream"
+          className="cursor-pointer border-none bg-transparent text-14 text-cream/70 hover:text-cream"
           aria-label="사이즈 가이드 닫기"
           onClick={onClose}
         >
@@ -102,26 +102,26 @@ export default function SizeGuideSidebar({
       <div className="flex-1 overflow-y-auto p-[24px]">
         {/* 3열 그리드: 카테고리별 헤더 3칸*/}
         <div className="grid grid-cols-3 border-t border-l border-navy-700">
-          <div className="border-r border-b border-navy-700 bg-navy-800 px-[10px] py-[14px] text-center text-[14px] font-bold text-cream">
+          <div className="border-r border-b border-navy-700 bg-navy-800 px-[10px] py-[14px] text-center text-14 font-bold text-cream">
             {guide.headers[0]}
           </div>
-          <div className="border-r border-b border-navy-700 bg-navy-800 px-[10px] py-[14px] text-center text-[14px] font-bold text-cream">
+          <div className="border-r border-b border-navy-700 bg-navy-800 px-[10px] py-[14px] text-center text-14 font-bold text-cream">
             {guide.headers[1]}
           </div>
-          <div className="border-r border-b border-navy-700 bg-navy-800 px-[10px] py-[14px] text-center text-[14px] font-bold text-cream">
+          <div className="border-r border-b border-navy-700 bg-navy-800 px-[10px] py-[14px] text-center text-14 font-bold text-cream">
             {guide.headers[2]}
           </div>
 
           {/* guide.rows 배열을 돌면서 행마다 셀 3개씩 그림 */}
           {guide.rows.map((row) => (
             <div key={row.size} style={{ display: "contents" }}>
-              <div className="border-r border-b border-navy-700 px-[10px] py-[14px] text-center text-[14px] font-medium text-cream/80">
+              <div className="border-r border-b border-navy-700 px-[10px] py-[14px] text-center text-14 font-medium text-cream/80">
                 {row.size}
               </div>
-              <div className="border-r border-b border-navy-700 px-[10px] py-[14px] text-center text-[14px] font-medium text-cream/80">
+              <div className="border-r border-b border-navy-700 px-[10px] py-[14px] text-center text-14 font-medium text-cream/80">
                 {row.col2}
               </div>
-              <div className="border-r border-b border-navy-700 px-[10px] py-[14px] text-center text-[14px] font-medium text-cream/80">
+              <div className="border-r border-b border-navy-700 px-[10px] py-[14px] text-center text-14 font-medium text-cream/80">
                 {row.col3}
               </div>
             </div>

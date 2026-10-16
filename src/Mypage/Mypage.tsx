@@ -123,23 +123,23 @@ export default function MyPage() {
   // 로딩 중이거나 로그인 안 됐으면 (리다이렉트 직전) 로딩 문구만
   if (isLoading || !isLoggedIn) {
     return (
-      <main className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[16px] py-[80px] text-center text-cream/50">
+      <main className="mx-auto w-full max-w-content bg-navy-950 px-[16px] py-[80px] text-center text-cream/50">
         로딩 중...
       </main>
     );
   }
 
   return (
-    <main className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[16px] py-[20px]">
+    <main className="mx-auto w-full max-w-content bg-navy-950 px-[16px] py-[20px]">
       <section>
         <div className="flex items-center gap-[20px]">
-          <strong className="text-[18px] font-bold text-cream">
+          <strong className="text-18 font-bold text-cream">
             {nickname}
           </strong>
           <button
             type="button"
             onClick={editProfile.open}
-            className="rounded-[4px] border border-navy-600 bg-transparent px-[8px] py-[4px] text-[12px] text-cream/80 transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
+            className="rounded-[4px] border border-navy-600 bg-transparent px-[8px] py-[4px] text-12 text-cream/80 transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
           >
             회원 정보 수정
           </button>
@@ -154,8 +154,8 @@ export default function MyPage() {
                   disabled
                   className="flex w-full cursor-not-allowed items-center justify-center gap-[8px] text-cream/30"
                 >
-                  <span className="text-[14px]">{b.label} &gt;</span>
-                  <strong className="text-[14px] font-bold">
+                  <span className="text-14">{b.label} &gt;</span>
+                  <strong className="text-14 font-bold">
                     {b.value}
                   </strong>
                 </button>
@@ -167,16 +167,16 @@ export default function MyPage() {
 
       {/* 실시간 주문 내역*/}
       <section className="mt-[30px]">
-        <h2 className="text-[16px] font-bold text-cream mb-[14px]">
+        <h2 className="text-16 font-bold text-cream mb-[14px]">
           최근 주문 내역
           {/* 3단계 상태: 로딩중/ 주문 없음/ 주문 있음 - 중첩 삼항연산자로 스위칭*/}
         </h2>
         {isOrderLoading ? (
-          <p className="text-[14px] text-cream/50">
+          <p className="text-14 text-cream/50">
             주문 내역을 불러오는 중...
           </p>
         ) : orders.length === 0 ? (
-          <div className="rounded-[8px] bg-navy-900 p-[20px] text-center text-[14px] text-cream/60">
+          <div className="rounded-[8px] bg-navy-900 p-[20px] text-center text-14 text-cream/60">
             주문 내역이 없습니다.
           </div>
         ) : (
@@ -186,7 +186,7 @@ export default function MyPage() {
                 key={order.id}
                 className="rounded-[8px] bg-navy-900 p-[16px] border border-navy-800"
               >
-                <div className="flex justify-between items-center border-b border-navy-800 pb-[10px] mb-[12px] text-[13px] text-cream/70">
+                <div className="flex justify-between items-center border-b border-navy-800 pb-[10px] mb-[12px] text-13 text-cream/70">
                   <span>
                     주문번호: <strong>{order.orderId}</strong>
                   </span>
@@ -197,7 +197,7 @@ export default function MyPage() {
                   {order.items.map((item, idx) => (
                     <div
                       key={idx}
-                      className="flex justify-between items-center text-[14px] text-cream"
+                      className="flex justify-between items-center text-14 text-cream"
                     >
                       <span>
                         {item.name} ({item.color} / {item.size}) x {item.qty}개
@@ -208,7 +208,7 @@ export default function MyPage() {
                     </div>
                   ))}
                 </div>
-                <div className="mt-[12px] pt-[10px] border-t border-navy-800 flex justify-between items-center text-[14px]">
+                <div className="mt-[12px] pt-[10px] border-t border-navy-800 flex justify-between items-center text-14">
                   <span className="text-cream/70">총 결제금액</span>
                   <span className="font-bold text-terracotta-400">
                     {order.totalPrice.toLocaleString()}원
@@ -223,7 +223,7 @@ export default function MyPage() {
       {/* ref를 감싸는 div에 연결 (scrollIntoView가 이 지점을 찾을 수 있게*/}
       <div ref={recentlyViewedRef}>
         {recentlyViewedProducts.length > 0 && (
-          <h2 className="text-[16px] font-bold text-cream mb-[14px]">
+          <h2 className="text-16 font-bold text-cream mb-[14px]">
             최근 본 상품
           </h2>
         )}
@@ -237,7 +237,7 @@ export default function MyPage() {
                   loading="lazy"
                   className="product-photo mb-[6px] h-[110px] w-[110px] bg-navy-800 object-cover"
                 />
-                <span className="line-clamp-2 text-[12px] text-cream/70">
+                <span className="line-clamp-2 text-12 text-cream/70">
                   {p.name}
                 </span>
               </Link>
@@ -274,8 +274,8 @@ export default function MyPage() {
                       }
                       className={
                         isActive
-                          ? "text-[14px] text-cream/80 hover:text-terracotta-400 hover:underline"
-                          : "cursor-not-allowed text-[14px] text-cream/30"
+                          ? "text-14 text-cream/80 hover:text-terracotta-400 hover:underline"
+                          : "cursor-not-allowed text-14 text-cream/30"
                       }
                     >
                       {item}
@@ -293,7 +293,7 @@ export default function MyPage() {
                   <button
                     type="button"
                     disabled
-                    className="cursor-not-allowed text-[14px] text-cream/30"
+                    className="cursor-not-allowed text-14 text-cream/30"
                   >
                     {item}
                   </button>
@@ -303,7 +303,7 @@ export default function MyPage() {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="text-[14px] text-cream/80 hover:text-terracotta-400 hover:underline"
+                  className="text-14 text-cream/80 hover:text-terracotta-400 hover:underline"
                 >
                   로그아웃
                 </button>
