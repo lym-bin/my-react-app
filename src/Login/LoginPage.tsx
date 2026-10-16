@@ -69,7 +69,7 @@ export default function LoginPage() {
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-[20px] py-[60px]">
       {/* 풀블리드 배경 사진*/}
       <img
-        src="/images/model_2.jpg"
+        src="/images/model_2.webp"
         alt="로그인 이미지"
         aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover object-[center_26%]"

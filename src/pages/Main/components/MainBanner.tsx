@@ -87,7 +87,7 @@ export default function MainBanner() {
         <div className="banner-image absolute inset-0">
           <img
             ref={imgRef}
-            src="/images/main-banner.svg"
+            src="/images/main-banner.webp"
             alt="Minimalist Collection Room View"
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
           />

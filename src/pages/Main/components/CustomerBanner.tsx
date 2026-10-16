@@ -28,7 +28,7 @@ const SLIDES: CustomerSlide[] = [
   },
   {
     id: 2,
-    img: "/images/model_2.jpg",
+    img: "/images/model_2.webp",
     title: "The Sweater You'll Reach For",
     desc: "여러 벌보다 한 벌. 질리지 않는 니트.",
   },

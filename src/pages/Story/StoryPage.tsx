@@ -9,9 +9,9 @@ import { Layers, PenTool, BadgeCheck, Clock } from "lucide-react";
 gsap.registerPlugin(ScrollTrigger);
 
 const PIN_IMAGES = [
-  { src: "/images/model_2.jpg", alt: "오버사이즈 실루엣" },
-  { src: "/images/card_1.svg", alt: "미니멀 컬러 팔레트" },
-  { src: "/images/suede-penny-loafers.jpg", alt: "정교한 디테일 클로즈업" },
+  { src: "/images/model_2.webp", alt: "오버사이즈 실루엣" },
+  { src: "/images/card_1.webp", alt: "미니멀 컬러 팔레트" },
+  { src: "/images/suede-penny-loafers.webp", alt: "정교한 디테일 클로즈업" },
 ];
 // 캡션 인덱스(0,1,2,) -> 이 캡션일 때 보여줄 이미지 인덱스 (이제 1:1 매칭)
 const PIN_IMAGE_FOR_CAPTION = [0, 1, 2];

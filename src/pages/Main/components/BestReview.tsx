@@ -11,25 +11,25 @@ interface FeedPhoto {
 const FEED_PHOTOS: FeedPhoto[] = [
   {
     id: 1,
-    img: "/images/card_1.svg",
+    img: "/images/card_1.webp",
     alt: "Objet & B 데일리룩",
     tag: "베이직 시그니처 화이트 셔츠",
   },
   {
     id: 2,
-    img: "/images/card_2.svg",
+    img: "/images/card_2.webp",
     alt: "Objet & B 스트리트 무드",
     tag: "릴랙스드 핏 니트 풀오버",
   },
   {
     id: 3,
-    img: "/images/card_3.svg",
+    img: "/images/card_3.webp",
     alt: "Objet & B 캐주얼 룩",
     tag: "미니멀 가죽 레더 스니커즈",
   },
   {
     id: 4,
-    img: "/images/card_4.svg",
+    img: "/images/card_4.webp",
     alt: "Objet & B 시티 무드",
     tag: "모던 싱글 체스터필드 코트",
   },
@@ -41,7 +41,7 @@ const FEED_PHOTOS: FeedPhoto[] = [
   },
   {
     id: 6,
-    img: "/images/community-street-snap.jpg",
+    img: "/images/community-street-snap.webp",
     alt: "Objet & B 시티 워크",
     tag: "시티 워크",
   },
