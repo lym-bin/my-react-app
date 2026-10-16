@@ -79,7 +79,7 @@ export default function MainPage() {
         <QuickNav />
       </div>
 
-      <ProductList />
+      <ProductList introDone={!showIntro} />
 
       <div className="gsap-reveal-section">
         <CustomerBanner />

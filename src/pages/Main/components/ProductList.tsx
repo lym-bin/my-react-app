@@ -9,11 +9,17 @@ import { PRODUCTS } from "../../../ProductList/ProductsData";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function ProductList() {
+interface ProductListProps {
+  introDone: boolean; // 인트로가 끝났는지 (끝난 뒤에만 애니메이션 준비)
+}
+
+export default function ProductList({ introDone }: ProductListProps) {
   const featured = PRODUCTS.slice(0, 6); // 전체 16개 중 앞 6개만 (0번부터 5번 인덱스)
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!introDone) return; // 큰 화면에선 상품 목록이 처음부터 재생 지점 안에 있어서, 인트로에 가려진 채 재생돼 버리는 걸 막음
+
     const ctx = gsap.context(() => {
       // 카드가 하나씩 순서대로(stagger) 떠오르는 효과
       gsap.from(".product-list-card", {
@@ -31,7 +37,7 @@ export default function ProductList() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [introDone]);
 
   return (
     <section ref={sectionRef} className="bg-navy-950">
