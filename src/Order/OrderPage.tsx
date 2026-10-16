@@ -1,6 +1,7 @@
 // src/Order/OrderPage.tsx
 // 로그인 안 됐거나 로딩중이거나 장바구니 비었으면 그에 맞는 화면을 보여줌
 // 다 통과하면 배송지/결제수단 골라서 Firestore에 주문 저장하는 페이지
+import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -94,6 +95,7 @@ export default function OrderPage() {
   const handleSubmitOrder = async () => {
     // 이미 제출 중이면 무시 (중복 클릭 방지)
     if (isSubmitting) return;
+
     if (items.length === 0) return;
     setIsSubmitting(true);
 
@@ -129,6 +131,39 @@ export default function OrderPage() {
     }
   };
 
+  // 결제창 띄우기(test: 결제 후 성공 주소로 돌아오는 지 확인)
+  const handleRequestPayment = async () => {
+    if (isSubmitting || items.length === 0) return;
+    setIsSubmitting(true);
+
+    const orderId = `ORD-${Date.now().toString().slice(-8)}`;
+    const firstName = items[0]?.name ?? "상품";
+    const orderName =
+      items.length > 1 ? `${firstName} 외 ${items.length - 1}건` : firstName;
+
+    try {
+      // SDK를 불러와서 결제창 객체 만들기 (customerKey: 구매자 구분값, 추측하기 어려운 Firebase uid 사용)
+      const tossPayments = await loadTossPayments(
+        import.meta.env.VITE_TOSS_CLIENT_KEY,
+      );
+      const payment = tossPayments.payment({ customerKey: user.uid });
+
+      // successUrl을 넘기면 "리다이렉트 방식": 결제가 끝나면 그 주소로 페이지 전체가 이동함
+      await payment.requestPayment({
+        method: "CARD",
+        amount: { currency: "KRW", value: totalPrice },
+        orderId,
+        orderName,
+        successUrl: `${window.location.origin}/payment/success`,
+        failUrl: `${window.location.origin}/payment/fail`,
+      });
+    } catch (error) {
+      // 결제창 자체를 못 띄운 경우 (키가 틀렸거나 파라미터 오류)
+      console.error("결제창을 열지 못했습니다.", error);
+      alert("결제창을 열지 못했습니다. 다시 시도해 주세요.");
+      setIsSubmitting(false);
+    }
+  };
   if (items.length === 0) {
     return (
       <main className="mx-auto w-full max-w-content bg-navy-950 px-[20px] py-[80px] text-center text-cream/60">
@@ -265,7 +300,7 @@ export default function OrderPage() {
           type="button"
           disabled={isSubmitting}
           className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-16 font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
-          onClick={handleSubmitOrder}
+          onClick={handleRequestPayment}
         >
           {/* inSubmitting이면 "처리 중..." 버튼 텍스트로. 아니면 실제 결제 금액 표시*/}
           {isSubmitting
