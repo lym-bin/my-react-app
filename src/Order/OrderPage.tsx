@@ -9,8 +9,9 @@ import { collection, addDoc } from "firebase/firestore"; // Firestore(DB) 관련
 import { db } from "../firebase"; // firebase.ts에서 만든 Firestore 접속 통로
 import AddressModal from "./AddressModal";
 import { type Address } from "../types/address";
+import useAddresses from "./useAddresses";
 
-// 배송지 기본값(localStorage에 저장된 게 없을 때 씀)
+// 저장된 배송지가 하나도 없을 때 보여줄 예시 배송지
 const initialAddresses: Address[] = [
   {
     id: "1",
@@ -36,22 +37,6 @@ const pmMethods = [
   { id: "pm-order", value: "order", label: "기타결제" },
 ];
 
-const ADDRESS_STORAGE_KEY = "objet-b-addresses";
-
-// localStorage에서 저장된 배송지 목록 불러오기 (CartContext의 loadinitiallItems랑 똑같은 패턴)
-function loadInitalAddresses(): Address[] {
-  try {
-    const raw = localStorage.getItem(ADDRESS_STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as Address[];
-      if (parsed.length > 0) return parsed;
-    }
-  } catch {
-    // ignore
-  }
-  return initialAddresses; // 저장된 게 없거나 실패하면 기본 배송지2개
-}
-
 export default function OrderPage() {
   const navigate = useNavigate();
   const { user, isLoading, nickname } = useAuth(); // 로그인 정보
@@ -59,24 +44,25 @@ export default function OrderPage() {
   const { items, totalPrice, clearCart } = useCart(); // 장바구니 정보
   const [selectedpm, setSelectedpm] = useState("toss"); // 선택된 결제수단
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-  // (A) 함수 자체를 넘김 (괄호 없음) -> "lazy 초기화" : 첫 렌더링 때만 딱 한 번 실행 됨
-  const [addresses, setAddresses] = useState<Address[]>(loadInitalAddresses);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // (B) 함수를 호출해서 (괄호 있음) 그 결과를 넘김 -> 매 렌더링마다 다시 실행됨 (비효율)
-  // [0]! : "!" = TS한테 "이 배열의 0번째, null/undefined 아닌 거 내가 보장해"
-  const [currentAddress, setCurrentAddress] = useState<Address>(
-    // 함수 참조만 넘기고, 결과에서 [0] 꺼내는 건 함수 안으로 옮김 (lazy 초기화)
-    () => loadInitalAddresses()[0]!,
-  );
 
-  // addresses가 바뀔 때마다 localStorage에 저장
-  useEffect(() => {
-    try {
-      localStorage.setItem(ADDRESS_STORAGE_KEY, JSON.stringify(addresses));
-    } catch {
-      // ignore
-    }
-  }, [addresses]);
+  // 배송지 목록은 Firestore에서 불러옴 (useAddresses 커스텀 훅)
+  // 객체 구조분해 + 이름 바꾸기: addresses를 savedAddresses라는 이름으로 꺼냄
+  const {
+    addresses: savedAddresses,
+    isLoading: isAddressLoading,
+    addAddress,
+  } = useAddresses(user?.uid);
+  // 저장된 게 없으면 예시 배송지를 보여줌 (첫 배송지를 추가하면 예시는 사라짐)
+  const addresses =
+    savedAddresses.length > 0 ? savedAddresses : initialAddresses;
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
+    null,
+  );
+  // 고른 id로 목록에서 찾아 씀 (주소 객체를 state로 따로 복사해 두지 않음 = 단일 진실 공급원)
+  // [0]! : "!" = TS한테 "이 배열의 0번째, null/undefined 아닌 거 내가 보장해" (예시 배송지가 항상 있음)
+  const currentAddress =
+    addresses.find((a) => a.id === selectedAddressId) ?? addresses[0]!;
 
   // 1. 비회원 접근 차단
 
@@ -91,8 +77,8 @@ export default function OrderPage() {
     }
   }, [user, isLoading, navigate]);
 
-  // 로딩 중일 때는 로딩바 표시
-  if (isLoading) {
+  // 로그인 확인 중이거나 배송지를 불러오는 중이면 로딩 표시
+  if (isLoading || isAddressLoading) {
     return (
       <main className="mx-auto w-full max-w-content bg-navy-950 px-[20px] py-[80px] text-center text-cream/60">
         로딩 중...
@@ -267,9 +253,7 @@ export default function OrderPage() {
               <strong className="text-cream">무료 배송</strong>
             </li>
             <li className="mt-[10px] flex items-end justify-between border-t border-dashed border-navy-600 pt-[16px]">
-              <span className="text-16 font-bold text-cream">
-                총 결제 금액
-              </span>
+              <span className="text-16 font-bold text-cream">총 결제 금액</span>
               <strong className="text-24 font-bold text-terracotta-400 sm:text-24">
                 {totalPrice.toLocaleString()}원
               </strong>
@@ -296,8 +280,14 @@ export default function OrderPage() {
         onClose={() => setIsAddressModalOpen(false)}
         addresses={addresses}
         selectedId={currentAddress.id}
-        onSelect={(addr) => setCurrentAddress(addr)}
-        onAdd={(newAddress) => setAddresses((prev) => [...prev, newAddress])} // 함수형 업데이트로 배열에 새 배송치 추가
+        onSelect={(addr) => setSelectedAddressId(addr.id)}
+        onAdd={(newAddress) => {
+          // 서버 저장이 실패하면 알려줌 (성공하면 훅이 목록에 추가해줌)
+          addAddress(newAddress).catch((error) => {
+            console.error("배송지 저장 중 오류가 발생했습니다.", error);
+            alert("배송지 저장에 실패했습니다. 다시 시도해 주세요.");
+          });
+        }}
       />
     </main>
   );
