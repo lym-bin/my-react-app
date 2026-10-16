@@ -11,6 +11,7 @@ import {
   useState, // 컴포넌트가 기억하는 값(state)상태 관리
   type ReactNode, // 화면에 그릴 수 있는 모든 것을 뜻하는 타입
 } from "react";
+import { useAuth } from "./AuthContext";
 
 // 바닐라js로 비유 {id: "1-red-M", productId} 객체
 // TS에서는 8개필드를 다 가져야한다는 규칙(Interface)
@@ -38,19 +39,37 @@ interface CartContextValue {
 // 빈 상자 생성 기본값 undefined = "Provider로 안 감싸졌을 때"를 감지함
 const CartContext = createContext<CartContextValue | undefined>(undefined);
 
-// localStorage에 저장할 떄 쓸 키 이름
+// localStorage에 저장할 떄 쓸 키 이름 (비로그인 손님용)
+// 로그인하면 뒤에 uid를 붙인 키를 따로 씀 -> 계정마다 장바구니가 섞이지 않음
 const CART_STORAGE_KEY = "objet-b-cart";
+
+const MAX_QTY = 20;
 
 // localStorage가 항상 성공한다는 보장이 없으므로 try/catch로 방어
 // 에러가 나도 앱이 죽지않게 []빈 배열 리턴
-function loadInitialItems(): CartItem[] {
+function loadItems(key: string): CartItem[] {
   try {
-    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    const raw = localStorage.getItem(key);
     // 삼항연산자로 raw(장바구니 키)가 있으면 파싱 없으면 빈 배열
     return raw ? (JSON.parse(raw) as CartItem[]) : [];
   } catch {
     return []; // localStorage 사용 불가 (시크릿 모드 등) 환경 방어
   }
+}
+
+// 로그인 전에 담아둔 손님 장바구니를 내 계정 장바구니에 합침 (같은 옵션이면 수량만 더함)
+function mergeItems(base: CartItem[], extra: CartItem[]): CartItem[] {
+  const merged = [...base];
+  extra.forEach((item) => {
+    const index = merged.findIndex((i) => i.id === item.id);
+    if (index === -1) {
+      merged.push(item);
+    } else {
+      const prev = merged[index]!;
+      merged[index] = { ...prev, qty: Math.min(MAX_QTY, prev.qty + item.qty) };
+    }
+  });
+  return merged;
 }
 
 // children: App.tsx에 컴포넌트의 여는 태그와 닫는 태그 사이의 모든 내용을
@@ -61,16 +80,41 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // 함수 자체를 넘겨 최초 1회만 실행되게(loadInitialItems)
   // useState의 초기값을 설정 할때 값 대신 함수를 전달하여
   // 첫 렌더링 때만 실행되도록 최적화(Lazy Initialization) 게으른 초기화
-  const [items, setItems] = useState<CartItem[]>(loadInitialItems);
+  const { user } = useAuth(); // CartProvider가 AuthProvider 안쪽이라 로그인 정보를 꺼낼 수 있음
+  const storageKey = user
+    ? `${CART_STORAGE_KEY}-${user.uid}`
+    : CART_STORAGE_KEY;
+  const [items, setItems] = useState<CartItem[]>(() => loadItems(storageKey));
+  // 지금 items가 "어느 키"에서 불러온 목록인지 기억 (키가 바뀌는 순간 옛 목록이 새 키에 저장되는 걸 막음)
+  const [loadedKey, setLoadedKey] = useState(storageKey);
 
-  // items가 바뀔 때마다 localStorage에 저장 (시크릿 모드 등 저장 불가 환경은 무시)
+  // 로그인/로그아웃으로 키가 바뀌면 그 키의 장바구니로 갈아끼움
   useEffect(() => {
+    if (loadedKey === storageKey) return;
+    let next = loadItems(storageKey);
+    if (user) {
+      // 로그인한 순간: 손님일 때 담아둔 것을 내 장바구니로 옮기고 손님 칸은 비움
+      next = mergeItems(next, loadItems(CART_STORAGE_KEY));
+      try {
+        localStorage.removeItem(CART_STORAGE_KEY);
+      } catch {
+        // 저장소 사용 불가 환경은 무시
+      }
+    }
+    // 로그아웃한 순간: 손님 칸(비어 있음)을 불러옴 -> 화면은 비고, 내 장바구니는 내 키에 그대로 남음
+    setItems(next);
+    setLoadedKey(storageKey);
+  }, [storageKey, loadedKey, user]);
+
+  // items가 바뀔 때마다 localStorage에 저장
+  useEffect(() => {
+    if (loadedKey !== storageKey) return; // 키를 갈아끼우는 중이면 저장 보류
     try {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+      localStorage.setItem(storageKey, JSON.stringify(items));
     } catch {
       // 저장 실패해도 앱은 계속 동작하게 무시
     }
-  }, [items]); // 의존성 배열: items가 바뀔 때마다 effect 재 실행
+  }, [items, storageKey, loadedKey]);
 
   // 장바구니에 상품 추가
   // addItem: 주문 받는 직원
@@ -100,8 +144,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const removeItem = (id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
   };
-
-  const MAX_QTY = 20;
 
   // 수량 변경, 0 이하로는 못 내려가게 Math.max(1, qty)로 방어
   const updateQty = (id: string, qty: number) => {

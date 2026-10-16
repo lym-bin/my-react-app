@@ -55,15 +55,15 @@ export default function OrderSuccessPage() {
       }) // 150 날짜 문자열 -> "2026년 0월 00일 오전 9:40" 한국어 형식으로 변환
     : "확인 불가";
   return (
-    <main className="mx-auto w-full max-w-[800px] bg-navy-950 px-[20px] py-[60px] sm:px-[20px] sm:py-[60px]">
+    <main className="mx-auto w-full max-w-narrow bg-navy-950 px-[20px] py-[60px] sm:px-[20px] sm:py-[60px]">
       <div className="mb-[40px] text-center">
-        <h2 className="mb-[12px] text-[24px] font-bold text-cream">
+        <h2 className="mb-[12px] text-24 font-bold text-cream">
           결제 완료
         </h2>
-        <span className="text-[16px] text-cream/60">
+        <span className="text-16 text-cream/60">
           감사합니다. 결제가 완료되었습니다.
         </span>
-        <div className="mt-[14px] flex justify-center gap-[16px] text-[13px] text-cream/50 sm:flex-row sm:justify-center sm:gap-[16px]">
+        <div className="mt-[14px] flex justify-center gap-[16px] text-13 text-cream/50 sm:flex-row sm:justify-center sm:gap-[16px]">
           <span>
             주문번호: <strong className="text-cream/80">{orderId}</strong>
           </span>
@@ -77,21 +77,21 @@ export default function OrderSuccessPage() {
       <section className="mb-[40px] grid grid-cols-1 gap-[20px] rounded-lg border border-navy-700 bg-navy-900 p-[20px] sm:p-[30px] md:grid-cols-2">
         <div>
           <div className="flex items-center gap-[10px] mb-[10px]">
-            <strong className="text-[16px] text-cream">
+            <strong className="text-16 text-cream">
               {nickname ?? "guest"}
             </strong>
             {address?.title && ( // address가 있고 title도 있을 때만 태그 표시
-              <span className="rounded-[4px] bg-navy-800 px-[6px] py-[2px] text-[12px] text-terracotta-400 font-semibold">
+              <span className="rounded-[4px] bg-navy-800 px-[6px] py-[2px] text-12 text-terracotta-400 font-semibold">
                 {address.title}
               </span>
             )}
           </div>
           <address className="not-italic">
             {/* address 없으면(주문 데이터 유실) 더마 에시 주소로 대체 표시*/}
-            <p className="my-[4px] text-[14px] leading-[1.6] text-cream/70">
+            <p className="my-[4px] text-14 leading-[1.6] text-cream/70">
               {address ? address.address : "경기도 수원시 팔달구 123"}
             </p>
-            <p className="my-[4px] text-[14px] leading-[1.6] text-cream/70">
+            <p className="my-[4px] text-14 leading-[1.6] text-cream/70">
               {address ? address.phone : "010-1234-1234"}
             </p>
           </address>
@@ -99,8 +99,8 @@ export default function OrderSuccessPage() {
 
         <div className="flex flex-col justify-center border-t border-navy-700 pt-[20px] md:border-t-0 md:border-1 md:pt-0 md:pl-[20px]">
           {/* 객체(동적 키)로 값 찾기: paymentMethod가 "toss"면 paymentLabels["toss"] -> 토스페이*/}
-          <span className="text-[13px] text-cream/50 mb-[4px]">결제 수단</span>
-          <strong className="text-[15px] text-cream">
+          <span className="text-13 text-cream/50 mb-[4px]">결제 수단</span>
+          <strong className="text-15 text-cream">
             {paymentLabels[paymentMethod] ?? "토스페이"}
           </strong>
         </div>
@@ -112,12 +112,12 @@ export default function OrderSuccessPage() {
         </h3>
 
         {items.length === 0 ? (
-          <p className="py-[30px] text-center text-[14px] text-cream/50">
+          <p className="py-[30px] text-center text-14 text-cream/50">
             주문 내역을 불러올 수 없습니다. (새로고침 시 초기화될 수 있습니다.)
           </p>
         ) : (
           <div>
-            <div className="hidden border-b border-navy-700 bg-navy-800 px-[20px] py-[14px] text-center text-[14px] font-bold text-cream/80 sm:grid sm:grid-cols-[2fr,1fr]">
+            <div className="hidden border-b border-navy-700 bg-navy-800 px-[20px] py-[14px] text-center text-14 font-bold text-cream/80 sm:grid sm:grid-cols-[2fr,1fr]">
               <span className="text-left">상품정보</span>
               <span className="text-right">결제금액</span>
             </div>
@@ -139,24 +139,24 @@ export default function OrderSuccessPage() {
                   </div>
                   <div className="flex flex-col gap-[6px]">
                     <strong className="text-cream">{item.name}</strong>
-                    <span className="text-[13px] text-cream/60">
+                    <span className="text-13 text-cream/60">
                       색상: {item.color} / 사이즈: {item.size} / 수량:{" "}
                       {item.qty}개
                     </span>
                   </div>
                 </div>
                 <div>
-                  <strong className="block text-right text-[16px] font-bold text-terracotta-400">
+                  <strong className="block text-right text-16 font-bold text-terracotta-400">
                     {(item.price * item.qty).toLocaleString()}원
                   </strong>
                 </div>
               </div>
             ))}
 
-            <div className="my-[24px] flex items-center justify-end gap-[16px] bg-navy-800 px-[16px] py-[16px] text-[14px] text-cream/80 rounded sm:my-[30px] sm:gap-[20px] sm:px-[30px] sm:py-[20px]">
-              <div className="text-[16px] font-bold text-cream">
+            <div className="my-[24px] flex items-center justify-end gap-[16px] bg-navy-800 px-[16px] py-[16px] text-14 text-cream/80 rounded sm:my-[30px] sm:gap-[20px] sm:px-[30px] sm:py-[20px]">
+              <div className="text-16 font-bold text-cream">
                 총 결제 금액 :{" "}
-                <span className="text-[20px] text-terracotta-400">
+                <span className="text-20 text-terracotta-400">
                   {totalPrice.toLocaleString()}원
                 </span>
               </div>
@@ -167,14 +167,14 @@ export default function OrderSuccessPage() {
         <div className="mt-[30px] flex flex-col gap-[10px] sm:mt-[40px] sm:flex-row sm:justify-center sm:gap-[14px]">
           <button
             type="button"
-            className="cursor-pointer border border-navy-600 bg-transparent px-[40px] py-[16px] text-[14px] font-bold text-cream transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
+            className="cursor-pointer border border-navy-600 bg-transparent px-[40px] py-[16px] text-14 font-bold text-cream transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
             onClick={() => navigate("/products")}
           >
             쇼핑 계속하기
           </button>
           <button
             type="button"
-            className="cursor-pointer border border-terracotta-500 bg-terracotta-500 px-[40px] py-[16px] text-[15px] font-bold text-navy-950 transition-colors hover:bg-terracotta-600"
+            className="cursor-pointer border border-terracotta-500 bg-terracotta-500 px-[40px] py-[16px] text-15 font-bold text-navy-950 transition-colors hover:bg-terracotta-600"
             onClick={() => navigate("/mypage")}
           >
             주문내역 확인하기

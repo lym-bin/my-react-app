@@ -84,7 +84,7 @@ export default function AddressModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-[16px] flex items-center justify-between">
-          <h3 className="text-[16px] font-bold text-cream">
+          <h3 className="text-16 font-bold text-cream">
             {mode === "list" ? "배송지 선택" : "새 배송지 추가"}
           </h3>
           <button
@@ -118,22 +118,22 @@ export default function AddressModal({
                       }`}
                     >
                       <div className="mb-[6px] flex items-center gap-[8px]">
-                        <span className="text-[13px] font-bold text-cream">
+                        <span className="text-13 font-bold text-cream">
                           {addr.title}
                         </span>
                         {isSelected && (
-                          <span className="rounded-full bg-terracotta-500 px-[8px] py-[2px] text-[11px] font-bold text-navy-950">
+                          <span className="rounded-full bg-terracotta-500 px-[8px] py-[2px] text-11 font-bold text-navy-950">
                             선택됨
                           </span>
                         )}
                       </div>
-                      <p className="text-[13px] text-cream/70">
+                      <p className="text-13 text-cream/70">
                         {addr.recipient}
                       </p>
-                      <p className="text-[13px] text-cream/70">
+                      <p className="text-13 text-cream/70">
                         {addr.address}
                       </p>
-                      <p className="text-[13px] text-cream/70">{addr.phone}</p>
+                      <p className="text-13 text-cream/70">{addr.phone}</p>
                     </button>
                   </li>
                 );
@@ -143,7 +143,7 @@ export default function AddressModal({
             <button
               type="button"
               onClick={() => setMode("add")}
-              className="mt-[14px] w-full cursor-pointer rounded-[6px] border border-dashed border-navy-600 py-[12px] text-[13px] text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
+              className="mt-[14px] w-full cursor-pointer rounded-[6px] border border-dashed border-navy-600 py-[12px] text-13 text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
             >
               + 새 배송지 추가
             </button>
@@ -157,7 +157,7 @@ export default function AddressModal({
               onChange={(e) => setTitle(e.target.value)}
               placeholder="배송지 이름 (예: 집, 회사)"
               required
-              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-[13px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-13 text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
             />
             <input
               type="text"
@@ -165,7 +165,7 @@ export default function AddressModal({
               onChange={(e) => setRecipient(e.target.value)}
               placeholder="받는 사람"
               required
-              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-[13px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-13 text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
             />
             <input
               type="text"
@@ -173,7 +173,7 @@ export default function AddressModal({
               onChange={(e) => setAddress(e.target.value)}
               placeholder="주소"
               required
-              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-[13px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-13 text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
             />
             <input
               type="tel"
@@ -181,20 +181,20 @@ export default function AddressModal({
               onChange={(e) => setPhone(e.target.value)}
               placeholder="연락처"
               required
-              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-[13px] text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-13 text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
             />
 
             <div className="mt-[6px] flex gap-[10px]">
               <button
                 type="button"
                 onClick={() => setMode("list")}
-                className="flex-1 cursor-pointer rounded-[6px] border border-navy-600 py-[10px] text-[13px] text-cream/80 transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
+                className="flex-1 cursor-pointer rounded-[6px] border border-navy-600 py-[10px] text-13 text-cream/80 transition-colors hover:border-terracotta-400 hover:text-terracotta-400"
               >
                 뒤로
               </button>
               <button
                 type="submit"
-                className="flex-1 cursor-pointer rounded-[6px] bg-terracotta-500 py-[10px] text-[13px] font-bold text-navy-950 transition-colors hover:bg-terracotta-600"
+                className="flex-1 cursor-pointer rounded-[6px] bg-terracotta-500 py-[10px] text-13 font-bold text-navy-950 transition-colors hover:bg-terracotta-600"
               >
                 저장하고 사용
               </button>

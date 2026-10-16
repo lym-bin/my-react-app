@@ -28,7 +28,7 @@ const SLIDES: CustomerSlide[] = [
   },
   {
     id: 2,
-    img: "/images/model_2.jpg",
+    img: "/images/model_2.webp",
     title: "The Sweater You'll Reach For",
     desc: "여러 벌보다 한 벌. 질리지 않는 니트.",
   },
@@ -120,7 +120,7 @@ export default function CustomerBanner() {
               key={slide.id}
               className="w-full flex-shrink-0 py-[36px] sm:py-[50px]"
             >
-              <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-[24px] px-[20px] md:flex-row md:items-center md:justify-between md:gap-0">
+              <div className="mx-auto flex max-w-content flex-col items-center gap-[24px] px-[20px] md:flex-row md:items-center md:justify-between md:gap-0">
                 <div className="flex w-full flex-col items-center gap-[14px] text-center md:w-1/2 md:items-start md:gap-[20px] md:text-left">
                   <h2
                     className="customer-banner-line min-h-[58px] text-[1.5rem] font-bold leading-[1.2] text-cream sm:min-h-[78px] sm:text-[2rem]"
@@ -146,7 +146,7 @@ export default function CustomerBanner() {
                       alt={slide.title}
                       className="w-full max-w-[400px] object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                     />
-                    <span className="absolute bottom-[14px] left-[14px] flex items-center gap-[6px] rounded-full border border-cream/25 bg-navy-950/60 px-[12px] py-[6px] text-[11px] tracking-[0.12em] text-cream uppercase backdrop-blur-sm transition-colors group-hover:border-terracotta-400 group-hover:text-terracotta-400">
+                    <span className="absolute bottom-[14px] left-[14px] flex items-center gap-[6px] rounded-full border border-cream/25 bg-navy-950/60 px-[12px] py-[6px] text-11 tracking-[0.12em] text-cream uppercase backdrop-blur-sm transition-colors group-hover:border-terracotta-400 group-hover:text-terracotta-400">
                       브랜드 스토리 보기 →
                     </span>
                   </Link>
@@ -175,7 +175,7 @@ export default function CustomerBanner() {
                 >
                   {slide.desc}
                 </p>
-                <span className="mt-[6px] inline-flex items-center gap-[6px] rounded-full border border-cream/25 px-[14px] py-[7px] text-[11px] tracking-[0.12em] text-cream/70 uppercase transition-colors group-hover:border-terracotta-400 group-hover:text-terracotta-400">
+                <span className="mt-[6px] inline-flex items-center gap-[6px] rounded-full border border-cream/25 px-[14px] py-[7px] text-11 tracking-[0.12em] text-cream/70 uppercase transition-colors group-hover:border-terracotta-400 group-hover:text-terracotta-400">
                   브랜드 스토리 보기 →
                 </span>
               </Link>
@@ -189,7 +189,7 @@ export default function CustomerBanner() {
         type="button"
         aria-label="이전 슬라이드"
         onClick={() => goTo(current - 1)}
-        className="absolute top-1/2 left-[12px] -translate-y-1/2 cursor-pointer rounded-full border border-navy-600 bg-navy-950/60 px-[10px] py-[6px] text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400 sm:left-[24px]"
+        className="absolute top-1/2 left-[12px] -translate-y-1/2 cursor-pointer rounded-full border border-navy-600 bg-navy-950/60 px-[10px] py-[6px] text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400 sm:left-[max(24px,calc(50%-640px))]"
       >
         ‹
       </button>
@@ -197,7 +197,7 @@ export default function CustomerBanner() {
         type="button"
         aria-label="다음 슬라이드"
         onClick={() => goTo(current + 1)}
-        className="absolute top-1/2 right-[12px] -translate-y-1/2 cursor-pointer rounded-full border border-navy-600 bg-navy-950/60 px-[10px] py-[6px] text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400 sm:right-[24px]"
+        className="absolute top-1/2 right-[12px] -translate-y-1/2 cursor-pointer rounded-full border border-navy-600 bg-navy-950/60 px-[10px] py-[6px] text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400 sm:right-[max(24px,calc(50%-640px))]"
       >
         ›
       </button>

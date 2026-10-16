@@ -82,12 +82,16 @@ export default function MainBanner() {
         aria-label="상품 목록으로 이동하기"
         className="group absolute inset-0 hidden md:block"
       >
-        <img
-          ref={imgRef}
-          src="/images/main-banner.svg"
-          alt="Minimalist Collection Room View"
-          className="banner-image absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-        />
+        {/* 스크롤 패럴랙스(GSAP)는 바깥 div가, 호버 확대(CSS)는 img가 맡음 */}
+        {/* 같은 요소의 transform을 둘이 같이 건드리면 서로 덮어써서 역할을 나눔 */}
+        <div className="banner-image absolute inset-0">
+          <img
+            ref={imgRef}
+            src="/images/main-banner.webp"
+            alt="Minimalist Collection Room View"
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+          />
+        </div>
         {/* 상/하단에만 은은한 음영 */}
         <div className="absolute inset-0 bg-gradient-to-b from-navy-950/90 via-navy-950/50 to-navy-950/10" />
       </Link>
@@ -101,9 +105,9 @@ export default function MainBanner() {
       </span>
 
       {/* 텍스트 영역: 모바일 전용 (데스크톱은 배경 이미지 자체에 메시지가 있어서 생략) */}
-      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col items-center gap-[20px] overflow-hidden px-[20px] py-[50px] text-center md:hidden">
+      <div className="relative z-10 mx-auto flex w-full max-w-wide flex-col items-center gap-[20px] overflow-hidden px-[20px] py-[50px] text-center md:hidden">
         <div className="overflow-hidden">
-          <span className="gsap-title-line inline-block text-[12px] font-light tracking-[0.3em] text-cream/50 uppercase">
+          <span className="gsap-title-line inline-block text-12 font-light tracking-[0.3em] text-cream/50 uppercase">
             Objet & B Editorial
           </span>
         </div>
@@ -118,7 +122,7 @@ export default function MainBanner() {
           <div className="gsap-title-line">
             <Link
               to="/products"
-              className="md:hidden group relative inline-flex items-center justify-center border border-cream/30 bg-transparent px-[32px] py-[13px] text-[13px] tracking-[0.2em] text-cream uppercase transition-all duration-300 hover:border-cream hover:bg-cream hover:text-navy-950"
+              className="md:hidden group relative inline-flex items-center justify-center border border-cream/30 bg-transparent px-[32px] py-[13px] text-13 tracking-[0.2em] text-cream uppercase transition-all duration-300 hover:border-cream hover:bg-cream hover:text-navy-950"
             >
               <span>SHOP NOW</span>
             </Link>

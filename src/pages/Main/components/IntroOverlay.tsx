@@ -87,8 +87,8 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
       ref={introRef}
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-navy-950 text-cream"
     >
-      {/* 히어로 모델 사진: 화면 높이에 맞춰 가운데 세움 ( 꽉 채우지 않아 큰 화면에서도 선명*/}
-      {/* 가운데 정렬은 감싸는 div(flex)가 애니메이션은 img(GSAP)가 각각 담당*/}
+      {/* 히어로 모델 사진: 화면 높이에 맞춰 가운데 세움 (꽉 채우지 않아 큰 화면에서도 선명) */}
+      {/* 가운데 정렬은 감싸는 div(flex)가, 애니메이션은 img(GSAP)가 각각 담당 */}
       <div className="absolute inset-0 flex justify-center">
         <img
           ref={imgRef}
@@ -109,7 +109,7 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
         className="relative z-10 flex flex-col items-center px-[20px] text-center"
       >
         {/* 상단 에디토리얼 태그 */}
-        <span className="intro-line intro-eyebrow mb-[16px] text-[10px] font-light tracking-[0.25em] text-cream/70 uppercase sm:text-[12px] sm:tracking-[0.4em]">
+        <span className="intro-line intro-eyebrow mb-[16px] text-10 font-light tracking-[0.25em] text-cream/70 uppercase sm:text-12 sm:tracking-[0.4em]">
           Objet & B Editorial Opening
         </span>
 
@@ -121,7 +121,7 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
           OBJET & B
         </h1>
 
-        <p className="intro-line intro-sub mt-[16px] text-[12px] font-light tracking-[0.15em] text-cream/85 sm:text-[13px] sm:tracking-[0.2em] md:text-[15px]">
+        <p className="intro-line intro-sub mt-[16px] text-12 font-light tracking-[0.15em] text-cream/85 sm:text-13 sm:tracking-[0.2em] md:text-15">
           Quiet luxury in every stitch and seam
         </p>
       </div>

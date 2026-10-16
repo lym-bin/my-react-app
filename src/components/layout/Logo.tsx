@@ -10,12 +10,12 @@ export default function Logo({ size = "sm", className = "" }: LogoProps) {
   // 여기서 변수로 뽑아두면 아래 return 부분이 훨씬 읽기 편해짐
   const word =
     size === "lg"
-      ? "text-[15px] md:text-[18px]" // "Objet & B 글자 크기"
-      : "text-[11px] sm:text-[13px] md:text-[14px]";
+      ? "text-15 md:text-18" // "Objet & B 글자 크기"
+      : "text-11 sm:text-13 md:text-14";
   const sub =
     size === "lg"
-      ? "text-[10px] md:text-[11px]" // "Paris" 글자 크기
-      : "text-[7px] sm:text-[8px] md:text-[9px]";
+      ? "text-10 md:text-11" // "Paris" 글자 크기
+      : "text-[0.4375rem] sm:text-[0.5rem] md:text-9";
 
   return (
     // 바깥 span: 세로로 쌓기(원, 브랜드명, Paris) + 부모가 넘긴 className을 뒤에 이어 붙임

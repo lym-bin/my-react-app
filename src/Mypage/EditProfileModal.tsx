@@ -123,10 +123,10 @@ export default function EditProfileModal({
       aria-label="회원 정보 수정"
     >
       <header className="flex items-center justify-between border-b border-navy-700 p-[24px]">
-        <h3 className="m-0 text-[18px] font-bold text-cream">회원 정보 수정</h3>
+        <h3 className="m-0 text-18 font-bold text-cream">회원 정보 수정</h3>
         <button
           type="button"
-          className="cursor-pointer border-none bg-transparent text-[14px] text-cream/70 hover:text-cream"
+          className="cursor-pointer border-none bg-transparent text-14 text-cream/70 hover:text-cream"
           aria-label="회원 정보 수정 닫기"
           onClick={onClose}
         >
@@ -137,7 +137,7 @@ export default function EditProfileModal({
       <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-[24px]">
         <div className="mb-[24px]">
           <label
-            className="mb-[8px] block text-[13px] text-cream/70"
+            className="mb-[8px] block text-13 text-cream/70"
             htmlFor="nickname"
           >
             닉네임
@@ -148,19 +148,19 @@ export default function EditProfileModal({
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             placeholder={user?.email ?? ""} // 값이 아니라 "비었을 때 흐리게 보이는 힌트"로 이메일 사용
-            className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-[14px] text-cream outline-none focus:border-terracotta-400"
+            className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-14 text-cream outline-none focus:border-terracotta-400"
           />
         </div>
 
         <div className="mb-[16px] border-t border-navy-700 pt-[20px]">
-          <p className="mb-[14px] text-[13px] font-medium text-cream/70">
+          <p className="mb-[14px] text-13 font-medium text-cream/70">
             비밀번호 변경 (변경하지 않으면 비워두세요)
           </p>
           {/* 세 입력창 다 같은 controlled input 패턴*/}
 
           <div className="mb-[12px]">
             <label
-              className="mb-[6px] block text-[12px] text-cream/50"
+              className="mb-[6px] block text-12 text-cream/50"
               htmlFor="currentPassword"
             >
               현재 비밀번호
@@ -170,13 +170,13 @@ export default function EditProfileModal({
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-[14px] text-cream outline-none focus:border-terracotta-400"
+              className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-14 text-cream outline-none focus:border-terracotta-400"
             />
           </div>
 
           <div className="mb-[12px]">
             <label
-              className="mb-[6px] block text-[12px] text-cream/50"
+              className="mb-[6px] block text-12 text-cream/50"
               htmlFor="newPassword"
             >
               새 비밀번호
@@ -186,13 +186,13 @@ export default function EditProfileModal({
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-[14px] text-cream outline-none focus:border-terracotta-400"
+              className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-14 text-cream outline-none focus:border-terracotta-400"
             />
           </div>
 
           <div>
             <label
-              className="mb-[6px] block text-[12px] text-cream/50"
+              className="mb-[6px] block text-12 text-cream/50"
               htmlFor="newPasswordConfirm"
             >
               새 비밀번호 확인
@@ -202,7 +202,7 @@ export default function EditProfileModal({
               type="password"
               value={newPasswordConfirm}
               onChange={(e) => setNewPasswordConfirm(e.target.value)}
-              className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-[14px] text-cream outline-none focus:border-terracotta-400"
+              className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-14 text-cream outline-none focus:border-terracotta-400"
             />
           </div>
         </div>
@@ -210,7 +210,7 @@ export default function EditProfileModal({
         {/* message 객체가 있을 때만 표시. type 값에 따라 색상 분기*/}
         {message && (
           <p
-            className={`mb-[16px] text-[13px] ${
+            className={`mb-[16px] text-13 ${
               message.type === "success" ? "text-terracotta-400" : "text-danger"
             }`}
           >
@@ -221,7 +221,7 @@ export default function EditProfileModal({
         <button
           type="submit"
           disabled={isSaving}
-          className="w-full cursor-pointer border border-terracotta-500 bg-terracotta-500 py-[13px] text-[14px] font-medium text-navy-950 transition-colors hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full cursor-pointer border border-terracotta-500 bg-terracotta-500 py-[13px] text-14 font-medium text-navy-950 transition-colors hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSaving ? "저장 중..." : "저장하기"}
         </button>

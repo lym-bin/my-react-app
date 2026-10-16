@@ -11,25 +11,25 @@ interface FeedPhoto {
 const FEED_PHOTOS: FeedPhoto[] = [
   {
     id: 1,
-    img: "/images/card_1.svg",
+    img: "/images/card_1.webp",
     alt: "Objet & B 데일리룩",
     tag: "베이직 시그니처 화이트 셔츠",
   },
   {
     id: 2,
-    img: "/images/card_2.svg",
+    img: "/images/card_2.webp",
     alt: "Objet & B 스트리트 무드",
     tag: "릴랙스드 핏 니트 풀오버",
   },
   {
     id: 3,
-    img: "/images/card_3.svg",
+    img: "/images/card_3.webp",
     alt: "Objet & B 캐주얼 룩",
     tag: "미니멀 가죽 레더 스니커즈",
   },
   {
     id: 4,
-    img: "/images/card_4.svg",
+    img: "/images/card_4.webp",
     alt: "Objet & B 시티 무드",
     tag: "모던 싱글 체스터필드 코트",
   },
@@ -41,7 +41,7 @@ const FEED_PHOTOS: FeedPhoto[] = [
   },
   {
     id: 6,
-    img: "/images/community-street-snap.jpg",
+    img: "/images/community-street-snap.webp",
     alt: "Objet & B 시티 워크",
     tag: "시티 워크",
   },
@@ -50,9 +50,9 @@ const FEED_PHOTOS: FeedPhoto[] = [
 export default function BestReview() {
   return (
     <section className="bg-navy-950 px-[20px] py-[60px]">
-      <div className="mx-auto max-w-[1200px]">
+      <div className="mx-auto max-w-content">
         <div className="mb-[30px] text-center">
-          <span className="mb-[8px] block text-[11px] font-light tracking-[0.3em] text-cream/40 uppercase">
+          <span className="mb-[8px] block text-11 font-light tracking-[0.3em] text-cream/40 uppercase">
             Objet & B Community
           </span>
           <h2 className="text-[1.8rem] font-bold text-cream sm:text-[2.2rem]">
@@ -74,7 +74,7 @@ export default function BestReview() {
               />
               {/* 호버 시 "@상품명" 라벨만 살짝 - 이미지 전체는 어둡게 안 깔고 라벨 자체에만 배경 */}
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-[10px] text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <span className="border border-cream/50 bg-navy-950/70 px-[12px] py-[7px] text-[11px] tracking-[0.05em] text-cream">
+                <span className="border border-cream/50 bg-navy-950/70 px-[12px] py-[7px] text-11 tracking-[0.05em] text-cream">
                   @{photo.tag}
                 </span>
               </div>

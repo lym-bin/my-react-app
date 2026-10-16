@@ -29,7 +29,7 @@ const BENEFITS = [
 export default function QuickNav() {
   return (
     <section className="border-t border-b border-navy-700 bg-navy-950">
-      <div className="mx-auto max-w-[1200px] px-[16px] py-[24px]">
+      <div className="mx-auto max-w-content px-[16px] py-[24px]">
         <ul className="grid grid-cols-2 gap-y-[20px] sm:grid-cols-4 sm:gap-y-0">
           {/* icon을 IconComponent 등 대문자로 시작하는 변수명으로 받음 */}
           {BENEFITS.map(({ id, icon: IconComponent, label }, index) => (
@@ -48,7 +48,7 @@ export default function QuickNav() {
                 className="text-terracotta-400"
                 aria-hidden="true"
               />
-              <span className="text-[12px] tracking-[0.05em] text-cream/70">
+              <span className="text-12 tracking-[0.05em] text-cream/70">
                 {label}
               </span>
             </li>

@@ -16,17 +16,17 @@ const ftNav = [
 export default function Footer() {
   return (
     <footer className="w-full border-t border-navy-700 bg-navy-950 px-[20px] py-[40px] md:px-[50px]">
-      <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-[32px] text-center md:flex-row md:items-center md:justify-between md:gap-0 md:text-left">
+      <div className="mx-auto flex max-w-content flex-col items-center gap-[32px] text-center md:flex-row md:items-center md:justify-between md:gap-0 md:text-left">
         {/* 1. 왼쪽 구역 로고 + 대표자 정보 + 노션 링크 */}
         <div className="flex flex-col items-center md:items-start">
           <Link to="/" aria-label="홈으로 이동하기">
             <Logo size="lg" />
           </Link>
 
-          <p className="my-[5px] text-[12px] text-cream/70">
+          <p className="my-[5px] text-12 text-cream/70">
             대표 : 임상빈 | persie24@naver.com
           </p>
-          <p className="my-[5px] text-[12px] text-cream/70">
+          <p className="my-[5px] text-12 text-cream/70">
             연락처 : 010-5150-5589
           </p>
           <div className="my-[5px]">
@@ -58,7 +58,7 @@ export default function Footer() {
                 {item.to ? (
                   <Link
                     to={item.to}
-                    className="text-[12px] text-cream/70 transition-colors hover:text-terracotta-400"
+                    className="text-12 text-cream/70 transition-colors hover:text-terracotta-400"
                   >
                     {item.label}
                   </Link>
@@ -66,7 +66,7 @@ export default function Footer() {
                   <button
                     type="button"
                     disabled
-                    className="cursor-not-allowed text-[12px] text-cream/30"
+                    className="cursor-not-allowed text-12 text-cream/30"
                   >
                     {item.label}
                   </button>
@@ -74,13 +74,13 @@ export default function Footer() {
               </li>
             ))}
           </ul>
-          <span className="block text-[12px] font-bold text-cream">
+          <span className="block text-12 font-bold text-cream">
             High-and Minimalist object shop
           </span>
         </nav>
 
         {/* 3. 오른쪽 구역: 저작권 문구 */}
-        <div className="text-center text-[12px] whitespace-normal text-cream/50 md:text-right">
+        <div className="text-center text-12 whitespace-normal text-cream/50 md:text-right">
           &copy;2026 Objet - B. All rights reserved.{" "}
           {/* &copy: "@" 기호의 HTML 엔티티*/}
         </div>

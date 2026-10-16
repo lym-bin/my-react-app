@@ -1,5 +1,5 @@
 // src/ProductDetail/SlmilarProducts.tsx
-// 상품 카드 그리드를 재 사용하는 컴포넌트 ("비슷한 제품" / "후기 컷" 둘 다 이걸 씀)
+// 상품 카드 그리드를 재 사용하는 컴포넌트 ("비슷한 제품" / "스타일링 컷" 둘 다 이걸 씀)
 // title/products를 props로 받는 재사용 컴포넌트 -> 이미지 경로 가드 -> 2열 그리드 Link로 상세 페이지 연결
 import { Link } from "react-router-dom"; // SPA 전용 링크 컴포넌트
 import { PRODUCTS, type Product } from "../ProductList/ProductsData";
@@ -9,7 +9,7 @@ import { PRODUCTS, type Product } from "../ProductList/ProductsData";
 interface SimilarProductsProps {
   title?: string;
   products?: Product[];
-  useReviewImage?: boolean; // true면 reviewImgSrc 우선 사용 ("후기 컷" 전용, 없으면 imgSrc로 폴백)
+  useReviewImage?: boolean; // true면 reviewImgSrc 우선 사용 ("스타일링 컷" 전용, 없으면 imgSrc로 폴백)
 }
 
 // export로 SimilarProducts 외부 활용
@@ -19,8 +19,8 @@ export default function SimilarProducts({
   useReviewImage = false,
 }: SimilarProductsProps) {
   return (
-    <section className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[20px] pt-[80px] pb-[40px]">
-      <h2 className="mb-[20px] text-center text-[16px] font-semibold text-cream">
+    <section className="mx-auto w-full max-w-content bg-navy-950 px-[20px] pt-[80px] pb-[40px]">
+      <h2 className="mb-[20px] text-center text-16 font-semibold text-cream">
         {title}
       </h2>
       <div className="grid grid-cols-2 gap-[20px]">
@@ -35,7 +35,7 @@ export default function SimilarProducts({
           >
             <div className="overflow-hidden bg-navy-800 h-[400px]">
               <img
-                // "후기 컷"이면 reviewImgSrc 우선, 없으면(아직 안 찍은 상품) imgSrc로 폴백
+                // "스타일링 컷"이면 reviewImgSrc 우선, 없으면(아직 안 찍은 상품) imgSrc로 폴백
                 // imgSrc가 이미 "/" 로 시작하면 그대로, 아니면 앞에 "/" 붙혀서 절대 경로 통일
                 // startWith("/"): 문자열이 "/"로 시작하는지 확인하는 boolean 메서드
                 src={(() => {
@@ -49,7 +49,7 @@ export default function SimilarProducts({
                 className="product-photo h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
               />
             </div>
-            <span className="mt-[10px] block text-center text-[13px] font-normal text-cream/70">
+            <span className="mt-[10px] block text-center text-13 font-normal text-cream/70">
               {product.name}
             </span>
           </Link>

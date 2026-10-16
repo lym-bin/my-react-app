@@ -9,8 +9,9 @@ import { collection, addDoc } from "firebase/firestore"; // Firestore(DB) 관련
 import { db } from "../firebase"; // firebase.ts에서 만든 Firestore 접속 통로
 import AddressModal from "./AddressModal";
 import { type Address } from "../types/address";
+import useAddresses from "./useAddresses";
 
-// 배송지 기본값(localStorage에 저장된 게 없을 때 씀)
+// 저장된 배송지가 하나도 없을 때 보여줄 예시 배송지
 const initialAddresses: Address[] = [
   {
     id: "1",
@@ -36,22 +37,6 @@ const pmMethods = [
   { id: "pm-order", value: "order", label: "기타결제" },
 ];
 
-const ADDRESS_STORAGE_KEY = "objet-b-addresses";
-
-// localStorage에서 저장된 배송지 목록 불러오기 (CartContext의 loadinitiallItems랑 똑같은 패턴)
-function loadInitalAddresses(): Address[] {
-  try {
-    const raw = localStorage.getItem(ADDRESS_STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as Address[];
-      if (parsed.length > 0) return parsed;
-    }
-  } catch {
-    // ignore
-  }
-  return initialAddresses; // 저장된 게 없거나 실패하면 기본 배송지2개
-}
-
 export default function OrderPage() {
   const navigate = useNavigate();
   const { user, isLoading, nickname } = useAuth(); // 로그인 정보
@@ -59,24 +44,25 @@ export default function OrderPage() {
   const { items, totalPrice, clearCart } = useCart(); // 장바구니 정보
   const [selectedpm, setSelectedpm] = useState("toss"); // 선택된 결제수단
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-  // (A) 함수 자체를 넘김 (괄호 없음) -> "lazy 초기화" : 첫 렌더링 때만 딱 한 번 실행 됨
-  const [addresses, setAddresses] = useState<Address[]>(loadInitalAddresses);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // (B) 함수를 호출해서 (괄호 있음) 그 결과를 넘김 -> 매 렌더링마다 다시 실행됨 (비효율)
-  // [0]! : "!" = TS한테 "이 배열의 0번째, null/undefined 아닌 거 내가 보장해"
-  const [currentAddress, setCurrentAddress] = useState<Address>(
-    // 함수 참조만 넘기고, 결과에서 [0] 꺼내는 건 함수 안으로 옮김 (lazy 초기화)
-    () => loadInitalAddresses()[0]!,
-  );
 
-  // addresses가 바뀔 때마다 localStorage에 저장
-  useEffect(() => {
-    try {
-      localStorage.setItem(ADDRESS_STORAGE_KEY, JSON.stringify(addresses));
-    } catch {
-      // ignore
-    }
-  }, [addresses]);
+  // 배송지 목록은 Firestore에서 불러옴 (useAddresses 커스텀 훅)
+  // 객체 구조분해 + 이름 바꾸기: addresses를 savedAddresses라는 이름으로 꺼냄
+  const {
+    addresses: savedAddresses,
+    isLoading: isAddressLoading,
+    addAddress,
+  } = useAddresses(user?.uid);
+  // 저장된 게 없으면 예시 배송지를 보여줌 (첫 배송지를 추가하면 예시는 사라짐)
+  const addresses =
+    savedAddresses.length > 0 ? savedAddresses : initialAddresses;
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
+    null,
+  );
+  // 고른 id로 목록에서 찾아 씀 (주소 객체를 state로 따로 복사해 두지 않음 = 단일 진실 공급원)
+  // [0]! : "!" = TS한테 "이 배열의 0번째, null/undefined 아닌 거 내가 보장해" (예시 배송지가 항상 있음)
+  const currentAddress =
+    addresses.find((a) => a.id === selectedAddressId) ?? addresses[0]!;
 
   // 1. 비회원 접근 차단
 
@@ -91,10 +77,10 @@ export default function OrderPage() {
     }
   }, [user, isLoading, navigate]);
 
-  // 로딩 중일 때는 로딩바 표시
-  if (isLoading) {
+  // 로그인 확인 중이거나 배송지를 불러오는 중이면 로딩 표시
+  if (isLoading || isAddressLoading) {
     return (
-      <main className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[20px] py-[80px] text-center text-cream/60">
+      <main className="mx-auto w-full max-w-content bg-navy-950 px-[20px] py-[80px] text-center text-cream/60">
         로딩 중...
       </main>
     );
@@ -145,12 +131,12 @@ export default function OrderPage() {
 
   if (items.length === 0) {
     return (
-      <main className="mx-auto w-full max-w-[1200px] bg-navy-950 px-[20px] py-[80px] text-center text-cream/60">
+      <main className="mx-auto w-full max-w-content bg-navy-950 px-[20px] py-[80px] text-center text-cream/60">
         <p className="mb-[20px]">장바구니가 비어 있습니다.</p>
         <button
           type="button"
           onClick={() => navigate("/products")}
-          className="cursor-pointer border border-terracotta-500 bg-transparent px-[24px] py-[10px] text-[14px] text-terracotta-500 transition-colors hover:bg-terracotta-500 hover:text-navy-950"
+          className="cursor-pointer border border-terracotta-500 bg-transparent px-[24px] py-[10px] text-14 text-terracotta-500 transition-colors hover:bg-terracotta-500 hover:text-navy-950"
         >
           쇼핑하러 가기
         </button>
@@ -159,14 +145,14 @@ export default function OrderPage() {
   }
 
   return (
-    <main className="relative mx-auto flex w-full max-w-[1200px] flex-col gap-[30px] bg-navy-950 px-[16px] py-[30px] sm:px-[20px] md:flex-row md:gap-[40px] md:py-[40px]">
+    <main className="relative mx-auto flex w-full max-w-content flex-col gap-[30px] bg-navy-950 px-[16px] py-[30px] sm:px-[20px] md:flex-row md:gap-[40px] md:py-[40px]">
       <div className="flex flex-1 flex-col gap-[40px]">
         {/* 배송 정보 */}
         <section className="border-b border-navy-700 pb-[30px]">
           <h2 className="mb-[20px] text-cream">배송 정보</h2>
           <div className="mb-[10px] flex flex-wrap items-center gap-[12px] sm:gap-[20px]">
             <strong className="text-cream">{nickname ?? "회원"}</strong>
-            <span className="rounded-[4px] bg-navy-800 px-[4px] py-[2px] text-[14px] text-cream/70">
+            <span className="rounded-[4px] bg-navy-800 px-[4px] py-[2px] text-14 text-cream/70">
               {currentAddress.title}
             </span>
             <button
@@ -205,7 +191,7 @@ export default function OrderPage() {
                 )}
                 <div className="flex flex-col gap-[8px] sm:gap-[10px]">
                   <h3 className="text-cream">{item.name}</h3>
-                  <div className="flex flex-wrap items-center gap-[6px] text-[13px] text-cream/60 sm:text-[14px]">
+                  <div className="flex flex-wrap items-center gap-[6px] text-13 text-cream/60 sm:text-14">
                     <span>색상: {item.color}</span>
                     <span className="text-navy-600">|</span>
                     {/* 구분선 역할하는 텍스트 파이프*/}
@@ -267,10 +253,8 @@ export default function OrderPage() {
               <strong className="text-cream">무료 배송</strong>
             </li>
             <li className="mt-[10px] flex items-end justify-between border-t border-dashed border-navy-600 pt-[16px]">
-              <span className="text-[16px] font-bold text-cream">
-                총 결제 금액
-              </span>
-              <strong className="text-[24px] font-bold text-terracotta-400 sm:text-[24px]">
+              <span className="text-16 font-bold text-cream">총 결제 금액</span>
+              <strong className="text-24 font-bold text-terracotta-400 sm:text-24">
                 {totalPrice.toLocaleString()}원
               </strong>
             </li>
@@ -280,7 +264,7 @@ export default function OrderPage() {
         <button
           type="button"
           disabled={isSubmitting}
-          className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-[16px] font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-16 font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={handleSubmitOrder}
         >
           {/* inSubmitting이면 "처리 중..." 버튼 텍스트로. 아니면 실제 결제 금액 표시*/}
@@ -296,8 +280,14 @@ export default function OrderPage() {
         onClose={() => setIsAddressModalOpen(false)}
         addresses={addresses}
         selectedId={currentAddress.id}
-        onSelect={(addr) => setCurrentAddress(addr)}
-        onAdd={(newAddress) => setAddresses((prev) => [...prev, newAddress])} // 함수형 업데이트로 배열에 새 배송치 추가
+        onSelect={(addr) => setSelectedAddressId(addr.id)}
+        onAdd={(newAddress) => {
+          // 서버 저장이 실패하면 알려줌 (성공하면 훅이 목록에 추가해줌)
+          addAddress(newAddress).catch((error) => {
+            console.error("배송지 저장 중 오류가 발생했습니다.", error);
+            alert("배송지 저장에 실패했습니다. 다시 시도해 주세요.");
+          });
+        }}
       />
     </main>
   );
