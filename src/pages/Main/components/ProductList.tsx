@@ -14,8 +14,8 @@ interface ProductListProps {
 }
 
 export default function ProductList({ introDone }: ProductListProps) {
-  // 앞 7개: 첫 카드가 2칸이라 7개여야 데스크톱(3열)과 모바일(2열) 모두 마지막 줄이 꽉 참
-  const featured = PRODUCTS.slice(0, 7);
+  // 앞 5개: 첫 카드가 2칸이라 5개여야 데스크톱(2+1, 3)과 모바일(2, 2, 2) 모두 마지막 줄이 꽉 참
+  const featured = PRODUCTS.slice(0, 5);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function ProductList({ introDone }: ProductListProps) {
           {featured.map((product, index) => (
             <li
               key={product.id}
-              // product-list-card 클래스 + stagger: 0.12로 6개 카드가 순서대로 떠오르게 //
+              // product-list-card 클래스 + stagger: 0.12로 카드가 순서대로 떠오르게 //
               className={`product-list-card ${index === 0 ? "col-span-2" : ""}`}
             >
               <Link
