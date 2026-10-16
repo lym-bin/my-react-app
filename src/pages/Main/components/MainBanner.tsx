@@ -82,12 +82,16 @@ export default function MainBanner() {
         aria-label="상품 목록으로 이동하기"
         className="group absolute inset-0 hidden md:block"
       >
-        <img
-          ref={imgRef}
-          src="/images/main-banner.svg"
-          alt="Minimalist Collection Room View"
-          className="banner-image absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-        />
+        {/* 스크롤 패럴랙스(GSAP)는 바깥 div가, 호버 확대(CSS)는 img가 맡음 */}
+        {/* 같은 요소의 transform을 둘이 같이 건드리면 서로 덮어써서 역할을 나눔 */}
+        <div className="banner-image absolute inset-0">
+          <img
+            ref={imgRef}
+            src="/images/main-banner.svg"
+            alt="Minimalist Collection Room View"
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+          />
+        </div>
         {/* 상/하단에만 은은한 음영 */}
         <div className="absolute inset-0 bg-gradient-to-b from-navy-950/90 via-navy-950/50 to-navy-950/10" />
       </Link>
