@@ -189,7 +189,7 @@ export default function CustomerBanner() {
         type="button"
         aria-label="이전 슬라이드"
         onClick={() => goTo(current - 1)}
-        className="absolute top-1/2 left-[12px] -translate-y-1/2 cursor-pointer rounded-full border border-navy-600 bg-navy-950/60 px-[10px] py-[6px] text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400 sm:left-[24px]"
+        className="absolute top-1/2 left-[12px] -translate-y-1/2 cursor-pointer rounded-full border border-navy-600 bg-navy-950/60 px-[10px] py-[6px] text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400 sm:left-[max(24px,calc(50%-640px))]"
       >
         ‹
       </button>
@@ -197,7 +197,7 @@ export default function CustomerBanner() {
         type="button"
         aria-label="다음 슬라이드"
         onClick={() => goTo(current + 1)}
-        className="absolute top-1/2 right-[12px] -translate-y-1/2 cursor-pointer rounded-full border border-navy-600 bg-navy-950/60 px-[10px] py-[6px] text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400 sm:right-[24px]"
+        className="absolute top-1/2 right-[12px] -translate-y-1/2 cursor-pointer rounded-full border border-navy-600 bg-navy-950/60 px-[10px] py-[6px] text-cream/70 transition-colors hover:border-terracotta-400 hover:text-terracotta-400 sm:right-[max(24px,calc(50%-640px))]"
       >
         ›
       </button>

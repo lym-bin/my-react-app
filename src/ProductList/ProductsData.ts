@@ -14,10 +14,10 @@ export interface Product {
   category: CategoryId; // 위에서 import한 타입 -> 오탈자 방지 ("tops같은 오탈자 방지")
   imgSrc: string; // 목록 썸네일용 대표 이미지
   images?: string[]; // ? = 선택, 상세페이지용 추가 이미지들 (대표컷/모델컷)
-  reviewImgSrc?: string; // ? = 선택, "후기 컷" 전용 착용샷 (없으면 imgSrc로 폴백)
+  reviewImgSrc?: string; // ? = 선택, "스타일링 컷" 전용 착용샷 (없으면 imgSrc로 폴백)
   isLarge?: boolean; // ? 그리드에서 2칸 차지할지
   similarProductIds?: number[]; // 비슷한 제품들의 ID배열 추가
-  reviewProductIds?: number[]; // 후기 컷용 ID 배열 추가
+  reviewProductIds?: number[]; // 스타일링 컷용 ID 배열 추가
   colors?: ColorOption[]; // 상품별 선택 가능한 색상 (없으면 전체 옵션 노출)
   sizes?: string[]; // 상품별 선택 가능한 사이즈 (없으면 전체 옵션 노출)
   description?: string; // 상품 상세 설명 (없으면 기본 문구 노출)
@@ -42,13 +42,8 @@ export const PRODUCTS: Product[] = [
     category: "top",
     imgSrc: "images/oversized-white-tshirt.png", // 목록 썸네일
     reviewImgSrc: "images/premium-cotton-oversized-white-tshirt-model.jpg",
-    images: [
-      // 상세 페이지 2장 (이 상품만 모델컷)
-      "images/premium-cotton-oversized-white-tshirt.png",
-      "images/premium-cotton-oversized-white-tshirt-model.jpg",
-    ],
     similarProductIds: [2, 3], // 상세 페이지 "비슷한 제품"에 2,3번 노출
-    reviewProductIds: [3, 4], // "후기 컷"에 3,4번 노출
+    reviewProductIds: [3, 4], // "스타일링 컷"에 3,4번 노출
     colors: pickColors("white", "black", "beige", "gray"), // 헬퍼로 4개 색상 골라 넣음
     sizes: ["S", "M", "L", "XL"],
     description:

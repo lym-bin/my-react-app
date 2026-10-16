@@ -87,8 +87,8 @@ export default function IntroOverlay({ onComplete }: IntroOverlayProps) {
       ref={introRef}
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-navy-950 text-cream"
     >
-      {/* 히어로 모델 사진: 화면 높이에 맞춰 가운데 세움 ( 꽉 채우지 않아 큰 화면에서도 선명*/}
-      {/* 가운데 정렬은 감싸는 div(flex)가 애니메이션은 img(GSAP)가 각각 담당*/}
+      {/* 히어로 모델 사진: 화면 높이에 맞춰 가운데 세움 (꽉 채우지 않아 큰 화면에서도 선명) */}
+      {/* 가운데 정렬은 감싸는 div(flex)가, 애니메이션은 img(GSAP)가 각각 담당 */}
       <div className="absolute inset-0 flex justify-center">
         <img
           ref={imgRef}

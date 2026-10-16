@@ -14,7 +14,8 @@ interface ProductListProps {
 }
 
 export default function ProductList({ introDone }: ProductListProps) {
-  const featured = PRODUCTS.slice(0, 6); // 전체 16개 중 앞 6개만 (0번부터 5번 인덱스)
+  // 앞 7개: 첫 카드가 2칸이라 7개여야 데스크톱(3열)과 모바일(2열) 모두 마지막 줄이 꽉 참
+  const featured = PRODUCTS.slice(0, 7);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

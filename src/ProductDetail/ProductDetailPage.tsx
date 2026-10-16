@@ -254,7 +254,7 @@ export default function ProductDetailPage() {
         </section>
       </main>
 
-      {/* 비슷한 제품 / 후기 컷 : ID 배열 -> 실제 상품 객체 배열로 변환*/}
+      {/* 비슷한 제품 / 스타일링 컷 : ID 배열 -> 실제 상품 객체 배열로 변환*/}
       {/* product.similarProductIds: 숫자 ID 배열[3,7,12]*/}
       {/* .map((id)=> PRODUCTS.find(...)): 각 ID를 실제 상품 객체로 바꿈 */}
       {/* .find()는 못 찾으면 undefined를 돌려줌 */}
@@ -269,7 +269,7 @@ export default function ProductDetailPage() {
           .filter((p): p is NonNullable<typeof p> => p !== undefined)}
       />
       <SimilarProducts
-        title="후기 컷"
+        title="스타일링 컷"
         products={product.reviewProductIds
           ?.map((id) => PRODUCTS.find((p) => p.id === id))
           .filter((p): p is NonNullable<typeof p> => p !== undefined)}
