@@ -51,7 +51,8 @@ function AppLayout() {
       {/* 로그인/스토리 페이지가 아닐 때만 헤더 노출 */}
       {!hideChrome && <Header />}
 
-      <main className="flex-1">
+      {/* 각 페이지가 자기 <main>을 갖고 있어서 여기선 div (main이 겹치지 않게) */}
+      <div className="flex-1">
         <PageTransition>
           <Routes>
             <Route path="/" element={<MainPage />} />
@@ -65,7 +66,7 @@ function AppLayout() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </PageTransition>
-      </main>
+      </div>
 
       {/* 로그인/스토리 페이지가 아닐 때만 푸터 노출 */}
       {!hideChrome && <Footer />}
