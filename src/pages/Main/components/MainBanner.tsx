@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ChevronDown } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -63,6 +62,14 @@ export default function MainBanner() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // 스크롤 유도 버튼: 배너가 끝나는 지점까지 부드럽게 이동
+  function handleScrollDown() {
+    const banner = bannerRef.current;
+    if (!banner) return;
+    const bannerBottom = banner.getBoundingClientRect().bottom + window.scrollY;
+    window.scrollTo({ top: bannerBottom, behavior: "smooth" });
+  }
+
   return (
     <section
       ref={bannerRef}
@@ -118,20 +125,28 @@ export default function MainBanner() {
           </div>
         </div>
       </div>
-      {/* 스크롤 유도 (데스크톱 전용)*/}
-      <div
-        aria-hidden="true"
-        className={`pointer-events-none absolute inset-x-0 bottom-[20px] z-10 mx-auto hidden w-fit flex-col items-center gap-[8px] text-[14px] font-light tracking-[0.28em] text-cream/70 uppercase transition-opacity duration-300 md:flex ${
-          scrolled ? "opacity-0" : "opacity-100"
+      {/* 스크롤 유도 버튼 (데스크톱 전용): 누르면 배너 바로 아래로 이동 */}
+      <button
+        type="button"
+        onClick={handleScrollDown}
+        aria-label="아래 섹션으로 스크롤"
+        className={`group absolute bottom-[10px] left-1/2 z-10 hidden h-[44px] w-[44px] -translate-x-1/2 cursor-pointer place-items-center rounded-full border-[1.5px] border-terracotta-500 bg-navy-950/80 transition-[opacity,background-color] duration-300 hover:bg-terracotta-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream md:grid ${
+          scrolled ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
       >
-        Scroll
-        <ChevronDown
-          size={26}
-          strokeWidth={1.8}
-          className="animate-bounce text-terracotta-400"
+        {/* 주기적으로 퍼지는 테두리 */}
+        <span
+          aria-hidden="true"
+          className="absolute -inset-[1.5px] rounded-full border-[1.5px] border-terracotta-500 motion-safe:animate-scroll-ripple"
         />
-      </div>
+        {/* 마우스 모양 + 아래로 흐르는 점 */}
+        <span
+          aria-hidden="true"
+          className="relative h-[20px] w-[12px] rounded-[9px] border-[1.5px] border-cream"
+        >
+          <span className="absolute top-[4px] left-1/2 -ml-[1.5px] h-[6px] w-[3px] rounded-[2px] bg-terracotta-400 group-hover:bg-cream motion-safe:animate-scroll-dot" />
+        </span>
+      </button>
     </section>
   );
 }
