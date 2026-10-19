@@ -2,7 +2,9 @@
 // 결제창에서 실패/취소하면 토스가 이 주소로 돌려 보냄 (?code=...&message=...&orderId=...)
 // 에러 코드를 사람이 읽을 수 있는 문장으로 바꿔서 보여줌
 
+import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { clearPendingOrder } from "./pendingOrder";
 
 // 자주 나오는 코드만 평소 message 말투로 변경. 나머지는 토스가 보내준 message를 그대로 사용
 const FAIL_MESSAGES: Record<string, string> = {
@@ -13,6 +15,11 @@ const FAIL_MESSAGES: Record<string, string> = {
 };
 
 export default function PaymentFailPage() {
+  // 결제가 안 됐으니 결제창에 가기 전 맡겨둔 주문 정보는 지움 (모바일 취소, 카드 거절 때 여기로 옴)
+  useEffect(() => {
+    clearPendingOrder();
+  }, []);
+
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code") ?? "";
   // 프로젝트 message -> 토스 message -> 기본 문장 순서로 사용
