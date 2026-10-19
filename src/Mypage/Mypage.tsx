@@ -98,6 +98,10 @@ export default function MyPage() {
         querySnapshot.forEach((doc) => {
           fetchedOrders.push({ id: doc.id, ...doc.data() } as OrderData);
         });
+        // Firestore는 정렬을 지정하지 않으면 문서 ID 순서(무작위)로 줌 -> 최신 주문이 위로 오게 직접 정렬
+        // createdAt이 ISO 문자열("2026-10-19T03:12:00.000Z")이라 문자열 비교만으로 시간순 비교가 됨
+        fetchedOrders.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
         if (!isCancelled) setOrders(fetchedOrders); // 이미 떠난 뒤면 setState 스킵
       } catch (error) {
         console.error("주문 내역을 불러오는 중 에러 발생:", error);
@@ -133,9 +137,7 @@ export default function MyPage() {
     <main className="mx-auto w-full max-w-content bg-navy-950 px-[16px] py-[20px]">
       <section>
         <div className="flex items-center gap-[20px]">
-          <strong className="text-18 font-bold text-cream">
-            {nickname}
-          </strong>
+          <strong className="text-18 font-bold text-cream">{nickname}</strong>
           <button
             type="button"
             onClick={editProfile.open}
@@ -155,9 +157,7 @@ export default function MyPage() {
                   className="flex w-full cursor-not-allowed items-center justify-center gap-[8px] text-cream/30"
                 >
                   <span className="text-14">{b.label} &gt;</span>
-                  <strong className="text-14 font-bold">
-                    {b.value}
-                  </strong>
+                  <strong className="text-14 font-bold">{b.value}</strong>
                 </button>
               </li>
             ))}
@@ -172,9 +172,7 @@ export default function MyPage() {
           {/* 3단계 상태: 로딩중/ 주문 없음/ 주문 있음 - 중첩 삼항연산자로 스위칭*/}
         </h2>
         {isOrderLoading ? (
-          <p className="text-14 text-cream/50">
-            주문 내역을 불러오는 중...
-          </p>
+          <p className="text-14 text-cream/50">주문 내역을 불러오는 중...</p>
         ) : orders.length === 0 ? (
           <div className="rounded-[8px] bg-navy-900 p-[20px] text-center text-14 text-cream/60">
             주문 내역이 없습니다.
