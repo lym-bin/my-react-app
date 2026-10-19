@@ -149,6 +149,11 @@ src/
 - 원인: Vercel 대시보드에 `Secret` 타입으로 등록한 환경변수는 보안상 로컬 개발(Development) 환경으로 내려오지 않았습니다.
 - 해결: 로컬에서는 git이 무시하는 `.env`에 `TOSS_SECRET_KEY`를 따로 넣었습니다. 이름에 `VITE_`를 붙이지 않아 브라우저 코드에는 포함되지 않습니다.
 
+**5. 로컬에서는 되는데 배포한 서버 함수만 500 (`FUNCTION_INVOCATION_FAILED`)**
+- 증상: `vercel dev`에서는 결제 승인이 잘 됐는데, Vercel 미리보기 배포에서는 `/api/confirm`이 모든 요청에 500을 냈습니다.
+- 원인: Vercel 로그에 `ERR_MODULE_NOT_FOUND: Cannot find module '.../src/ProductList/ProductsData'`가 찍혀 있었습니다. 이 프로젝트는 `"type": "module"`(ES 모듈)이라, 실제 서버의 Node는 import 경로에 **확장자가 없으면 파일을 찾지 않습니다.** 브라우저 코드는 Vite가, 로컬 개발 서버는 개발 도구가 확장자를 알아서 찾아줘서 드러나지 않았습니다.
+- 해결: 서버 함수가 불러오는 연결 고리(`api/confirm.ts` → `ProductsData` → `OptionsData`)의 import에 `.js` 확장자를 붙였습니다. 서버에는 `.ts`가 `.js`로 변환되어 올라가기 때문에 실행 시점의 이름인 `.js`로 적고, TypeScript와 Vite는 `.js`로 적어도 옆의 `.ts` 파일을 찾아 줍니다. **머지 전에 미리보기 배포로 확인한 덕분에** 실제 사이트에 나가기 전에 발견했습니다.
+
 ## 만들면서
 
 원래는 이미지 클릭하면 모달 띄우는 정도로 시작했는데 하다 보니 장바구니, 로그인, 주문 흐름까지 다 붙이게 됐습니다. Firebase로 인증/DB 연동해보면서 실제 서비스처럼 상태 관리하는 게 생각보다 까다로웠고, 특히 옵션(색상/사이즈)별로 장바구니 아이템을 분리해서 관리하는 부분이 고민이 많았습니다.
