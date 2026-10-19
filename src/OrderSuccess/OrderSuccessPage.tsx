@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import type { CartItem } from "../context/CartContext";
 import { type Address } from "../types/address";
+import { useEffect } from "react";
 
 interface OrderSuccessState {
   items: CartItem[];
@@ -31,11 +32,19 @@ export default function OrderSuccessPage() {
   const location = useLocation(); // 현재 경로 정보 + navigate로 넘겨받은 state를 읽는 훅
   const { nickname } = useAuth();
 
-  // orderPage의 navigate("/ordersuccess", { state: orderData })로 넘어온 데이터
+  // PaymentSuccessPage의 navigate("/ordersuccess", { state: orderData })로 넘어온 데이터
   // location.state는 타입이 unknown이라 as로 OrderSucccessState 맞다 선언
-  // null까지 붙인 이유 : 새로고침하면 state가 통쨰로 사라져서 null이 될 수 있음
+  // null까지 붙인 이유 : 주소를 직접 입력하거나 새 탭으로 열면 넘겨받은 state가 없어서 null이 될 수 있음
+  // (새로고침은 같은 방문 기록을 다시 여는 거라 state가 그대로 남음)
   const state = location.state as OrderSuccessState | null;
-  // state가 없으면(새로고침 등)각 값마다 안전한 기본값으로 대체
+
+  // 주소를 직접 입력하거나 새 탭으로 열어서 넘겨받은 주문 정보가 없으면
+  // "확인 불가" 화면 대신 주문내역을 볼 수 있는 마이페이지로 보냄
+  useEffect(() => {
+    if (!state) navigate("/mypage", { replace: true });
+  }, [state, navigate]);
+
+  // state가 없으면(직접 접속 등) 마이페이지로 이동하기 전 한 번 그려질 때를 대비한 기본값
   const items = state?.items ?? [];
   const totalPrice = state?.totalPrice ?? 0;
   const address = state?.address;
@@ -57,9 +66,7 @@ export default function OrderSuccessPage() {
   return (
     <main className="mx-auto w-full max-w-narrow bg-navy-950 px-[20px] py-[60px] sm:px-[20px] sm:py-[60px]">
       <div className="mb-[40px] text-center">
-        <h2 className="mb-[12px] text-24 font-bold text-cream">
-          결제 완료
-        </h2>
+        <h2 className="mb-[12px] text-24 font-bold text-cream">결제 완료</h2>
         <span className="text-16 text-cream/60">
           감사합니다. 결제가 완료되었습니다.
         </span>
@@ -101,7 +108,7 @@ export default function OrderSuccessPage() {
           {/* 객체(동적 키)로 값 찾기: paymentMethod가 "toss"면 paymentLabels["toss"] -> 토스페이*/}
           <span className="text-13 text-cream/50 mb-[4px]">결제 수단</span>
           <strong className="text-15 text-cream">
-            {paymentLabels[paymentMethod] ?? "토스페이"}
+            {paymentLabels[paymentMethod] ?? paymentMethod}
           </strong>
         </div>
       </section>

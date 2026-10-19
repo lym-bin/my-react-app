@@ -19,6 +19,8 @@ import ProductDetailPage from "./ProductDetail/ProductDetailPage";
 import MyPage from "./Mypage/Mypage";
 import ProductListPage from "./ProductList/ProductListPage";
 import StoryPage from "./pages/Story/StoryPage";
+import PaymentSuccessPage from "./Payment/PaymentSuccessPage";
+import PaymentFailPage from "./Payment/PaymentFailPage";
 
 function AppLayout() {
   // 지금 주소가 뭔지 알려주는 센서같은 느낌
@@ -42,6 +44,8 @@ function AppLayout() {
             <Route path="/products/:id" element={<ProductDetailPage />} />
             <Route path="/order" element={<OrderPage />} />
             <Route path="/ordersuccess" element={<OrderSuccessPage />} />
+            <Route path="/payment/success" element={<PaymentSuccessPage />} />
+            <Route path="/payment/fail" element={<PaymentFailPage />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/story" element={<StoryPage />} />
             <Route path="*" element={<NotFoundPage />} />

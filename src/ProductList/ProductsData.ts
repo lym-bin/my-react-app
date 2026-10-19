@@ -1,7 +1,7 @@
 // src/ProductList/ProductsData.ts
 // 상품 데이터의 단일 소스 (정적 배열) 목록/상세/추천/최근 본 상품 모두 여기서 참조
 import type { CategoryId } from "./Categories"; // "top" | "outer" | "pants" | "shoes" 중 하나인 타입
-import { COLOR_OPTIONS, type ColorOption } from "./OptionsData"; // 색상 옵션 다일 소스 + 그 타입
+import { COLOR_OPTIONS, type ColorOption } from "./OptionsData.js"; // 색상 옵션 다일 소스 + 그 타입
 
 // 상품 하나의 "모양" 설계도
 // 옵셔널: ?(있어도 되고 없어도 되는 필드 없으면 undefined)

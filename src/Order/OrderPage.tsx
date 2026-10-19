@@ -1,15 +1,15 @@
 // src/Order/OrderPage.tsx
 // 로그인 안 됐거나 로딩중이거나 장바구니 비었으면 그에 맞는 화면을 보여줌
-// 다 통과하면 배송지/결제수단 골라서 Firestore에 주문 저장하는 페이지
+// 다 통과하면 배송지를 고르고 토스 결제창을 여는 페이지 (주문 저장은 결제 승인 후 PaymentSuccessPage에서)
+import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { collection, addDoc } from "firebase/firestore"; // Firestore(DB) 관련 함수들
-import { db } from "../firebase"; // firebase.ts에서 만든 Firestore 접속 통로
 import AddressModal from "./AddressModal";
 import { type Address } from "../types/address";
 import useAddresses from "./useAddresses";
+import { clearPendingOrder, savePendingOrder } from "../Payment/pendingOrder";
 
 // 저장된 배송지가 하나도 없을 때 보여줄 예시 배송지
 const initialAddresses: Address[] = [
@@ -29,22 +29,14 @@ const initialAddresses: Address[] = [
   },
 ];
 
-// 결제수단 4개
-const pmMethods = [
-  { id: "pm-toss", value: "toss", label: "토스페이" },
-  { id: "pm-kakao", value: "kakao", label: "카카오페이" },
-  { id: "pm-naver", value: "naver", label: "네이버페이" },
-  { id: "pm-order", value: "order", label: "기타결제" },
-];
-
 export default function OrderPage() {
   const navigate = useNavigate();
   const { user, isLoading, nickname } = useAuth(); // 로그인 정보
 
-  const { items, totalPrice, clearCart } = useCart(); // 장바구니 정보
-  const [selectedpm, setSelectedpm] = useState("toss"); // 선택된 결제수단
+  const { items, totalPrice } = useCart(); // 장바구니 정보
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCanceled, setIsCanceled] = useState(false); // 결제 창을 직접 닫았는지
 
   // 배송지 목록은 Firestore에서 불러옴 (useAddresses 커스텀 훅)
   // 객체 구조분해 + 이름 바꾸기: addresses를 savedAddresses라는 이름으로 꺼냄
@@ -91,44 +83,62 @@ export default function OrderPage() {
     return null;
   }
 
-  const handleSubmitOrder = async () => {
-    // 이미 제출 중이면 무시 (중복 클릭 방지)
-    if (isSubmitting) return;
-    if (items.length === 0) return;
+  // 결제창 띄우기 -> 결제가 끝나면 성공/실패 주소로 이동, PC에서 창을 닫으면 USER_CANCEL 에러
+  const handleRequestPayment = async () => {
+    if (isSubmitting || items.length === 0) return;
+    setIsCanceled(false); // 다시 결제를 시작하면 지난번 취소 안내는 지움
     setIsSubmitting(true);
 
-    const orderData = {
-      userId: user.uid,
-      nickname: nickname ?? "회원",
-      items,
-      totalPrice,
-      address: currentAddress,
-      paymentMethod: selectedpm,
-      orderId: `ORD-${Date.now().toString().slice(-8)}`,
-      createdAt: new Date().toISOString(),
-    };
+    const orderId = `ORD-${Date.now().toString().slice(-8)}`;
+    const firstName = items[0]?.name ?? "상품";
+    const orderName =
+      items.length > 1 ? `${firstName} 외 ${items.length - 1}건` : firstName;
 
-    // collection(db, "orders") : Firebase DB 안의 orders라는 테이블
-    // addDoc(그 컬렉션, orderData): 그 안에 새 문서(레코드) 하나를 추가
-    // CartContext가 localStorage에 저장했던 것과 달리 진짜 서버(firebase)DB에
-    // 저장 해야 하므로 비동기(await) 사용하고 try/catch로 예외처리
-    // finally : 성공하든 실패하든 무조건 실행
-    // setIsSybmitting(false): 성공 시엔 어차피 다른 페이지로 이동, 실패 했을 때도 "처리중"
-    // 버튼이 계속 멈춰있지 않고 다시 누를 수 있는 상태로 돌아오게 하려면 반드시 실행해야하므로
-    // navigate("/ordersuccess", { state: orderData }) : useNavigate에
-    // 두 번째 인자로 객체를 넘기면 데이터가 URL에 안 보이지만 OrderSuccessPage로 그대로 전달
-    try {
-      await addDoc(collection(db, "orders"), orderData);
-      navigate("/ordersuccess", { state: orderData });
-      clearCart();
-    } catch (error) {
-      console.error("주문 저장 중 오류가 발생했습니다.", error);
-      alert("결제 처리에 실패했습니다. 다시 시도해 주세요.");
-    } finally {
+    // 결제창에 다녀오면 state가 사라지니까, 떠나기 전에 주문 정보를 맡겨둠
+    const saved = savePendingOrder({
+      orderId,
+      amount: totalPrice,
+      items,
+      address: currentAddress,
+      nickname: nickname ?? "회원",
+    });
+    if (!saved) {
+      alert("주문 정보를 저장하지 못했어요. 브라우저 설정을 확인해 주세요");
       setIsSubmitting(false);
+      return;
+    }
+    try {
+      // SDK를 불러와서 결제창 객체 만들기 (customerKey: 구매자 구분값, 추측하기 어려운 Firebase uid 사용)
+      const tossPayments = await loadTossPayments(
+        import.meta.env.VITE_TOSS_CLIENT_KEY,
+      );
+      const payment = tossPayments.payment({ customerKey: user.uid });
+
+      // successUrl을 넘기면 "리다이렉트 방식": 결제가 끝나면 그 주소로 페이지 전체가 이동함
+      await payment.requestPayment({
+        method: "CARD",
+        amount: { currency: "KRW", value: totalPrice },
+        orderId,
+        orderName,
+        successUrl: `${window.location.origin}/payment/success`,
+        failUrl: `${window.location.origin}/payment/fail`,
+      });
+    } catch (error) {
+      setIsSubmitting(false);
+      clearPendingOrder(); // 결제를 안 했으니 맡겨둔 주문 정보도 치움
+
+      // 사용자가 결제창을 직접 닫은 건 오류가 아니라 선택 -> 알림 없이 원래 화면 그대로
+      const code = (error as { code?: string }).code;
+      if (code === "USER_CANCEL") {
+        setIsCanceled(true);
+        return;
+      }
+
+      // 그 외: 결제창 자체를 못 띄운 경우 (키가 틀렸거나 파라미터 오류)
+      console.error("결제창을 열지 못했습니다.", error);
+      alert("결제창을 열지 못했습니다. 다시 시도해 주세요.");
     }
   };
-
   if (items.length === 0) {
     return (
       <main className="mx-auto w-full max-w-content bg-navy-950 px-[20px] py-[80px] text-center text-cream/60">
@@ -208,32 +218,13 @@ export default function OrderPage() {
           </ul>
         </section>
 
-        {/* 결제 수단: ProductDatailPage 색상/사이즈 라디오랑 다른 방식 */}
+        {/* 결제 수단: 실제 선택(카드, 간편결제)은 토스 결제창 안에서 하도록 함 */}
         <section className="border-b border-navy-700 pb-[30px]">
           <h2 className="mb-[20px] text-cream">결제 수단</h2>
-          <ul className="mb-[16px] flex flex-wrap gap-[14px] sm:gap-[20px]">
-            {/* 네이티브 라디오 그대로 노출 (hidden 안 씀). accent-*로 체크 색상*/}
-            {pmMethods.map((method) => (
-              <li key={method.id} className="flex items-center gap-[10px]">
-                <input
-                  type="radio"
-                  id={method.id} // <- 이 id를
-                  name="pm-method"
-                  value={method.value}
-                  checked={selectedpm === method.value}
-                  onChange={() => setSelectedpm(method.value)}
-                  className="accent-terracotta-500" // 네이티브 라디오 체크 색상 커스텀 (Tailwind 유틸)
-                />
-                {/* label과 input이 형제 관계 htmlFor={method.id)로 id랑 "이름으로" 연결*/}
-                <label
-                  htmlFor={method.id}
-                  className="text-cream/60 cursor-pointer"
-                >
-                  {method.label}
-                </label>
-              </li>
-            ))}
-          </ul>
+          <p className="text-cream/85">카드 · 간편결제 (토스페이먼츠)</p>
+          <p className="mt-[8px] text-13 text-terracotta-400">
+            테스트 결제입니다. 실제로 돈이 나가지 않아요.
+          </p>
         </section>
       </div>
 
@@ -265,13 +256,19 @@ export default function OrderPage() {
           type="button"
           disabled={isSubmitting}
           className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-16 font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
-          onClick={handleSubmitOrder}
+          onClick={handleRequestPayment}
         >
           {/* inSubmitting이면 "처리 중..." 버튼 텍스트로. 아니면 실제 결제 금액 표시*/}
           {isSubmitting
             ? "처리 중...."
             : `${totalPrice.toLocaleString()}원 결제하기`}
         </button>
+
+        {isCanceled && (
+          <p className="mt-[10px] text-center text-13 text-cream/60">
+            결제를 취소했어요. 장바구니와 배송지는 그대로 유지됩니다.
+          </p>
+        )}
       </aside>
 
       {/* 배송지 선택/추가 모델*/}
