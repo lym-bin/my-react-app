@@ -143,9 +143,10 @@ export default function Header() {
         </ul>
 
         {/* 로고: 부모(relative div) 기준으로 absolute + translate로 항상 정중앙 고정*/}
+        {/* mt: 아래 작은 PARIS 줄 높이의 절반만큼 내려서 "OBJET & B" 글자 줄을 양옆 메뉴와 같은 높이에 맞춤 (광학적 정렬) */}
         <Link
           to="/"
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-1/2 left-1/2 mt-[5px] -translate-x-1/2 -translate-y-1/2 sm:mt-[6px] md:mt-[7px]"
           aria-label="홈으로 이동하기"
         >
           <Logo />
@@ -177,7 +178,8 @@ export default function Header() {
                   totalCount > 0 ? `장바구니 ${totalCount}개` : "장바구니"
                 }
                 // relative: 휴대폰에서 뱃지를 아이콘 위에 겹쳐 올릴 때 기준점
-                className="relative inline-flex items-center gap-[4px] transition hover:text-terracotta-400"
+                // flex(inline-flex 아님): inline-flex는 글자 줄 위에 얹혀서 아래 여백이 생기고 아이콘이 2px 위로 뜸
+                className="relative flex items-center gap-[4px] transition hover:text-terracotta-400"
               >
                 <ShoppingBag
                   className="h-[18px] w-[18px] sm:hidden"
