@@ -9,7 +9,7 @@ import { useAuth } from "../context/AuthContext";
 import AddressModal from "./AddressModal";
 import { type Address } from "../types/address";
 import useAddresses from "./useAddresses";
-import { savePendingOrder } from "../Payment/pendingOrder";
+import { clearPendingOrder, savePendingOrder } from "../Payment/pendingOrder";
 
 // 저장된 배송지가 하나도 없을 때 보여줄 예시 배송지
 const initialAddresses: Address[] = [
@@ -33,9 +33,10 @@ export default function OrderPage() {
   const navigate = useNavigate();
   const { user, isLoading, nickname } = useAuth(); // 로그인 정보
 
-  const { items, totalPrice, clearCart } = useCart(); // 장바구니 정보
+  const { items, totalPrice } = useCart(); // 장바구니 정보
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCanceled, setIsCanceled] = useState(false); // 결제 창을 직접 닫았는지
 
   // 배송지 목록은 Firestore에서 불러옴 (useAddresses 커스텀 훅)
   // 객체 구조분해 + 이름 바꾸기: addresses를 savedAddresses라는 이름으로 꺼냄
@@ -82,9 +83,10 @@ export default function OrderPage() {
     return null;
   }
 
-  // 결제창 띄우기(test: 결제 후 성공 주소로 돌아오는 지 확인)
+  // 결제창 띄우기 -> 결제가 끝나면 성공/실패 주소로 이동, PC에서 창을 닫으면 USER_CANCEL 에러
   const handleRequestPayment = async () => {
     if (isSubmitting || items.length === 0) return;
+    setIsCanceled(false); // 다시 결제를 시작하면 지난번 취소 안내는 지움
     setIsSubmitting(true);
 
     const orderId = `ORD-${Date.now().toString().slice(-8)}`;
@@ -122,10 +124,19 @@ export default function OrderPage() {
         failUrl: `${window.location.origin}/payment/fail`,
       });
     } catch (error) {
-      // 결제창 자체를 못 띄운 경우 (키가 틀렸거나 파라미터 오류)
+      setIsSubmitting(false);
+      clearPendingOrder(); // 결제를 안 했으니 맡겨둔 주문 정보도 치움
+
+      // 사용자가 결제창을 직접 닫은 건 오류가 아니라 선택 -> 알림 없이 원래 화면 그대로
+      const code = (error as { code?: string }).code;
+      if (code === "USER_CANCEL") {
+        setIsCanceled(true);
+        return;
+      }
+
+      // 그 외: 결제창 자체를 못 띄운 경우 (키가 틀렸거나 파라미터 오류)
       console.error("결제창을 열지 못했습니다.", error);
       alert("결제창을 열지 못했습니다. 다시 시도해 주세요.");
-      setIsSubmitting(false);
     }
   };
   if (items.length === 0) {
@@ -252,6 +263,12 @@ export default function OrderPage() {
             ? "처리 중...."
             : `${totalPrice.toLocaleString()}원 결제하기`}
         </button>
+
+        {isCanceled && (
+          <p className="mt-[10px] text-center text-13 text-cream/60">
+            결제를 취소했어요. 장바구니와 배송지는 그대로 유지됩니다.
+          </p>
+        )}
       </aside>
 
       {/* 배송지 선택/추가 모델*/}
