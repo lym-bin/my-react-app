@@ -157,7 +157,7 @@ export default function AddressModal({
               onChange={(e) => setTitle(e.target.value)}
               placeholder="배송지 이름 (예: 집, 회사)"
               required
-              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-13 text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-16 text-cream sm:text-13 outline-none placeholder:text-cream/40 focus:border-terracotta-400"
             />
             <input
               type="text"
@@ -165,7 +165,7 @@ export default function AddressModal({
               onChange={(e) => setRecipient(e.target.value)}
               placeholder="받는 사람"
               required
-              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-13 text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-16 text-cream sm:text-13 outline-none placeholder:text-cream/40 focus:border-terracotta-400"
             />
             <input
               type="text"
@@ -173,7 +173,7 @@ export default function AddressModal({
               onChange={(e) => setAddress(e.target.value)}
               placeholder="주소"
               required
-              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-13 text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-16 text-cream sm:text-13 outline-none placeholder:text-cream/40 focus:border-terracotta-400"
             />
             <input
               type="tel"
@@ -181,7 +181,7 @@ export default function AddressModal({
               onChange={(e) => setPhone(e.target.value)}
               placeholder="연락처"
               required
-              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-13 text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+              className="w-full rounded-[6px] border border-navy-600 bg-navy-950 px-[12px] py-[10px] text-16 text-cream sm:text-13 outline-none placeholder:text-cream/40 focus:border-terracotta-400"
             />
 
             <div className="mt-[6px] flex gap-[10px]">

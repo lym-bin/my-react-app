@@ -148,7 +148,7 @@ export default function EditProfileModal({
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             placeholder={user?.email ?? ""} // 값이 아니라 "비었을 때 흐리게 보이는 힌트"로 이메일 사용
-            className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-14 text-cream outline-none focus:border-terracotta-400"
+            className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-16 text-cream sm:text-14 outline-none focus:border-terracotta-400"
           />
         </div>
 
@@ -170,7 +170,7 @@ export default function EditProfileModal({
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-14 text-cream outline-none focus:border-terracotta-400"
+              className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-16 text-cream sm:text-14 outline-none focus:border-terracotta-400"
             />
           </div>
 
@@ -186,7 +186,7 @@ export default function EditProfileModal({
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-14 text-cream outline-none focus:border-terracotta-400"
+              className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-16 text-cream sm:text-14 outline-none focus:border-terracotta-400"
             />
           </div>
 
@@ -202,7 +202,7 @@ export default function EditProfileModal({
               type="password"
               value={newPasswordConfirm}
               onChange={(e) => setNewPasswordConfirm(e.target.value)}
-              className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-14 text-cream outline-none focus:border-terracotta-400"
+              className="w-full border border-navy-600 bg-navy-800 px-[12px] py-[10px] text-16 text-cream sm:text-14 outline-none focus:border-terracotta-400"
             />
           </div>
         </div>

@@ -95,7 +95,7 @@ export default function LoginPage() {
               onChange={(e) => setNickname(e.target.value)}
               placeholder="닉네임을 입력해 주세요."
               required
-              className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-14 text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+              className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-16 text-cream sm:text-14 outline-none placeholder:text-cream/40 focus:border-terracotta-400"
             />
           )}
           <input
@@ -104,7 +104,7 @@ export default function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="이메일을 입력해 주세요."
             required
-            className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-14 text-cream outline-none placeholder:text-cream/40 focus:border-terracotta-400"
+            className="mb-[12px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-16 text-cream sm:text-14 outline-none placeholder:text-cream/40 focus:border-terracotta-400"
           />
 
           <input
@@ -114,7 +114,7 @@ export default function LoginPage() {
             placeholder="비밀번호를 입력해 주세요."
             required
             minLength={6}
-            className="mb-[16px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-14 text-cream placeholder:text-cream/40 outline-none focus:border-terracotta-400"
+            className="mb-[16px] w-full rounded-[8px] border border-navy-600 bg-navy-950 px-[14px] py-[12px] text-16 text-cream sm:text-14 placeholder:text-cream/40 outline-none focus:border-terracotta-400"
           />
 
           {/* error/info 각각 있을 때만 표시, 동시에 둘 다 올 수도 있는 구조(서로 배타적이지 않음)*/}
