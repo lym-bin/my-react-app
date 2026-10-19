@@ -57,9 +57,7 @@ export default function OrderSuccessPage() {
   return (
     <main className="mx-auto w-full max-w-narrow bg-navy-950 px-[20px] py-[60px] sm:px-[20px] sm:py-[60px]">
       <div className="mb-[40px] text-center">
-        <h2 className="mb-[12px] text-24 font-bold text-cream">
-          결제 완료
-        </h2>
+        <h2 className="mb-[12px] text-24 font-bold text-cream">결제 완료</h2>
         <span className="text-16 text-cream/60">
           감사합니다. 결제가 완료되었습니다.
         </span>
@@ -101,7 +99,7 @@ export default function OrderSuccessPage() {
           {/* 객체(동적 키)로 값 찾기: paymentMethod가 "toss"면 paymentLabels["toss"] -> 토스페이*/}
           <span className="text-13 text-cream/50 mb-[4px]">결제 수단</span>
           <strong className="text-15 text-cream">
-            {paymentLabels[paymentMethod] ?? "토스페이"}
+            {paymentLabels[paymentMethod] ?? paymentMethod}
           </strong>
         </div>
       </section>

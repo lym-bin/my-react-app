@@ -3,10 +3,22 @@
 // 지금은 쿼리를 읽어서 보여주는 단계까지. 다음 단계에서 서버승인(/api/confirm)을 붙힘 TO-BE
 
 import { useEffect, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { loadPendingOrder } from "./pendingOrder";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  clearPendingOrder,
+  loadPendingOrder,
+  type PendingOrder,
+} from "./pendingOrder";
+import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../firebase";
 
 export default function PaymentSuccessPage() {
+  const navigate = useNavigate();
+  const { user, isLoading } = useAuth();
+  const { clearCart } = useCart();
+
   // useSearchParams: 주소의 ?뒤 쿼리스트링을 이름으로 꺼내 쓰는 훅(순서는 상관 없음)
   const [searchParams] = useSearchParams();
   const paymentKey = searchParams.get("paymentKey");
@@ -23,26 +35,40 @@ export default function PaymentSuccessPage() {
     pending.orderId === orderId &&
     pending.amount === amount;
   // 승인 진행 상태: 확인 중 -> 성공 / 실패
-  const [status, setStatus] = useState<"confirming" | "success" | "fail">(
-    "confirming",
-  );
+  const [status, setStatus] = useState<"confirming" | "fail">("confirming");
   const [errorMessage, setErrorMessage] = useState("");
   // 승인 요청을 이미 보냈는지 기억 (화면을 다시 그리지 않는 메모용 useRef)
   const requestRef = useRef(false);
 
   useEffect(() => {
-    if (!isMatched || requestRef.current) return;
+    // 로그인 복원이 끝나고(user 있음) 맡겨둔 주문이 맞을 때만, 그리고 딱 한 번만
+    if (!isMatched || isLoading || !user || !pending || requestRef.current)
+      return;
     // StrictMode에서 effect가 두 번 실행돼도 승인 요청은 딱 한 번만 보냄
     requestRef.current = true;
 
-    async function confirmPayment() {
+    async function confirmAndSave(userId: string, order: PendingOrder) {
+      // 1. 서버에 승인 부탁
+      let paymentMethod = "카드";
       try {
         const response = await fetch("/api/confirm", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ paymentKey, orderId, amount }),
+          body: JSON.stringify({
+            paymentKey,
+            orderId,
+            amount,
+            // 맡겨둔 주문에서 "무엇을 몇 개"만 골라서 보냄 (가격은 서버가 계산)
+            items: pending?.items.map((item) => ({
+              productId: item.productId,
+              qty: item.qty,
+            })),
+          }),
         });
-        const result = (await response.json()) as { message?: string };
+        const result = (await response.json()) as {
+          message?: string;
+          method?: string; // 토스가 알려주는 결제수단 ("카드", "간편결제" 등)
+        };
 
         // response.ok : 상태 코드가 200번대면 true
         if (!response.ok) {
@@ -50,15 +76,55 @@ export default function PaymentSuccessPage() {
           setStatus("fail");
           return;
         }
-        setStatus("success");
+        paymentMethod = result.method ?? "카드";
       } catch {
         setErrorMessage("서버에 연결하지 못했어요. 잠시 후 다시 시도해주세요.");
         setStatus("fail");
+        return;
       }
+
+      // 2. 승인 성공 -> 주문 저장 (예전 OrderPage의 handleSubmitOrder가 하던 일)
+      const orderData = {
+        userId,
+        nickname: order.nickname,
+        items: order.items,
+        totalPrice: order.amount,
+        address: order.address,
+        paymentMethod,
+        paymentKey, // 나중에 결제 조회, 취소할 때 필요한 결제 번호
+        orderId: order.orderId,
+        createdAt: new Date().toISOString(),
+      };
+      try {
+        await addDoc(collection(db, "orders"), orderData);
+      } catch {
+        // 돈은 나갔는데 주문 기록이 없는 상황 -> 실패 화면과 구분해서 주문번호를 안내
+        setErrorMessage(
+          `결제는 완료됐지만 주문 저장에 실패했어요. 주문 번호 ${order.orderId}로 문의해 주세요.`,
+        );
+        setStatus("fail");
+        return;
+      }
+
+      // 3. 정리하고 완료 페이지로
+      clearCart();
+      clearPendingOrder();
+      // replace: 방문 기록을 바꿔치기 -> 뒤로 가기로 이 페이지에 돌아와 승인을 또 요청하지 않음
+      navigate("/ordersuccess", { state: orderData, replace: true });
     }
 
-    confirmPayment();
-  }, [isMatched, paymentKey, orderId, amount]);
+    confirmAndSave(user.uid, pending);
+  }, [
+    isMatched,
+    isLoading,
+    user,
+    pending,
+    paymentKey,
+    orderId,
+    amount,
+    clearCart,
+    navigate,
+  ]);
 
   // 필수 값이 하나라도 없으면 결제창을 거쳐 정상적으로 들어온 게 아님
   if (!paymentKey || !orderId || !amount) {
@@ -121,19 +187,6 @@ export default function PaymentSuccessPage() {
     );
   }
 
-  // 승인 성공 (주문 저장과 완료 페이지 이동은 다음 단계에서 연결)
-  if (status === "success") {
-    return (
-      <main className="mx-auto flex w-full max-w-[600px] flex-col items-center bg-navy-950 px-[20px] py-[120px] text-center">
-        <h1 className="mb-[16px] text-24 font-normal text-cream">
-          결제가 승인됐어요
-        </h1>
-        <p className="text-14 leading-[1.6] text-cream/60">
-          주문번호 {orderId} · {amount.toLocaleString()}원
-        </p>
-      </main>
-    );
-  }
   return (
     <main className="mx-auto flex w-full max-w-[600px] flex-col items-center bg-navy-950 px-[20px] py-[120px] text-center">
       <h1 className="mb-[16px] text-24 font-normal text-cream">
