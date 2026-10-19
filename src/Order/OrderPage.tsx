@@ -1,13 +1,11 @@
 // src/Order/OrderPage.tsx
 // 로그인 안 됐거나 로딩중이거나 장바구니 비었으면 그에 맞는 화면을 보여줌
-// 다 통과하면 배송지/결제수단 골라서 Firestore에 주문 저장하는 페이지
+// 다 통과하면 배송지를 고르고 토스 결제창을 여는 페이지 (주문 저장은 결제 승인 후 PaymentSuccessPage에서)
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { collection, addDoc } from "firebase/firestore"; // Firestore(DB) 관련 함수들
-import { db } from "../firebase"; // firebase.ts에서 만든 Firestore 접속 통로
 import AddressModal from "./AddressModal";
 import { type Address } from "../types/address";
 import useAddresses from "./useAddresses";
@@ -31,20 +29,11 @@ const initialAddresses: Address[] = [
   },
 ];
 
-// 결제수단 4개
-const pmMethods = [
-  { id: "pm-toss", value: "toss", label: "토스페이" },
-  { id: "pm-kakao", value: "kakao", label: "카카오페이" },
-  { id: "pm-naver", value: "naver", label: "네이버페이" },
-  { id: "pm-order", value: "order", label: "기타결제" },
-];
-
 export default function OrderPage() {
   const navigate = useNavigate();
   const { user, isLoading, nickname } = useAuth(); // 로그인 정보
 
   const { items, totalPrice, clearCart } = useCart(); // 장바구니 정보
-  const [selectedpm, setSelectedpm] = useState("toss"); // 선택된 결제수단
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -92,45 +81,6 @@ export default function OrderPage() {
   if (!user) {
     return null;
   }
-
-  const handleSubmitOrder = async () => {
-    // 이미 제출 중이면 무시 (중복 클릭 방지)
-    if (isSubmitting) return;
-
-    if (items.length === 0) return;
-    setIsSubmitting(true);
-
-    const orderData = {
-      userId: user.uid,
-      nickname: nickname ?? "회원",
-      items,
-      totalPrice,
-      address: currentAddress,
-      paymentMethod: selectedpm,
-      orderId: `ORD-${Date.now().toString().slice(-8)}`,
-      createdAt: new Date().toISOString(),
-    };
-
-    // collection(db, "orders") : Firebase DB 안의 orders라는 테이블
-    // addDoc(그 컬렉션, orderData): 그 안에 새 문서(레코드) 하나를 추가
-    // CartContext가 localStorage에 저장했던 것과 달리 진짜 서버(firebase)DB에
-    // 저장 해야 하므로 비동기(await) 사용하고 try/catch로 예외처리
-    // finally : 성공하든 실패하든 무조건 실행
-    // setIsSybmitting(false): 성공 시엔 어차피 다른 페이지로 이동, 실패 했을 때도 "처리중"
-    // 버튼이 계속 멈춰있지 않고 다시 누를 수 있는 상태로 돌아오게 하려면 반드시 실행해야하므로
-    // navigate("/ordersuccess", { state: orderData }) : useNavigate에
-    // 두 번째 인자로 객체를 넘기면 데이터가 URL에 안 보이지만 OrderSuccessPage로 그대로 전달
-    try {
-      await addDoc(collection(db, "orders"), orderData);
-      navigate("/ordersuccess", { state: orderData });
-      clearCart();
-    } catch (error) {
-      console.error("주문 저장 중 오류가 발생했습니다.", error);
-      alert("결제 처리에 실패했습니다. 다시 시도해 주세요.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   // 결제창 띄우기(test: 결제 후 성공 주소로 돌아오는 지 확인)
   const handleRequestPayment = async () => {
@@ -257,32 +207,13 @@ export default function OrderPage() {
           </ul>
         </section>
 
-        {/* 결제 수단: ProductDatailPage 색상/사이즈 라디오랑 다른 방식 */}
+        {/* 결제 수단: 실제 선택(카드, 간편결제)은 토스 결제창 안에서 하도록 함 */}
         <section className="border-b border-navy-700 pb-[30px]">
           <h2 className="mb-[20px] text-cream">결제 수단</h2>
-          <ul className="mb-[16px] flex flex-wrap gap-[14px] sm:gap-[20px]">
-            {/* 네이티브 라디오 그대로 노출 (hidden 안 씀). accent-*로 체크 색상*/}
-            {pmMethods.map((method) => (
-              <li key={method.id} className="flex items-center gap-[10px]">
-                <input
-                  type="radio"
-                  id={method.id} // <- 이 id를
-                  name="pm-method"
-                  value={method.value}
-                  checked={selectedpm === method.value}
-                  onChange={() => setSelectedpm(method.value)}
-                  className="accent-terracotta-500" // 네이티브 라디오 체크 색상 커스텀 (Tailwind 유틸)
-                />
-                {/* label과 input이 형제 관계 htmlFor={method.id)로 id랑 "이름으로" 연결*/}
-                <label
-                  htmlFor={method.id}
-                  className="text-cream/60 cursor-pointer"
-                >
-                  {method.label}
-                </label>
-              </li>
-            ))}
-          </ul>
+          <p className="text-cream/85">카드 · 간편결제 (토스페이먼츠)</p>
+          <p className="mt-[8px] text-13 text-terracotta-400">
+            테스트 결제입니다. 실제로 돈이 나가지 않아요.
+          </p>
         </section>
       </div>
 

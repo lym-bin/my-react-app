@@ -27,6 +27,17 @@ function calulateAmount(items: ConfirmBody["items"]): number | null {
   return total;
 }
 
+// 토스 결제 정보 중 화면에 필요한 것만 골라서 돌려줌 (결제별 비밀 값, 카드 정보등은 서버 밖으로 안 내보냄)
+function pickPaymentSummary(payment: Record<string, unknown>) {
+  return {
+    status: payment.status,
+    orderId: payment.orderId,
+    totalAmount: payment.totalAmount,
+    method: payment.method,
+    approvedAt: payment.approvedAt,
+  };
+}
+
 // POST 요청이 오면 실행되는 함수 (Request/Response는 브라우저 fetch와 같은 웹 표준 객체)
 export async function POST(request: Request) {
   const { paymentKey, orderId, amount, items } =
@@ -83,8 +94,36 @@ export async function POST(request: Request) {
       body: JSON.stringify({ paymentKey, orderId, amount }),
     },
   );
-  const result = await tossResponse.json();
+  const result = (await tossResponse.json()) as { code?: string };
 
-  // 토스가 준 결과와 상태 코드를 브라우저에 그대로 전달 (성공 200, 실패 4xx/5xx)
-  return Response.json(result, { status: tossResponse.status });
+  // 같은 결제를 또 승인하려 한 경우(확인 중 새로고침 등): 토스가 ALREADY_PAYMENT로 거절
+  // -> 바로 실패로 보내지 않고, 이미 승인된 결제를 조회해서 "이 주문이 맞으면" 성공으로 돌려줌
+  // -> 같은 요청을 여러 번 보내기 결과가 같아짐 (먹등성)
+  if (result.code === "ALREADY_PROCESSED_PAYMENT") {
+    const lookupResponse = await fetch(
+      // encodeURIComponents: 브라우저가 보낸 값을 주소에 넣을 때 "/" 같은 특수문자로 경로가 바뀌지 않게
+      `https://api.tosspayments.com/v1/payments/${encodeURIComponent(paymentKey)}`,
+      { headers: { Authorization: `Basic ${auth}` } },
+    );
+    const payment = (await lookupResponse.json()) as {
+      status?: string;
+      orderId?: string;
+      totalAmount?: number;
+    };
+
+    // 결제가 완료(DONE) 상태이고, 주문번호와 금액까지 같아야 같은 결제로 인정
+    const isSamePayment =
+      lookupResponse.ok &&
+      payment.status === "DONE" &&
+      payment.orderId === orderId &&
+      payment.totalAmount === amount;
+
+    if (isSamePayment) {
+      return Response.json(pickPaymentSummary(payment), { status: 200 });
+    }
+  }
+  // 성공이면 필요한 정보만, 실패면 토스의 에러 코드와 메시지만 전달
+  return Response.json(tossResponse.ok ? pickPaymentSummary(result) : result, {
+    status: tossResponse.status,
+  });
 }
