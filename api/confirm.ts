@@ -2,7 +2,7 @@
 // 서버: 브라우저 대신 토스에 "이 결제를 승인해 주세요" 라고 요청 하는 곳
 // 시크릿 키는 여기(서버)에서만 꺼내 씀 -> 브라우저 코드에는 절대 들어가지 않음
 // (금액을 상품 데이터로 다시 계산하는 검증은 다음 단계에서 추가)
-import { PRODUCTS } from "../src/ProductList/ProductsData";
+import { PRODUCTS } from "../src/ProductList/ProductsData.js";
 
 interface ConfirmBody {
   paymentKey: string;
