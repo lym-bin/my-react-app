@@ -11,6 +11,7 @@ import { db } from "../firebase"; // firebase.ts에서 만든 Firestore 접속 �
 import AddressModal from "./AddressModal";
 import { type Address } from "../types/address";
 import useAddresses from "./useAddresses";
+import { savePendingOrder } from "../Payment/pendingOrder";
 
 // 저장된 배송지가 하나도 없을 때 보여줄 예시 배송지
 const initialAddresses: Address[] = [
@@ -141,6 +142,19 @@ export default function OrderPage() {
     const orderName =
       items.length > 1 ? `${firstName} 외 ${items.length - 1}건` : firstName;
 
+    // 결제창에 다녀오면 state가 사라지니까, 떠나기 전에 주문 정보를 맡겨둠
+    const saved = savePendingOrder({
+      orderId,
+      amount: totalPrice,
+      items,
+      address: currentAddress,
+      nickname: nickname ?? "회원",
+    });
+    if (!saved) {
+      alert("주문 정보를 저장하지 못했어요. 브라우저 설정을 확인해 주세요");
+      setIsSubmitting(false);
+      return;
+    }
     try {
       // SDK를 불러와서 결제창 객체 만들기 (customerKey: 구매자 구분값, 추측하기 어려운 Firebase uid 사용)
       const tossPayments = await loadTossPayments(
