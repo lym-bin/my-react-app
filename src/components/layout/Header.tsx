@@ -16,7 +16,7 @@ import { useAuth } from "../../context/AuthContext"; // 로그인 정보 창구
 import { useCart } from "../../context/CartContext"; // 장바구니 정보 창구
 import Logo from "./Logo";
 import useDisclosure from "../../hooks/useDisclosure";
-import { Search, ShoppingBag, User } from "lucide-react"; // 휴대폰 폭에서 글자 대신 쓰는 아이콘
+import { LogIn, Search, ShoppingBag, User } from "lucide-react"; // 휴대폰 폭에서 글자 대신 쓰는 아이콘
 
 // "전체보기"는 카테고리 파라미터 없이 /productsd로 이동.
 // ...스프레드 문법으로 배열이나 객체를 펼쳐서 넣어줌
@@ -155,7 +155,7 @@ export default function Header() {
         <nav className="flex justify-end" aria-label="상단 유틸리티 메뉴">
           {/* 휴대폰 폭: 아이콘만 (로고와 겹치지 않게) / sm(640px) 이상: 글자 */}
           {/* 아이콘만 보일 때도 스크린리더가 읽을 수 있게 aria-label로 이름을 붙임 */}
-          <ul className="flex items-center gap-[16px] text-11 tracking-[0.05em] text-cream/90 sm:gap-[30px] sm:text-12">
+          <ul className="flex items-center gap-[20px] text-11 tracking-[0.05em] text-cream/90 sm:gap-[30px] sm:text-12">
             <li>
               <button
                 type="button"
@@ -163,7 +163,10 @@ export default function Header() {
                 aria-label="검색"
                 className="flex cursor-pointer items-center transition hover:text-terracotta-400"
               >
-                <Search className="h-[18px] w-[18px] sm:hidden" aria-hidden="true" />
+                <Search
+                  className="h-[18px] w-[18px] sm:hidden"
+                  aria-hidden="true"
+                />
                 <span className="hidden sm:inline">검색</span>
               </button>
             </li>
@@ -173,13 +176,19 @@ export default function Header() {
                 aria-label={
                   totalCount > 0 ? `장바구니 ${totalCount}개` : "장바구니"
                 }
-                className="inline-flex items-center gap-[4px] transition hover:text-terracotta-400"
+                // relative: 휴대폰에서 뱃지를 아이콘 위에 겹쳐 올릴 때 기준점
+                className="relative inline-flex items-center gap-[4px] transition hover:text-terracotta-400"
               >
-                <ShoppingBag className="h-[18px] w-[18px] sm:hidden" aria-hidden="true" />
+                <ShoppingBag
+                  className="h-[18px] w-[18px] sm:hidden"
+                  aria-hidden="true"
+                />
                 <span className="hidden sm:inline">장바구니</span>
                 {/* totalCount가 0보다 클 때만 빨간 뱃지 렌더링*/}
                 {totalCount > 0 && (
-                  <span className="flex h-[14px] min-w-[14px] items-center justify-center rounded-full bg-terracotta-500 px-[3px] text-9 font-bold text-navy-950">
+                  // 휴대폰: 아이콘 오른쪽 위에 겹침(absolute, 자리를 차지하지 않아 아이콘 간격이 일정)
+                  // sm 이상: "장바구니" 글자 옆에 나란히(static)
+                  <span className="absolute -top-[7px] -right-[9px] flex h-[14px] min-w-[14px] items-center justify-center rounded-full bg-terracotta-500 px-[3px] text-9 font-bold text-navy-950 sm:static">
                     {totalCount}
                   </span>
                 )}
@@ -192,7 +201,18 @@ export default function Header() {
                 aria-label={isLoggedIn ? "마이페이지" : "로그인"}
                 className="flex items-center transition hover:text-terracotta-400"
               >
-                <User className="h-[18px] w-[18px] sm:hidden" aria-hidden="true" />
+                {/* 휴대폰: 로그아웃은 "들어가기" 화살표, 로그인은 사람 아이콘 / sm 이상: 글자 */}
+                {isLoggedIn ? (
+                  <User
+                    className="h-[18px] w-[18px] sm:hidden"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <LogIn
+                    className="h-[18px] w-[18px] sm:hidden"
+                    aria-hidden="true"
+                  />
+                )}
                 <span className="hidden sm:inline">
                   {isLoggedIn ? "마이페이지" : "로그인"}
                 </span>
