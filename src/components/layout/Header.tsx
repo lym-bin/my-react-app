@@ -16,6 +16,7 @@ import { useAuth } from "../../context/AuthContext"; // 로그인 정보 창구
 import { useCart } from "../../context/CartContext"; // 장바구니 정보 창구
 import Logo from "./Logo";
 import useDisclosure from "../../hooks/useDisclosure";
+import { Search, ShoppingBag, User } from "lucide-react"; // 휴대폰 폭에서 글자 대신 쓰는 아이콘
 
 // "전체보기"는 카테고리 파라미터 없이 /productsd로 이동.
 // ...스프레드 문법으로 배열이나 객체를 펼쳐서 넣어줌
@@ -87,7 +88,8 @@ export default function Header() {
   }
 
   return (
-    <header className="border-b border-navy-700 bg-navy-950">
+    // sticky top-0: 스크롤해도 화면 맨 위에 붙어 있음 (z-50: 페이지 내용보다 위, 사이드바·모달보다 아래)
+    <header className="sticky top-0 z-50 border-b border-navy-700 bg-navy-950">
       {/* relative: 안에서 absolute로 위치 잡을 자식(로고)의 기준점이 되어줌 */}
       <div className="relative mx-auto flex h-[80px] w-full max-w-content items-center justify-between px-[12px] py-[8px] sm:px-[18px]">
         {/* 좌측 카테고리 */}
@@ -151,22 +153,30 @@ export default function Header() {
 
         {/* 우측 네비 */}
         <nav className="flex justify-end" aria-label="상단 유틸리티 메뉴">
-          <ul className="flex items-center gap-[20px] text-11 tracking-[0.05em] text-cream/90 sm:gap-[30px] sm:text-12">
+          {/* 휴대폰 폭: 아이콘만 (로고와 겹치지 않게) / sm(640px) 이상: 글자 */}
+          {/* 아이콘만 보일 때도 스크린리더가 읽을 수 있게 aria-label로 이름을 붙임 */}
+          <ul className="flex items-center gap-[16px] text-11 tracking-[0.05em] text-cream/90 sm:gap-[30px] sm:text-12">
             <li>
               <button
                 type="button"
                 onClick={search.open}
-                className="cursor-pointer transition hover:text-terracotta-400"
+                aria-label="검색"
+                className="flex cursor-pointer items-center transition hover:text-terracotta-400"
               >
-                검색
+                <Search className="h-[18px] w-[18px] sm:hidden" aria-hidden="true" />
+                <span className="hidden sm:inline">검색</span>
               </button>
             </li>
             <li>
               <Link
                 to="/order"
+                aria-label={
+                  totalCount > 0 ? `장바구니 ${totalCount}개` : "장바구니"
+                }
                 className="inline-flex items-center gap-[4px] transition hover:text-terracotta-400"
               >
-                장바구니
+                <ShoppingBag className="h-[18px] w-[18px] sm:hidden" aria-hidden="true" />
+                <span className="hidden sm:inline">장바구니</span>
                 {/* totalCount가 0보다 클 때만 빨간 뱃지 렌더링*/}
                 {totalCount > 0 && (
                   <span className="flex h-[14px] min-w-[14px] items-center justify-center rounded-full bg-terracotta-500 px-[3px] text-9 font-bold text-navy-950">
@@ -179,9 +189,13 @@ export default function Header() {
               <Link
                 // 삼항연산자로 로그인 여부에 따라 목적지가 마이페이지 or 로그인페이지로 갈림
                 to={isLoggedIn ? "/mypage" : "/login"}
-                className="transition hover:text-terracotta-400"
+                aria-label={isLoggedIn ? "마이페이지" : "로그인"}
+                className="flex items-center transition hover:text-terracotta-400"
               >
-                {isLoggedIn ? "마이페이지" : "로그인"}
+                <User className="h-[18px] w-[18px] sm:hidden" aria-hidden="true" />
+                <span className="hidden sm:inline">
+                  {isLoggedIn ? "마이페이지" : "로그인"}
+                </span>
               </Link>
             </li>
           </ul>
@@ -208,7 +222,8 @@ export default function Header() {
                 value={searchValue} // controlled input(제어 컴포넌트): 같이 항상 state와 동기화됨
                 onChange={(e) => setSearchValue(e.target.value)} // 타이핑할 때마다 state 갱신
                 placeholder="상품명, 브랜드로 검색해보세요"
-                className="w-full bg-transparent text-13 text-cream outline-none placeholder:text-cream/40"
+                // text-16(휴대폰): 아이폰 Safari는 16px보다 작은 입력칸을 누르면 화면을 확대해 버림
+                className="w-full bg-transparent text-16 text-cream outline-none placeholder:text-cream/40 sm:text-13"
               />
               <button
                 type="button"
