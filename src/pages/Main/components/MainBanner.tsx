@@ -67,7 +67,9 @@ export default function MainBanner() {
     const banner = bannerRef.current;
     if (!banner) return;
     const bannerBottom = banner.getBoundingClientRect().bottom + window.scrollY;
-    window.scrollTo({ top: bannerBottom, behavior: "smooth" });
+    // 헤더가 위에 붙어 있어서(sticky) 그 높이만큼 덜 내려가야 다음 섹션 제목이 헤더에 안 가려짐
+    const headerHeight = document.querySelector("header")?.offsetHeight ?? 0;
+    window.scrollTo({ top: bannerBottom - headerHeight, behavior: "smooth" });
   }
 
   return (
