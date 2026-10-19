@@ -2,7 +2,7 @@
 // 결제창 인증이 끝나면 토스가 이 주소로 돌려보냄 (?paymentKey=...&orderId=...&amount=...)
 // 지금은 쿼리를 읽어서 보여주는 단계까지. 다음 단계에서 서버승인(/api/confirm)을 붙힘 TO-BE
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { loadPendingOrder } from "./pendingOrder";
 
@@ -22,6 +22,43 @@ export default function PaymentSuccessPage() {
     pending !== null &&
     pending.orderId === orderId &&
     pending.amount === amount;
+  // 승인 진행 상태: 확인 중 -> 성공 / 실패
+  const [status, setStatus] = useState<"confirming" | "success" | "fail">(
+    "confirming",
+  );
+  const [errorMessage, setErrorMessage] = useState("");
+  // 승인 요청을 이미 보냈는지 기억 (화면을 다시 그리지 않는 메모용 useRef)
+  const requestRef = useRef(false);
+
+  useEffect(() => {
+    if (!isMatched || requestRef.current) return;
+    // StrictMode에서 effect가 두 번 실행돼도 승인 요청은 딱 한 번만 보냄
+    requestRef.current = true;
+
+    async function confirmPayment() {
+      try {
+        const response = await fetch("/api/confirm", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ paymentKey, orderId, amount }),
+        });
+        const result = (await response.json()) as { message?: string };
+
+        // response.ok : 상태 코드가 200번대면 true
+        if (!response.ok) {
+          setErrorMessage(result.message ?? "결제 승인에 실패했어요.");
+          setStatus("fail");
+          return;
+        }
+        setStatus("success");
+      } catch {
+        setErrorMessage("서버에 연결하지 못했어요. 잠시 후 다시 시도해주세요.");
+        setStatus("fail");
+      }
+    }
+
+    confirmPayment();
+  }, [isMatched, paymentKey, orderId, amount]);
 
   // 필수 값이 하나라도 없으면 결제창을 거쳐 정상적으로 들어온 게 아님
   if (!paymentKey || !orderId || !amount) {
@@ -64,6 +101,39 @@ export default function PaymentSuccessPage() {
     );
   }
 
+  // 승인 실패: 토스나 내 서버가 거절한 경우
+  if (status === "fail") {
+    return (
+      <main className="mx-auto flex w-full max-w-[600px] flex-col items-center bg-navy-950 px-[20px] py-[120px] text-center">
+        <h1 className="mb-[16px] text-24 font-normal text-cream">
+          결제를 승인하지 못했어요
+        </h1>
+        <p className="mb-[32px] text-14 leading-[1.6] text-cream/60">
+          {errorMessage}
+        </p>
+        <Link
+          to="/order"
+          className="inline-flex items-center justify-center border border-terracotta-500 px-[32px] py-[13px] text-13 tracking-[0.1em] text-terracotta-500 transition-colors hover:bg-terracotta-500 hover:text-navy-950"
+        >
+          주문 페이지로 가기
+        </Link>
+      </main>
+    );
+  }
+
+  // 승인 성공 (주문 저장과 완료 페이지 이동은 다음 단계에서 연결)
+  if (status === "success") {
+    return (
+      <main className="mx-auto flex w-full max-w-[600px] flex-col items-center bg-navy-950 px-[20px] py-[120px] text-center">
+        <h1 className="mb-[16px] text-24 font-normal text-cream">
+          결제가 승인됐어요
+        </h1>
+        <p className="text-14 leading-[1.6] text-cream/60">
+          주문번호 {orderId} · {amount.toLocaleString()}원
+        </p>
+      </main>
+    );
+  }
   return (
     <main className="mx-auto flex w-full max-w-[600px] flex-col items-center bg-navy-950 px-[20px] py-[120px] text-center">
       <h1 className="mb-[16px] text-24 font-normal text-cream">

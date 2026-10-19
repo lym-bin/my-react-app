@@ -1,0 +1,15 @@
+{
+  // api/ 폴더(서버 함수) 전용 TypeScript 설정
+  // src/는 브라우저 코드라 루트 tsconfig를, api/는 Node 서버 코드라 이 설정을 따름
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    // TS 7부터는 쓸 타입을 직접 적어야함 (process, fetch ,Response 등 Node 타입)
+    "types": ["node"],
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["."]
+}
