@@ -18,6 +18,7 @@ import Logo from "./Logo";
 import useDisclosure from "../../hooks/useDisclosure";
 
 // "전체보기"는 카테고리 파라미터 없이 /productsd로 이동.
+// ...스프레드 문법으로 배열이나 객체를 펼쳐서 넣어줌
 const CATEGORY_MENU = [
   { id: "all", label: "전체보기", category: "" }, // 맨 앞 "쩐체보기" 하나 고정 추가
   ...CATEGORIES.map((c) => ({ id: c.id, label: c.label, category: c.id })), // 나머지는 CATEGORIES 그대로 펼침(스프레드)
@@ -88,7 +89,7 @@ export default function Header() {
   return (
     <header className="border-b border-navy-700 bg-navy-950">
       {/* relative: 안에서 absolute로 위치 잡을 자식(로고)의 기준점이 되어줌 */}
-      <div className="relative mx-auto flex h-[80px] w-full max-w-[1200px] items-center justify-between px-[12px] py-[8px] sm:px-[18px]">
+      <div className="relative mx-auto flex h-[80px] w-full max-w-content items-center justify-between px-[12px] py-[8px] sm:px-[18px]">
         {/* 좌측 카테고리 */}
         <ul className="relative flex justify-start">
           {/* ref로 이 li를 categoryRef.current에 연결 (바깥클릭 감지용)*/}
@@ -127,7 +128,7 @@ export default function Header() {
                       type="button"
                       role="menuitem"
                       onClick={() => handleCategoryClick(item.category)} // 클릭하면 그 카테고리로 이동
-                      className="block w-full px-[16px] py-[8px] text-left text-[12px] text-cream transition hover:bg-navy-800 hover:text-terracotta-400"
+                      className="block w-full px-[16px] py-[8px] text-left text-12 text-cream transition hover:bg-navy-800 hover:text-terracotta-400"
                     >
                       {item.label}
                       {/* "전체보기", "상의" 등 화면에 보일 텍스트 */}
@@ -150,7 +151,7 @@ export default function Header() {
 
         {/* 우측 네비 */}
         <nav className="flex justify-end" aria-label="상단 유틸리티 메뉴">
-          <ul className="flex items-center gap-[20px] text-[11px] tracking-[0.05em] text-cream/90 sm:gap-[30px] sm:text-[12px]">
+          <ul className="flex items-center gap-[20px] text-11 tracking-[0.05em] text-cream/90 sm:gap-[30px] sm:text-12">
             <li>
               <button
                 type="button"
@@ -168,7 +169,7 @@ export default function Header() {
                 장바구니
                 {/* totalCount가 0보다 클 때만 빨간 뱃지 렌더링*/}
                 {totalCount > 0 && (
-                  <span className="flex h-[14px] min-w-[14px] items-center justify-center rounded-full bg-terracotta-500 px-[3px] text-[9px] font-bold text-navy-950">
+                  <span className="flex h-[14px] min-w-[14px] items-center justify-center rounded-full bg-terracotta-500 px-[3px] text-9 font-bold text-navy-950">
                     {totalCount}
                   </span>
                 )}
@@ -207,13 +208,13 @@ export default function Header() {
                 value={searchValue} // controlled input(제어 컴포넌트): 같이 항상 state와 동기화됨
                 onChange={(e) => setSearchValue(e.target.value)} // 타이핑할 때마다 state 갱신
                 placeholder="상품명, 브랜드로 검색해보세요"
-                className="w-full bg-transparent text-[13px] text-cream outline-none placeholder:text-cream/40"
+                className="w-full bg-transparent text-13 text-cream outline-none placeholder:text-cream/40"
               />
               <button
                 type="button"
                 aria-label="검색창 닫기"
                 onClick={search.close}
-                className="text-[12px] text-cream/60 hover:text-cream"
+                className="text-12 text-cream/60 hover:text-cream"
               >
                 ✕
               </button>
