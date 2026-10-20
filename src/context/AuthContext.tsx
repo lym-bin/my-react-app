@@ -93,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (nickname) {
       // 닉네임을 같이 넘겼으면, 그 유저의 표시이름(displayName)설정
       await updateProfile(credential.user, { displayName: nickname });
-      // 리스너는 "닉네임 변경"까지는 자동으로 안 려줘서 화면 갱신위해 수동으로 새 객체 넣어줌
+      // 리스너는 "닉네임 변경"까지는 자동으로 안그려줘서 화면 갱신위해 수동으로 새 객체 넣어줌
       setUser({ ...credential.user } as User);
     }
   };
