@@ -2,6 +2,7 @@
 // 전역상태(로그인/장바구니)를 설치하고, 라우터를 달고 url마다 어떤 페이지를 보여줄지 정하는 파일
 // 매핑을 도와주는 파일
 // 전역 데이터(Provider) 설치 -> 주소 감시 시작(Router) -> 주소에 맞는 페이지 하나만 골라서 헤더/푸터 그리기
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
@@ -21,6 +22,8 @@ import ProductListPage from "./ProductList/ProductListPage";
 import StoryPage from "./pages/Story/StoryPage";
 import PaymentSuccessPage from "./Payment/PaymentSuccessPage";
 import PaymentFailPage from "./Payment/PaymentFailPage";
+
+const queryClient = new QueryClient();
 
 function AppLayout() {
   // 지금 주소가 뭔지 알려주는 센서같은 느낌
@@ -61,15 +64,17 @@ function AppLayout() {
 
 export default function App() {
   return (
-    // 감싸는 이유는 로그인/장바구니 정보를 어디서든 꺼낼 수있게
-    <AuthProvider>
-      {/* CartProvider가 useAuth로 로그인 정보를 쓰기 때문에 반드시 AuthProvider 안쪽에 둠 */}
-      <CartProvider>
-        {/* 라우팅 기능을 쓸 수있게*/}
-        <BrowserRouter>
-          <AppLayout />
-        </BrowserRouter>
-      </CartProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      {/* 감싸는 이유는 로그인/장바구니 정보를 어디서든 꺼낼 수있게 */}
+      <AuthProvider>
+        {/* CartProvider가 useAuth로 로그인 정보를 쓰기 때문에 반드시 AuthProvider 안쪽에 둠 */}
+        <CartProvider>
+          {/* 라우팅 기능을 쓸 수있게*/}
+          <BrowserRouter>
+            <AppLayout />
+          </BrowserRouter>
+        </CartProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }

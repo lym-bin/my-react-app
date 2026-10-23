@@ -1,11 +1,12 @@
 // src/Mypage/Mypage.tsx
 // 로그인 검사 후, Firestore에서 사용자의 주문내역을 조회해서 보여주고,
 // 최근 본 상품, 회원정보 수정도 같이 관리하는 마이 페이지
-// 로그인 확인(리다이렉트)-> Firestore에서 본인 주문만 쿼리해서 조회(언마운트 방어)
+// 로그인 확인(리다이렉트)-> Firestore에서 본인 주문만 쿼리해서 조회
 // localStorage 기반 최근 본 상품 표시 -> 사이드 네비게이션바에서 스크롤 이동
+import { useQuery } from "@tanstack/react-query";
 import useDisclosure from "../hooks/useDisclosure";
 import EditProfileModal from "./EditProfileModal";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { PRODUCTS } from "../ProductList/ProductsData";
 import { getRecentlyViewed } from "../ProductList/recentlyViewed";
@@ -50,14 +51,31 @@ const mainNav = [
 ];
 const subNavComingSoon = ["공지사항", "고객센터", "이벤트"];
 
+async function fetchOrders(uid: string): Promise<OrderData[]> {
+  const q = query(collection(db, "orders"), where("userId", "==", uid));
+  const snapshot = await getDocs(q);
+  const orders = snapshot.docs.map(
+    (doc) => ({ id: doc.id, ...doc.data() }) as OrderData,
+  );
+  return orders.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
 export default function MyPage() {
   const navigate = useNavigate();
   const { isLoggedIn, isLoading, user, nickname, logout } = useAuth();
   const editProfile = useDisclosure();
 
   // 주문 내역 상태 관리
-  const [orders, setOrders] = useState<OrderData[]>([]);
-  const [isOrderLoading, setIsOrderLoading] = useState(true);
+  const {
+    data: orders = [],
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["orders", user?.uid],
+    queryFn: () => fetchOrders(user!.uid),
+    enabled: !!user,
+  });
+
   // 최근 본 상품: localStorage에 저장된 id들 -> 실제 상품 객체로 변환(ProductDetailPage에서 본 패턴)
   const recentlyViewedIds = getRecentlyViewed();
   const recentlyViewedProducts = recentlyViewedIds
@@ -72,52 +90,8 @@ export default function MyPage() {
     // 로그인 안 됐으면(로딩 끝난 후) 로그인 페이지로
     if (!isLoading && !isLoggedIn) {
       navigate("/login");
-      return; // useEffect 콜백 안의 조기 종료 (훅 규칙이랑 무관, 그냥 함수 안 return)
     }
-
-    // 사용자 마이페이지 진입시 Firestore에 요청(fetchOrders 시작) ->응답이 오기도 전에 다른 페이지이동 ->
-    // 컴포넌트는 화면에서 이미 사라졌는데 조금 뒤 Firestore 응답이 뒤늦게 도착 -> setOrders(...) 호출
-    // 결론적으로 사라진 컴포넌트에 state를 넣으려는 시도라서 메모리 누수 원인이 됨
-    // isCancelled는 그걸 막는 깃발
-    let isCancelled = false; // 컴포넌트가 사라지면 true로 바뀜 -> 기 뒤엔 setState 안 함
-
-    async function fetchOrders() {
-      if (!user) return;
-      try {
-        // userId가 현재 로그인한 유저의 uid와 일치하는 문서 조회
-        // Firestore 쿼리 만들기 : "orders" 컬렉션에서 userId가 내 uid랑 같은 문서만
-        // Firestore가 리턴하는 데이터는 TS 입장에서 원래 구체적인 타입을 모르기 때문에 필요함
-        const q = query(
-          collection(db, "orders"),
-          where("userId", "==", user.uid), // SQL의 WHERE절(데이터 조회 수정할 떄 원하는 행 조회)이랑 같은 역할
-        );
-        const querySnapshot = await getDocs(q); // 쿼리 실행 -> 결과 묶음(snapshot)
-        const fetchedOrders: OrderData[] = [];
-        // doc.data()는 문서 내용(필드들)만 줌 doc.id(문서 고유ID)는 별도로 붙혀야 함
-        // (...) 스프레드로 둘을 합쳐서 하나의 객체로. as로 OrderData 타입이라고 단언
-        querySnapshot.forEach((doc) => {
-          fetchedOrders.push({ id: doc.id, ...doc.data() } as OrderData);
-        });
-        // Firestore는 정렬을 지정하지 않으면 문서 ID 순서(무작위)로 줌 -> 최신 주문이 위로 오게 직접 정렬
-        // createdAt이 ISO 문자열("2026-10-19T03:12:00.000Z")이라 문자열 비교만으로 시간순 비교가 됨
-        fetchedOrders.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-
-        if (!isCancelled) setOrders(fetchedOrders); // 이미 떠난 뒤면 setState 스킵
-      } catch (error) {
-        console.error("주문 내역을 불러오는 중 에러 발생:", error);
-      } finally {
-        if (!isCancelled) setIsOrderLoading(false);
-      }
-    }
-
-    if (isLoggedIn && user) {
-      fetchOrders();
-    }
-
-    return () => {
-      isCancelled = true; // cleanup: 마이페이지를 빨리 벗어나면 여기서 true로 바뀜
-    };
-  }, [isLoading, isLoggedIn, user, navigate]);
+  }, [isLoading, isLoggedIn, navigate]);
 
   const handleLogout = async () => {
     await logout();
@@ -171,8 +145,12 @@ export default function MyPage() {
           최근 주문 내역
           {/* 3단계 상태: 로딩중/ 주문 없음/ 주문 있음 - 중첩 삼항연산자로 스위칭*/}
         </h2>
-        {isOrderLoading ? (
+        {isPending ? (
           <p className="text-14 text-cream/50">주문 내역을 불러오는 중...</p>
+        ) : isError ? (
+          <p className="text-14 text-cream/50">
+            주문 내역을 불러오지 못했어요. 잠시 후 다시 시도해주세요.
+          </p>
         ) : orders.length === 0 ? (
           <div className="rounded-[8px] bg-navy-900 p-[20px] text-center text-14 text-cream/60">
             주문 내역이 없습니다.
