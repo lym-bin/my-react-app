@@ -69,6 +69,23 @@ export default function OrderPage() {
     }
   }, [user, isLoading, navigate]);
 
+  // 결제 후 뒤로 가기 시 브라우저가 결제창이 떠 있던 /order를 bfcache에서 그대로 복원함
+  // → 이미 끝난 결제창이 멈춰 있고, 닫으면 "종료된 세션" 오류가 나서 빠져나갈 수 없었음
+  // → 복원(persisted)된 경우 새로 고쳐서 지금의 진짜 상태(비워진 장바구니)로 다시 그림
+  useEffect(() => {
+    // 핸들러 정의
+    function handlePageShow(e: PageTransitionEvent) {
+      if (e.persisted) {
+        window.location.reload();
+      }
+    }
+    // effect가 실행될 때 등록 (함수 바깥)
+    window.addEventListener("pageshow", handlePageShow);
+
+    // cleanup (함수 바깥)
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
+
   // 로그인 확인 중이거나 배송지를 불러오는 중이면 로딩 표시
   if (isLoading || isAddressLoading) {
     return (
