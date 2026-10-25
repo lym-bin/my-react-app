@@ -2,7 +2,7 @@
 // 로그인 안 됐거나 로딩중이거나 장바구니 비었으면 그에 맞는 화면을 보여줌
 // 다 통과하면 배송지를 고르고 토스 결제창을 여는 페이지 (주문 저장은 결제 승인 후 PaymentSuccessPage에서)
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
@@ -37,6 +37,8 @@ export default function OrderPage() {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCanceled, setIsCanceled] = useState(false); // 결제 창을 직접 닫았는지
+  // 가리킬 요소가 없는 빈 박스는 null이지만 예/아니요로 잡아둬야 false 기본값
+  const isPayingRef = useRef(false); // 지금 결제창이 떠있는지, 아닌지 빈 박스 생성
 
   // 배송지 목록은 Firestore에서 불러옴 (useAddresses 커스텀 훅)
   // 객체 구조분해 + 이름 바꾸기: addresses를 savedAddresses라는 이름으로 꺼냄
@@ -86,6 +88,20 @@ export default function OrderPage() {
     return () => window.removeEventListener("pageshow", handlePageShow);
   }, []);
 
+  // 결제창이 떠 있는 채로 SPA로 이동하면 토스 창이 남음
+  // cleanup이 실행 되는 순간 current 최신 값이 들어있기 때문에 ref
+  useEffect(() => {
+    // 나타날 때는 할 일 없음
+    return () => {
+      // 사라 질 때
+      if (isPayingRef.current) {
+        clearPendingOrder();
+        alert("결제가 취소되었습니다.");
+        window.location.reload();
+      }
+    };
+  }, []);
+
   // 로그인 확인 중이거나 배송지를 불러오는 중이면 로딩 표시
   if (isLoading || isAddressLoading) {
     return (
@@ -103,6 +119,7 @@ export default function OrderPage() {
   // 결제창 띄우기 -> 결제가 끝나면 성공/실패 주소로 이동, PC에서 창을 닫으면 USER_CANCEL 에러
   const handleRequestPayment = async () => {
     if (isSubmitting || items.length === 0) return;
+    isPayingRef.current = true;
     setIsCanceled(false); // 다시 결제를 시작하면 지난번 취소 안내는 지움
     setIsSubmitting(true);
 
@@ -122,6 +139,7 @@ export default function OrderPage() {
     if (!saved) {
       alert("주문 정보를 저장하지 못했어요. 브라우저 설정을 확인해 주세요");
       setIsSubmitting(false);
+      isPayingRef.current = false;
       return;
     }
     try {
@@ -142,6 +160,7 @@ export default function OrderPage() {
       });
     } catch (error) {
       setIsSubmitting(false);
+      isPayingRef.current = false;
       clearPendingOrder(); // 결제를 안 했으니 맡겨둔 주문 정보도 치움
 
       // 사용자가 결제창을 직접 닫은 건 오류가 아니라 선택 -> 알림 없이 원래 화면 그대로
