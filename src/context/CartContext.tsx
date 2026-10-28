@@ -132,7 +132,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (existing) {
         // 존재하면 : 그 항목만 수량 더해서 교체(나머지는 그대로 map으로 복사)
         return prev.map((i) =>
-          i.id === id ? { ...i, qty: i.qty + item.qty } : i,
+          i.id === id ? { ...i, qty: Math.min(MAX_QTY, i.qty + item.qty) } : i,
         );
       }
       // 없으면: 새 항목으로 배열 끝에 추가
