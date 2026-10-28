@@ -17,6 +17,7 @@ import { useCart } from "../../context/CartContext"; // 장바구니 정보 창�
 import Logo from "./Logo";
 import useDisclosure from "../../hooks/useDisclosure";
 import { LogIn, Search, ShoppingBag, User } from "lucide-react"; // 휴대폰 폭에서 글자 대신 쓰는 아이콘
+import { useCartSidebar } from "../../context/CartSidebarContext";
 
 // "전체보기"는 카테고리 파라미터 없이 /productsd로 이동.
 // ...스프레드 문법으로 배열이나 객체를 펼쳐서 넣어줌
@@ -36,7 +37,7 @@ export default function Header() {
   const category = useDisclosure(); // 카테고리 드롭다운
   const search = useDisclosure(); // 검색 모달 열림 여부
   const [searchValue, setSearchValue] = useState(""); // 검색창 입력 값
-
+  const cart = useCartSidebar();
   // useState는 TV 화면에 표시되는 채널 숫자 - 값이 바뀌면 화면(리렌더링)
   // useRef는 TV본체를 직접 가리키는 리모컨
   // 리모컨을 다른 걸로 바꿔 낀다고 해서 화면이 다시 그려지진 않음
@@ -172,14 +173,16 @@ export default function Header() {
               </button>
             </li>
             <li>
-              <Link
-                to="/order"
+              <button
+                type="button"
+                onClick={cart.open}
+                aria-expanded={cart.isOpen}
                 aria-label={
                   totalCount > 0 ? `장바구니 ${totalCount}개` : "장바구니"
                 }
                 // relative: 휴대폰에서 뱃지를 아이콘 위에 겹쳐 올릴 때 기준점
                 // flex(inline-flex 아님): inline-flex는 글자 줄 위에 얹혀서 아래 여백이 생기고 아이콘이 2px 위로 뜸
-                className="relative flex items-center gap-[4px] transition hover:text-terracotta-400"
+                className="cursor-pointer relative flex items-center gap-[4px] transition hover:text-terracotta-400"
               >
                 <ShoppingBag
                   className="h-[18px] w-[18px] sm:hidden"
@@ -194,7 +197,7 @@ export default function Header() {
                     {totalCount}
                   </span>
                 )}
-              </Link>
+              </button>
             </li>
             <li>
               <Link
