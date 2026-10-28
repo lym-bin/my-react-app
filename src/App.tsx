@@ -22,6 +22,11 @@ import ProductListPage from "./ProductList/ProductListPage";
 import StoryPage from "./pages/Story/StoryPage";
 import PaymentSuccessPage from "./Payment/PaymentSuccessPage";
 import PaymentFailPage from "./Payment/PaymentFailPage";
+import {
+  CartSidebarProvider,
+  useCartSidebar,
+} from "./context/CartSidebarContext";
+import CartSidebar from "./ProductDetail/CartSidebar";
 
 const queryClient = new QueryClient();
 
@@ -31,11 +36,23 @@ function AppLayout() {
   const isLoginPage = location.pathname === "/login";
   const isStoryPage = location.pathname === "/story";
   const hideChrome = isLoginPage || isStoryPage;
+  const cart = useCartSidebar();
 
   return (
     <div className="flex min-h-screen flex-col">
       {/* 로그인/스토리 페이지가 아닐 때만 헤더 노출 */}
       {!hideChrome && <Header />}
+      <CartSidebar />
+
+      {/* 장바구니 사이드바가 열렸을 때 막 처리 */}
+      {cart.isOpen && (
+        <div
+          className="fixed inset-0 z-[9998] bg-navy-950/70 transition-opacity"
+          onClick={() => {
+            cart.close();
+          }}
+        />
+      )}
 
       {/* 각 페이지가 자기 <main>을 갖고 있어서 여기선 div (main이 겹치지 않게) */}
       <div className="flex-1">
@@ -69,10 +86,12 @@ export default function App() {
       <AuthProvider>
         {/* CartProvider가 useAuth로 로그인 정보를 쓰기 때문에 반드시 AuthProvider 안쪽에 둠 */}
         <CartProvider>
-          {/* 라우팅 기능을 쓸 수있게*/}
-          <BrowserRouter>
-            <AppLayout />
-          </BrowserRouter>
+          <CartSidebarProvider>
+            {/* 라우팅 기능을 쓸 수있게*/}
+            <BrowserRouter>
+              <AppLayout />
+            </BrowserRouter>
+          </CartSidebarProvider>
         </CartProvider>
       </AuthProvider>
     </QueryClientProvider>

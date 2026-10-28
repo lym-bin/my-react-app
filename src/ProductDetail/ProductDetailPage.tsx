@@ -10,13 +10,13 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useParams } from "react-router-dom"; // URL 경로의 동적 부분(:id 같은)을 읽는 쪽
 import useDisclosure from "../hooks/useDisclosure";
 import SizeGuideSidebar from "./SizeGuideSidebar";
-import CartSidebar from "./CartSidebar";
 import SimilarProducts from "./SimilarProducts";
 import { useCart } from "../context/CartContext";
 // 상품 데이터는 ProductList 페이지와 동일한 소스를 공유.
 import { PRODUCTS } from "../ProductList/ProductsData";
 import { COLOR_OPTIONS, SIZE_OPTIONS } from "../ProductList/OptionsData";
 import { addRecentlyViewed } from "../ProductList/recentlyViewed";
+import { useCartSidebar } from "../context/CartSidebarContext";
 export default function ProductDetailPage() {
   // App.tsx에서 라우터가 "/products/:id" 경로로 매칭시켜준 id를 꺼냄. 예: /products/3 -> id = "3" (항상 문자열!)
   const { id } = useParams();
@@ -24,7 +24,7 @@ export default function ProductDetailPage() {
   const { isLoggedIn } = useAuth();
   // 커스텀 훅 두 번 호출
   // 독립된 isOpen상태가 생김
-  const cart = useDisclosure(); // 장바구니 사이드바 열고 닫기
+  const cart = useCartSidebar(); // 커스텀 훅 useCartSidebar로 전역 사용
   const sizeGuide = useDisclosure(); // 사이즈가이드 사이드바 열고 닫기(완전히 별개 인스턴스)
   const { addItem } = useCart(); // CartContext에서 "장바구니에 담기" 함수만 꺼냄
 
@@ -86,8 +86,8 @@ export default function ProductDetailPage() {
     openCart(); // 담고 나서 장바구니 사이드바 자동으로 열기
   };
 
-  // 둘 중 하나라도 열려있으면 배경 dimmed 처리
-  const isDimmedOpen = cart.isOpen || sizeGuide.isOpen;
+  // 사이즈가이드바가 열려 있으면(장바구니 막은 AppLayout이 담당)
+  const isDimmedOpen = sizeGuide.isOpen;
 
   // 상품 못 찾았으면(잘못된 id 등) 안내 문구만 보여주고 끝
   if (!product) {
@@ -105,7 +105,6 @@ export default function ProductDetailPage() {
         <div
           className="fixed inset-0 z-[9998] bg-navy-950/70 transition-opacity"
           onClick={() => {
-            cart.close();
             sizeGuide.close(); // 배경 클릭하면 둘 다 닫음 (어느 쪽이 열려있든 상관없이)
           }}
         />
@@ -250,7 +249,6 @@ export default function ProductDetailPage() {
             onClose={sizeGuide.close}
             category={product.category}
           />
-          <CartSidebar isOpen={cart.isOpen} onClose={cart.close} />
         </section>
       </main>
 
