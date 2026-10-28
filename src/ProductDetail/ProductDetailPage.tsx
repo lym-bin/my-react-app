@@ -10,13 +10,13 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useParams } from "react-router-dom"; // URL 경로의 동적 부분(:id 같은)을 읽는 쪽
 import useDisclosure from "../hooks/useDisclosure";
 import SizeGuideSidebar from "./SizeGuideSidebar";
-import CartSidebar from "./CartSidebar";
 import SimilarProducts from "./SimilarProducts";
 import { useCart } from "../context/CartContext";
 // 상품 데이터는 ProductList 페이지와 동일한 소스를 공유.
 import { PRODUCTS } from "../ProductList/ProductsData";
 import { COLOR_OPTIONS, SIZE_OPTIONS } from "../ProductList/OptionsData";
 import { addRecentlyViewed } from "../ProductList/recentlyViewed";
+import { useCartSidebar } from "../context/CartSidebarContext";
 export default function ProductDetailPage() {
   // App.tsx에서 라우터가 "/products/:id" 경로로 매칭시켜준 id를 꺼냄. 예: /products/3 -> id = "3" (항상 문자열!)
   const { id } = useParams();
@@ -24,7 +24,7 @@ export default function ProductDetailPage() {
   const { isLoggedIn } = useAuth();
   // 커스텀 훅 두 번 호출
   // 독립된 isOpen상태가 생김
-  const cart = useDisclosure(); // 장바구니 사이드바 열고 닫기
+  const cart = useCartSidebar(); // 커스텀 훅 useCartSidebar로 전역 사용
   const sizeGuide = useDisclosure(); // 사이즈가이드 사이드바 열고 닫기(완전히 별개 인스턴스)
   const { addItem } = useCart(); // CartContext에서 "장바구니에 담기" 함수만 꺼냄
 
@@ -250,7 +250,6 @@ export default function ProductDetailPage() {
             onClose={sizeGuide.close}
             category={product.category}
           />
-          <CartSidebar isOpen={cart.isOpen} onClose={cart.close} />
         </section>
       </main>
 

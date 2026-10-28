@@ -12,7 +12,7 @@ export default function CartSidebar() {
   // useNavigate: 버튼 클릭 같은 이벤트 헨들러 안에서 코드로 페이지를 이동 시키는 HOOK
   // LINK가 클릭하면 이동하는 링크 라면 useNavigate()는 조건 판단 후 이동
   const navigate = useNavigate(); // 2. 네비게이트 훅 선언
-  const { isOpen, close } = useCartSidebar();
+  const { isOpen, close } = useCartSidebar(); // CartSidebarProvider 안에서만 쓰는 부품
 
   return (
     <aside
