@@ -86,8 +86,8 @@ export default function ProductDetailPage() {
     openCart(); // 담고 나서 장바구니 사이드바 자동으로 열기
   };
 
-  // 둘 중 하나라도 열려있으면 배경 dimmed 처리
-  const isDimmedOpen = cart.isOpen || sizeGuide.isOpen;
+  // 사이즈가이드바가 열려 있으면(장바구니 막은 AppLayout이 담당)
+  const isDimmedOpen = sizeGuide.isOpen;
 
   // 상품 못 찾았으면(잘못된 id 등) 안내 문구만 보여주고 끝
   if (!product) {
@@ -105,7 +105,6 @@ export default function ProductDetailPage() {
         <div
           className="fixed inset-0 z-[9998] bg-navy-950/70 transition-opacity"
           onClick={() => {
-            cart.close();
             sizeGuide.close(); // 배경 클릭하면 둘 다 닫음 (어느 쪽이 열려있든 상관없이)
           }}
         />
