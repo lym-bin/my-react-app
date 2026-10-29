@@ -17,8 +17,29 @@ import QuickNav from "./components/QuickNav";
 // 컴포넌트 함수 안에 넣으면 렌더링마다 반복 등록 되니까 밖에 둠
 gsap.registerPlugin(ScrollTrigger);
 
+const INTRO_SEEN_KEY = "objet-b-intro-seen";
+
+// 현재 바라보고 있는 탭에서 인트로를 끝까지 봤는지 (저장소를 못 쓰면 "안 봤다"로 처리 -> 인트로가 나옴)
+function hasSeenIntro() {
+  try {
+    return sessionStorage.getItem(INTRO_SEEN_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+// 인트로를 끝까지 봤다고 도장 찍기
+function markIntroSeen() {
+  try {
+    sessionStorage.setItem(INTRO_SEEN_KEY, "true");
+  } catch {
+    // 저장 못해도 인트로가 다시 나올 뿐, 앱은 정상 동작
+    return;
+  }
+}
+
 export default function MainPage() {
-  const [showIntro, setShowIntro] = useState(true); // 인트로 애니메이션 보여줄지 여부
+  const [showIntro, setShowIntro] = useState(() => !hasSeenIntro()); // 인트로 애니메이션 보여줄지 여부
   const containerRef = useRef<HTMLDivElement>(null); // <main> 태그를 직접 갈리킴 ref
 
   useEffect(() => {
@@ -67,7 +88,14 @@ export default function MainPage() {
     >
       {/* 1. 첫 진입 시 풀스크린 오프닝 인트로 */}
       {/* showIntro가 true일 때만 인트로 화면 표시*/}
-      {showIntro && <IntroOverlay onComplete={() => setShowIntro(false)} />}
+      {showIntro && (
+        <IntroOverlay
+          onComplete={() => {
+            markIntroSeen();
+            setShowIntro(false);
+          }}
+        />
+      )}
 
       {/* 2. 에디토리얼 모션이 적용된 메인 섹션들 */}
       {/* gsap-reveal-section : Tailwind 클래스 아니라 순수하게 "GSAP이 찾을 표식으로 쓰는 클래스*/}
