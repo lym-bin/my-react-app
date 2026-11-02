@@ -162,7 +162,7 @@ export default function ProductListPage() {
         )}
 
         {/* 상단 정렬 및 필터 버튼 영역 */}
-        <div className="flex items-center justify-between border-b border-navy-700 pb-[20px]">
+        <div className="flex flex-col items-start gap-[12px] border-b border-navy-700 pb-[20px] sm:flex-row sm:items-center sm:justify-between">
           <div className="text-13 font-medium text-cream/80">
             {/* {" "} = JSX에서 "여기 공백 한칸" 명시 (JSX는 줄바꿈 공백을 무시해서 수동으로 넣음) */}
             TOTAL{" "}
@@ -173,7 +173,7 @@ export default function ProductListPage() {
             ITEMS
           </div>
 
-          <div className="flex items-center gap-[24px]">
+          <div className="flex flex-wrap items-center gap-x-[24px] gap-y-[10px]">
             {/* 정렬 옵션 리스트 */}
             <ul className="flex items-center gap-[16px]">
               {/* sortOptions 배열을 돌면서 정렬 버튼 4개 생성(.map = 배열 -> JSX 배열
@@ -185,7 +185,7 @@ export default function ProductListPage() {
                     // 템플릿 리터럴(백틱) 안에서 삼항연산자로 클래스 분기
                     // 현재 정렬 기준이면 -> 강조 스타일, 아니면 -> 흐린 스타일
                     // activeSort option이 true면 강조, false면 text-cream으로 흐리게
-                    className={`cursor-pointer text-13 transition-colors ${
+                    className={`cursor-pointer text-13 whitespace-nowrap transition-colors ${
                       activeSort === option
                         ? "font-bold text-terracotta-400 underline underline-offset-4"
                         : "text-cream/50 hover:text-cream"

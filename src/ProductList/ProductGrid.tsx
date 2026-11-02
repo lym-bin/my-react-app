@@ -42,7 +42,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
   // toLocaleString(): 천 단위 콤마를 자동으로 넣어주는 JS메서드
   return (
     <section className="mx-auto w-full max-w-content bg-navy-950 px-[20px]">
-      <ul className="mb-[40px] grid grid-cols-3 gap-[24px]">
+      <ul className="mb-[40px] grid grid-cols-2 md:grid-cols-3 gap-[24px]">
         {/* 보여줄 상품을들 map으로 돌면서 카드 생성*/}
         {visibleProducts.map((product) => (
           <ProductCard
