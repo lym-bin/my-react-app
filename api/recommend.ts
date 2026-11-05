@@ -1,7 +1,8 @@
 // api/recommend.ts
-// 서버: 상품 ID를 받아 원본데이터(PRODUCTS)에서 찾는 곳
+// 서버: 상품 ID를 받아 원본데이터(PRODUCTS)에서 찾고, AI 추천 받음
 import { GoogleGenAI } from "@google/genai";
 import { PRODUCTS } from "../src/ProductList/ProductsData.js";
+import { filterRecommendations } from "../src/utils/filterRecommendations.js";
 
 interface RecommendBody {
   productId: number; // 브라우저가 보내는 것
@@ -54,7 +55,6 @@ ${candidateText}
   }
   const ai = new GoogleGenAI({ apiKey });
 
-  // AI가 직접 추천해주는 안내 문구
   const interaction = await ai.interactions.create({
     model: "gemini-3.5-flash-lite",
     input: prompt,
@@ -83,5 +83,30 @@ ${candidateText}
     },
   });
 
-  return Response.json({ text: interaction.output_text });
+  // ① AI 답(글자)을 객체로 바꾸기
+  const text = interaction.output_text;
+  if (!text) {
+    return Response.json(
+      { message: "텍스트가 비어있는 상태입니다." },
+      { status: 502 },
+    );
+  }
+
+  // 모양은 아직 믿지 않음 → 안의 값은 unknown(모름)으로 둠
+  let parsed: { recommendations?: { id?: unknown; reason?: unknown }[] };
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    return Response.json(
+      { message: "파싱한 데이터가 올바르지 않아요." },
+      { status: 502 },
+    );
+  }
+
+  const results = filterRecommendations(
+    parsed.recommendations ?? [],
+    candidates,
+  );
+
+  return Response.json({ recommendations: results });
 }
