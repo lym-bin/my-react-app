@@ -55,36 +55,55 @@ ${candidateText}
   }
   const ai = new GoogleGenAI({ apiKey });
 
-  const interaction = await ai.interactions.create({
-    model: "gemini-3.5-flash-lite",
-    input: prompt,
-    // 답을 이 모양의 JSON으로만 받기
-    response_format: {
-      type: "text",
-      mime_type: "application/json",
-      schema: {
-        type: "object",
-        properties: {
-          recommendations: {
-            type: "array",
-            maxItems: 3,
-            items: {
-              type: "object",
-              properties: {
-                id: { type: "integer" },
-                reason: { type: "string" },
+  // Gemini 호출 (실패하면 throw -> catch에서 처리)
+  let text: string | undefined;
+  try {
+    const interaction = await ai.interactions.create({
+      model: "gemini-3.5-flash-lite",
+      input: prompt,
+      // 답을 이 모양의 JSON으로만 받기
+      response_format: {
+        type: "text",
+        mime_type: "application/json",
+        schema: {
+          type: "object",
+          properties: {
+            recommendations: {
+              type: "array",
+              maxItems: 3,
+              items: {
+                type: "object",
+                properties: {
+                  id: { type: "integer" },
+                  reason: { type: "string" },
+                },
+                required: ["id", "reason"],
               },
-              required: ["id", "reason"],
             },
           },
+          required: ["recommendations"],
         },
-        required: ["recommendations"],
       },
-    },
-  });
+    });
+    text = interaction.output_text;
+  } catch (error) {
+    // 한도 초과: SDK 에러에 status 숫자가 들어 있음 (RateLimitError는 공개 안 돼서 숫자로 구분)
+    if (error instanceof Error && "status" in error && error.status === 429) {
+      console.error("[recommend] Gemini 한도 초과 (429)");
+      return Response.json(
+        { message: "Gemini 무료 하루 할당량 초과." },
+        { status: 429 },
+      );
+    }
+    // 그 밖의 실패 (네트워크, 잘못된 모델 이름 등)
+    console.error("[recommend] Gemini 호출 실패", error);
+    return Response.json(
+      { message: "오류가 발생했습니다. 잠시 후 다시 시도해주세요." },
+      { status: 502 },
+    );
+  }
 
   // ① AI 답(글자)을 객체로 바꾸기
-  const text = interaction.output_text;
   if (!text) {
     return Response.json(
       { message: "텍스트가 비어있는 상태입니다." },
