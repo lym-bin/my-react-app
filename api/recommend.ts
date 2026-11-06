@@ -9,7 +9,17 @@ interface RecommendBody {
 }
 
 export async function POST(request: Request) {
-  const { productId } = (await request.json()) as RecommendBody;
+  // body가 JSON이 아니면 json()이 throw -> 브라우저 잘못이므로 400
+  let body: RecommendBody;
+  try {
+    body = (await request.json()) as RecommendBody;
+  } catch {
+    return Response.json(
+      { message: "JSON 형식에 맞지 않습니다." },
+      { status: 400 },
+    );
+  }
+  const { productId } = body;
 
   // 원본에서 찾기
   const product = PRODUCTS.find((p) => p.id === productId);
