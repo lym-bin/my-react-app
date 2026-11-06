@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom"; // URL 경로의 동적 부분(:id
 import useDisclosure from "../hooks/useDisclosure";
 import SizeGuideSidebar from "./SizeGuideSidebar";
 import SimilarProducts from "./SimilarProducts";
+import AiRecommendations from "./AiRecommendations";
 import { useCart } from "../context/CartContext";
 // 상품 데이터는 ProductList 페이지와 동일한 소스를 공유.
 import { PRODUCTS } from "../ProductList/ProductsData";
@@ -251,7 +252,7 @@ export default function ProductDetailPage() {
           />
         </section>
       </main>
-
+      <AiRecommendations productId={product.id} />
       {/* 비슷한 제품 / 스타일링 컷 : ID 배열 -> 실제 상품 객체 배열로 변환*/}
       {/* product.similarProductIds: 숫자 ID 배열[3,7,12]*/}
       {/* .map((id)=> PRODUCTS.find(...)): 각 ID를 실제 상품 객체로 바꿈 */}
