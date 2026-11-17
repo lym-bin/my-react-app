@@ -118,41 +118,19 @@ export default function LoginPage() {
           />
 
           {/* error/info 각각 있을 때만 표시, 동시에 둘 다 올 수도 있는 구조(서로 배타적이지 않음)*/}
-          {error && (
-            <p className="mb-[16px] text-13 text-danger">{error}</p>
-          )}
+          {error && <p className="mb-[16px] text-13 text-danger">{error}</p>}
           {info && (
             <p className="mb-[16px] text-13 text-terracotta-400">{info}</p>
           )}
 
-          <div className="mb-[20px] flex items-center justify-between text-13 text-cream/60">
-            <div className="flex items-center gap-[6px]">
-              {/* checked/onChange 없는 체크박스: 브라우저가 알아서 체크 상태 관리(uncontrolled)*/}
-              {/* 이 값을 읽어서 쓰는 로직이 없어서 "자동로그인" 기능 자체는 아직 안 붙음*/}
-              <input
-                type="checkbox"
-                id="keep"
-                className="accent-terracotta-500"
-              />
-              <label htmlFor="keep">자동로그인</label>
-            </div>
-            <div className="flex gap-[8px]">
-              <button
-                type="button"
-                disabled
-                className="cursor-not-allowed text-cream/30"
-              >
-                아이디 찾기
-              </button>
-              <span>|</span>
-              <button
-                type="button"
-                onClick={handlePasswordReset}
-                className="hover:text-terracotta-400 hover:underline"
-              >
-                비밀번호 찾기
-              </button>
-            </div>
+          <div className="justify-center mb-[20px] flex items-center text-13 text-cream/60">
+            <button
+              type="button"
+              onClick={handlePasswordReset}
+              className="hover:text-terracotta-400 hover:underline"
+            >
+              비밀번호 찾기
+            </button>
           </div>
 
           <button
