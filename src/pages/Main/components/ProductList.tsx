@@ -45,7 +45,7 @@ export default function ProductList({ introDone }: ProductListProps) {
       <div className="mx-auto mb-[50px] max-w-content px-[16px] py-[40px] sm:py-[40px]">
         {/* 섹션 헤드라인 */}
         <div className="mb-[30px] text-center">
-          <span className="mb-[8px] block text-11 font-light tracking-[0.3em] text-cream/40 uppercase">
+          <span className="mb-[8px] block text-11 font-light tracking-[0.3em] text-cream/60 uppercase">
             Objet & B Selection
           </span>
           <h2 className="font-serif text-[1.8rem] font-light text-cream sm:text-[2.2rem]">

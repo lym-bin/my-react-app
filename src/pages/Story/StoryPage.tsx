@@ -184,7 +184,7 @@ export default function StoryPage() {
           }}
         />
         <div className="relative z-10 max-w-[640px]">
-          <p className="story-hero-item story-hero-eyebrow mb-[16px] text-11 font-light uppercase tracking-[0.32em] text-cream/45">
+          <p className="story-hero-item story-hero-eyebrow mb-[16px] text-11 font-light uppercase tracking-[0.32em] text-cream/60">
             Objet & B Editorial
           </p>
           <h1 className="story-hero-item story-hero-title mb-[22px] text-[2.6rem] leading-[1.1] font-bold sm:text-[3.4rem] md:text-[4.4rem]">
@@ -197,7 +197,7 @@ export default function StoryPage() {
             <br />
             정교한 마감. 이 세 가지로 요약됩니다.
           </p>
-          <div className="story-hero-item story-hero-cue inline-flex flex-col items-center gap-[10px] text-[0.65625rem] uppercase tracking-[0.28em] text-cream/45">
+          <div className="story-hero-item story-hero-cue inline-flex flex-col items-center gap-[10px] text-[0.65625rem] uppercase tracking-[0.28em] text-cream/60">
             <span className="h-[34px] w-px bg-gradient-to-b from-terracotta-400 to-transparent" />
             Scroll
           </div>
@@ -245,7 +245,7 @@ export default function StoryPage() {
         className="flex min-h-screen flex-col justify-center gap-[32px] overflow-hidden border-t border-navy-800 bg-navy-900 py-[60px]"
       >
         <div className="text-center">
-          <p className="mb-[8px] text-11 uppercase tracking-[0.3em] text-cream/45">
+          <p className="mb-[8px] text-11 uppercase tracking-[0.3em] text-cream/60">
             Objet & B Craft
           </p>
           <h2 className="text-[1.9rem] font-bold sm:text-[2.3rem]">
@@ -262,7 +262,7 @@ export default function StoryPage() {
                 key={value.id}
                 className="w-[min(78vw,320px)] flex-shrink-0 rounded-[2px] border border-navy-700 bg-navy-950 px-[28px] py-[44px] text-center"
               >
-                <span className="mb-[18px] block text-12 tracking-[0.2em] text-cream/40">
+                <span className="mb-[18px] block text-12 tracking-[0.2em] text-cream/60">
                   {value.num}
                 </span>
                 <value.icon
@@ -288,7 +288,7 @@ export default function StoryPage() {
         ref={ctaRef}
         className="flex min-h-screen flex-col items-center justify-center border-t border-navy-800 px-[20px] text-center"
       >
-        <p className="story-cta-item mb-[10px] text-11 uppercase tracking-[0.3em] text-cream/45">
+        <p className="story-cta-item mb-[10px] text-11 uppercase tracking-[0.3em] text-cream/60">
           Objet & B
         </p>
         <h2 className="story-cta-item mb-[36px] text-[2rem] leading-[1.25] font-bold sm:text-[2.6rem]">

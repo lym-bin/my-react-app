@@ -87,7 +87,7 @@ export default function SizeGuideSidebar({
     >
       {/* 헤더 영역 */}
       <header className="flex items-center justify-between border-b border-navy-700 p-[24px]">
-        <h3 className="m-0 text-18 font-bold text-cream">{guide.title}</h3>
+        <h2 className="m-0 text-18 font-bold text-cream">{guide.title}</h2>
         <button
           type="button"
           className="cursor-pointer border-none bg-transparent text-14 text-cream/70 hover:text-cream"

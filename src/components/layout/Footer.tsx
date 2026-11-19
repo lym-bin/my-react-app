@@ -80,7 +80,7 @@ export default function Footer() {
         </nav>
 
         {/* 3. 오른쪽 구역: 저작권 문구 */}
-        <div className="text-center text-12 whitespace-normal text-cream/50 md:text-right">
+        <div className="text-center text-12 whitespace-normal text-cream/60 md:text-right">
           &copy;2026 Objet - B. All rights reserved.{" "}
           {/* &copy: "@" 기호의 HTML 엔티티*/}
         </div>

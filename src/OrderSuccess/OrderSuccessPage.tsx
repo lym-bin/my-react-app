@@ -70,7 +70,7 @@ export default function OrderSuccessPage() {
         <span className="text-16 text-cream/60">
           감사합니다. 결제가 완료되었습니다.
         </span>
-        <div className="mt-[14px] flex justify-center gap-[16px] text-13 text-cream/50 sm:flex-row sm:justify-center sm:gap-[16px]">
+        <div className="mt-[14px] flex justify-center gap-[16px] text-13 text-cream/60 sm:flex-row sm:justify-center sm:gap-[16px]">
           <span>
             주문번호: <strong className="text-cream/80">{orderId}</strong>
           </span>
@@ -106,7 +106,7 @@ export default function OrderSuccessPage() {
 
         <div className="flex flex-col justify-center border-t border-navy-700 pt-[20px] md:border-t-0 md:border-1 md:pt-0 md:pl-[20px]">
           {/* 객체(동적 키)로 값 찾기: paymentMethod가 "toss"면 paymentLabels["toss"] -> 토스페이*/}
-          <span className="text-13 text-cream/50 mb-[4px]">결제 수단</span>
+          <span className="text-13 text-cream/60 mb-[4px]">결제 수단</span>
           <strong className="text-15 text-cream">
             {paymentLabels[paymentMethod] ?? paymentMethod}
           </strong>
@@ -119,7 +119,7 @@ export default function OrderSuccessPage() {
         </h3>
 
         {items.length === 0 ? (
-          <p className="py-[30px] text-center text-14 text-cream/50">
+          <p className="py-[30px] text-center text-14 text-cream/60">
             주문 내역을 불러올 수 없습니다. (새로고침 시 초기화될 수 있습니다.)
           </p>
         ) : (
@@ -181,7 +181,7 @@ export default function OrderSuccessPage() {
           </button>
           <button
             type="button"
-            className="cursor-pointer border border-terracotta-500 bg-terracotta-500 px-[40px] py-[16px] text-15 font-bold text-navy-950 transition-colors hover:bg-terracotta-600"
+            className="cursor-pointer border border-terracotta-500 bg-terracotta-500 px-[40px] py-[16px] text-15 font-bold text-navy-950 transition-colors hover:bg-terracotta-400"
             onClick={() => navigate("/mypage")}
           >
             주문내역 확인하기

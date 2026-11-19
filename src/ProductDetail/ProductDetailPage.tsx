@@ -227,7 +227,7 @@ export default function ProductDetailPage() {
               {/* type="submit" -> 이 버튼 누르면 <form>의 onSubmit(handleAddToCart) 실행*/}
               <button
                 type="submit"
-                className="w-full cursor-pointer border border-terracotta-500 bg-terracotta-500 py-[15px] text-15 font-medium text-navy-950 transition-colors duration-200 hover:bg-terracotta-600"
+                className="w-full cursor-pointer border border-terracotta-500 bg-terracotta-500 py-[15px] text-15 font-medium text-navy-950 transition-colors duration-200 hover:bg-terracotta-400"
                 aria-expanded={cart.isOpen}
               >
                 장바구니 담기

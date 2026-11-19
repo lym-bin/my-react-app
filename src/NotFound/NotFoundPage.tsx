@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 export default function NotFoundPage() {
   return (
     <main className="mx-auto flex w-full max-w-[600px] flex-col items-center justify-center bg-navy-950 px-[20px] py-[120px] text-center">
-      <span className="mb-[16px] text-13 tracking-[0.3em] text-cream/40 uppercase">
+      <span className="mb-[16px] text-13 tracking-[0.3em] text-cream/60 uppercase">
         404
       </span>
       <h1 className="mb-[16px] text-24 font-normal text-cream">
