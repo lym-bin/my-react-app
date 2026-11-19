@@ -109,7 +109,7 @@ export default function MainBanner() {
       {/* 텍스트 영역: 모바일 전용 (데스크톱은 배경 이미지 자체에 메시지가 있어서 생략) */}
       <div className="relative z-10 mx-auto flex w-full max-w-wide flex-col items-center gap-[20px] overflow-hidden px-[20px] py-[50px] text-center md:hidden">
         <div className="overflow-hidden">
-          <span className="gsap-title-line inline-block text-12 font-light tracking-[0.3em] text-cream/50 uppercase">
+          <span className="gsap-title-line inline-block text-12 font-light tracking-[0.3em] text-cream/60 uppercase">
             Objet & B Editorial
           </span>
         </div>

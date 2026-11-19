@@ -1,5 +1,5 @@
 // src/context/CartSidebarContext.tsx
-// 열림/닫기를 필요한 곳만 다시 그릴 수 있게 해주는 context
+// 여러곳에서 열기/닫기 하는 상태를 간편하게 props없이 공유하는 context
 
 import { createContext, useContext, type ReactNode } from "react";
 import useDisclosure from "../hooks/useDisclosure";

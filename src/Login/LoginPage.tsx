@@ -136,7 +136,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="mb-[20px] w-full cursor-pointer rounded-[8px] bg-terracotta-500 py-[14px] text-14 font-bold text-navy-950 shadow-[0_10px_30px_-8px_rgba(193,80,46,0.65)] transition-all duration-200 hover:-translate-y-[2px] hover:bg-terracotta-600 hover:shadow-[0_14px_34px_-6px_rgba(193,80,46,0.75)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+            className="mb-[20px] w-full cursor-pointer rounded-[8px] bg-terracotta-500 py-[14px] text-14 font-bold text-navy-950 shadow-[0_10px_30px_-8px_rgba(193,80,46,0.65)] transition-all duration-200 hover:-translate-y-[2px] hover:bg-terracotta-400 hover:shadow-[0_14px_34px_-6px_rgba(193,80,46,0.75)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
           >
             {isSubmitting
               ? "처리중..."

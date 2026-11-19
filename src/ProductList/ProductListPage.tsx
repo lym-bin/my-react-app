@@ -188,7 +188,7 @@ export default function ProductListPage() {
                     className={`cursor-pointer text-13 whitespace-nowrap transition-colors ${
                       activeSort === option
                         ? "font-bold text-terracotta-400 underline underline-offset-4"
-                        : "text-cream/50 hover:text-cream"
+                        : "text-cream/60 hover:text-cream"
                     }`}
                     aria-current={activeSort === option} // 접근성: 현재 선택 항목 표시 (스크린 리더용)
                     onClick={() => setActiveSort(option)} // 클릭 -> 이 옵션으로 정렬 state 변경 -> 리렌더 -> useMemo 재 계산

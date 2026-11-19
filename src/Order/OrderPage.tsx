@@ -291,7 +291,7 @@ export default function OrderPage() {
         <button
           type="button"
           disabled={isSubmitting}
-          className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-16 font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-[14px] cursor-pointer border-none bg-terracotta-500 py-[16px] text-16 font-bold text-navy-950 transition-colors duration-200 hover:bg-terracotta-400 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={handleRequestPayment}
         >
           {/* inSubmitting이면 "처리 중..." 버튼 텍스트로. 아니면 실제 결제 금액 표시*/}

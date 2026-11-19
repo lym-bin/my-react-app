@@ -160,7 +160,7 @@ export default function EditProfileModal({
 
           <div className="mb-[12px]">
             <label
-              className="mb-[6px] block text-12 text-cream/50"
+              className="mb-[6px] block text-12 text-cream/60"
               htmlFor="currentPassword"
             >
               현재 비밀번호
@@ -176,7 +176,7 @@ export default function EditProfileModal({
 
           <div className="mb-[12px]">
             <label
-              className="mb-[6px] block text-12 text-cream/50"
+              className="mb-[6px] block text-12 text-cream/60"
               htmlFor="newPassword"
             >
               새 비밀번호
@@ -192,7 +192,7 @@ export default function EditProfileModal({
 
           <div>
             <label
-              className="mb-[6px] block text-12 text-cream/50"
+              className="mb-[6px] block text-12 text-cream/60"
               htmlFor="newPasswordConfirm"
             >
               새 비밀번호 확인
@@ -221,7 +221,7 @@ export default function EditProfileModal({
         <button
           type="submit"
           disabled={isSaving}
-          className="w-full cursor-pointer border border-terracotta-500 bg-terracotta-500 py-[13px] text-14 font-medium text-navy-950 transition-colors hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full cursor-pointer border border-terracotta-500 bg-terracotta-500 py-[13px] text-14 font-medium text-navy-950 transition-colors hover:bg-terracotta-400 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSaving ? "저장 중..." : "저장하기"}
         </button>

@@ -39,14 +39,14 @@ export default function PaymentFailPage() {
         장바구니는 그대로 남아 있어요.
       </p>
       {code && (
-        <span className="mb-[24px] text-11 tracking-[0.1em] text-cream/40">
+        <span className="mb-[24px] text-11 tracking-[0.1em] text-cream/60">
           {code}
         </span>
       )}
       <div className="flex flex-col gap-[10px] sm:flex-row">
         <Link
           to="/order"
-          className="inline-flex items-center justify-center bg-terracotta-500 px-[32px] py-[13px] text-13 font-bold text-navy-950 transition-colors hover:bg-terracotta-600"
+          className="inline-flex items-center justify-center bg-terracotta-500 px-[32px] py-[13px] text-13 font-bold text-navy-950 transition-colors hover:bg-terracotta-400"
         >
           다시 결제하기
         </Link>

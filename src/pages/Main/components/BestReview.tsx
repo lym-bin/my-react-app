@@ -52,11 +52,11 @@ export default function BestReview() {
     <section className="bg-navy-950 px-[20px] py-[60px]">
       <div className="mx-auto max-w-content">
         <div className="mb-[30px] text-center">
-          <span className="mb-[8px] block text-11 font-light tracking-[0.3em] text-cream/40 uppercase">
+          <span className="mb-[8px] block text-11 font-light tracking-[0.3em] text-cream/60 uppercase">
             Objet & B Community
           </span>
           <h2 className="text-[1.8rem] font-bold text-cream sm:text-[2.2rem]">
-            @objetandb <span className="text-cream/40">· Instagram</span>
+            @objetandb <span className="text-cream/60">· Instagram</span>
           </h2>
         </div>
 

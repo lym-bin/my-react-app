@@ -43,7 +43,7 @@ export default class ErrorBoundary extends Component<
     if (this.state.hasError) {
       return (
         <div className="flex min-h-screen w-full flex-col items-center justify-center bg-navy-950 px-[20px] text-center">
-          <span className="mb-[16px] text-13 tracking-[0.3em] text-cream/40 uppercase">
+          <span className="mb-[16px] text-13 tracking-[0.3em] text-cream/60 uppercase">
             Error
           </span>
           <h1 className="mb-[16px] text-24 font-normal text-cream">

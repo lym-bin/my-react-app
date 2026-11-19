@@ -27,7 +27,7 @@ export default function Logo({ size = "sm", className = "" }: LogoProps) {
       >
         Objet & B
       </span>
-      <span className={`tracking-[0.12em] text-cream/50 uppercase ${sub}`}>
+      <span className={`tracking-[0.12em] text-cream/60 uppercase ${sub}`}>
         Paris
       </span>
     </span>

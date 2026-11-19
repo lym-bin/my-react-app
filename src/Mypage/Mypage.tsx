@@ -101,7 +101,7 @@ export default function MyPage() {
   // 로딩 중이거나 로그인 안 됐으면 (리다이렉트 직전) 로딩 문구만
   if (isLoading || !isLoggedIn) {
     return (
-      <main className="mx-auto w-full max-w-content bg-navy-950 px-[16px] py-[80px] text-center text-cream/50">
+      <main className="mx-auto w-full max-w-content bg-navy-950 px-[16px] py-[80px] text-center text-cream/60">
         로딩 중...
       </main>
     );
@@ -146,9 +146,9 @@ export default function MyPage() {
           {/* 3단계 상태: 로딩중/ 주문 없음/ 주문 있음 - 중첩 삼항연산자로 스위칭*/}
         </h2>
         {isPending ? (
-          <p className="text-14 text-cream/50">주문 내역을 불러오는 중...</p>
+          <p className="text-14 text-cream/60">주문 내역을 불러오는 중...</p>
         ) : isError ? (
-          <p className="text-14 text-cream/50">
+          <p className="text-14 text-cream/60">
             주문 내역을 불러오지 못했어요. 잠시 후 다시 시도해주세요.
           </p>
         ) : orders.length === 0 ? (

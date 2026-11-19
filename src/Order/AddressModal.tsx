@@ -127,12 +127,8 @@ export default function AddressModal({
                           </span>
                         )}
                       </div>
-                      <p className="text-13 text-cream/70">
-                        {addr.recipient}
-                      </p>
-                      <p className="text-13 text-cream/70">
-                        {addr.address}
-                      </p>
+                      <p className="text-13 text-cream/70">{addr.recipient}</p>
+                      <p className="text-13 text-cream/70">{addr.address}</p>
                       <p className="text-13 text-cream/70">{addr.phone}</p>
                     </button>
                   </li>
@@ -194,7 +190,7 @@ export default function AddressModal({
               </button>
               <button
                 type="submit"
-                className="flex-1 cursor-pointer rounded-[6px] bg-terracotta-500 py-[10px] text-13 font-bold text-navy-950 transition-colors hover:bg-terracotta-600"
+                className="flex-1 cursor-pointer rounded-[6px] bg-terracotta-500 py-[10px] text-13 font-bold text-navy-950 transition-colors hover:bg-terracotta-400"
               >
                 저장하고 사용
               </button>

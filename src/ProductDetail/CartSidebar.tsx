@@ -26,10 +26,10 @@ export default function CartSidebar() {
     >
       {/* 장바구니 사이드바 헤더 */}
       <header className="flex items-center justify-between border-b border-navy-700 p-[24px]">
-        <h3 className="m-0 text-18 font-bold text-cream">
+        <h2 className="m-0 text-18 font-bold text-cream">
           {/* 아이템 있으면 "Cart (3)" 처럼 개수 표시, 없으면 그냥 "Cart"*/}
           Cart{items.length > 0 ? ` (${items.length})` : ""}
-        </h3>
+        </h2>
         <button
           type="button"
           className="cursor-pointer border-none bg-transparent text-14 font-semibold text-cream/70 hover:text-cream"
@@ -44,7 +44,7 @@ export default function CartSidebar() {
         <div className="flex-1 overflow-y-auto p-[24px]">
           {/* 비었으면 안내 문구, 있으면 목록 (삼항연산자로 두 UI 통째로 스위칭) */}
           {items.length === 0 ? (
-            <p className="text-14 text-cream/50">장바구니가 비어 있습니다.</p>
+            <p className="text-14 text-cream/60">장바구니가 비어 있습니다.</p>
           ) : (
             <ul className="flex flex-col gap-[20px]">
               {items.map((item) => (
@@ -98,7 +98,7 @@ export default function CartSidebar() {
                       <button
                         type="button"
                         onClick={() => removeItem(item.id)}
-                        className="text-12 text-cream/40 underline hover:text-terracotta-400"
+                        className="text-12 text-cream/60 underline hover:text-terracotta-400"
                       >
                         삭제
                       </button>
@@ -127,7 +127,7 @@ export default function CartSidebar() {
                 close(); // 3. 사이드바 닫기
                 navigate("/order"); // 4. 주문/결제 페이지로 이동(/order 경로로 이동)
               }}
-              className="w-full cursor-pointer bg-terracotta-500 py-[15px] text-14 font-bold text-navy-950 transition-colors hover:bg-terracotta-600 disabled:cursor-not-allowed disabled:opacity-40"
+              className="w-full cursor-pointer bg-terracotta-500 py-[15px] text-14 font-bold text-navy-950 transition-colors hover:bg-terracotta-400 disabled:cursor-not-allowed disabled:opacity-40"
             >
               결제하기
             </button>
